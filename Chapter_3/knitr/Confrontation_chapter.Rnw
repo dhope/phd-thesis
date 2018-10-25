@@ -1,0 +1,522 @@
+% \documentclass{sfuthesis}
+% \usepackage[round,sort&compress]{natbib}
+% \usepackage{multirow} % span in both directions tables
+% \usepackage{array}
+% \usepackage{pdflscape}
+% \usepackage{rotating}
+% \usepackage{import}
+% \usepackage{phaistos}
+% \usepackage{amsmath,amssymb,amsthm}
+% \usepackage[pdfborder={0 0 0},colorlinks=false]{hyperref}
+% \usepackage{graphicx}
+% \usepackage{caption}
+% \usepackage{tabularx}
+% % \usepackage{animate}
+% \usepackage{tcolorbox}
+% \usepackage{multicol}
+% \usepackage{comment}
+% \usepackage{lineno}
+% \usepackage{xr}
+% \externaldocument[2-]{../Model_Description_Chapter/ModelWalkthrough.Rnw}
+% \frenchspacing                                    % (1)
+% \renewcommand*{\chapterautorefname}{Chapter}      % (2)
+% \renewcommand*{\sectionautorefname}{Section}      % (2)
+% \renewcommand*{\subsectionautorefname}{Section}   % (2)
+% \renewcommand{\defaultspacing}{\doublespacing}  % (3)
+
+% % https://tex.stackexchange.com/questions/15728/multiple-references-with-autoref
+% % define a macro \Autoref to allow multiple references to be passed to \autoref
+
+
+% \begin{document}
+% % \SweaveOpts{concordance=FALSE}
+<<setup-confront, echo=F, message=F, warning=F, cache=F>>=
+set_parent("../FullThesis/HopeThesis.Rnw")
+library(tidyverse)
+library(knitr)
+library(xtable)
+library(cowplot) 
+require(lubridate)
+opts_chunk$set(#cache.path = 'cache/',
+                echo=F, # Do NOT repeat code in final document
+                message = F, # Do NOT print R messages in document
+                warning = F, # Do NOT pring warnings
+                cache = T, # Cache runs
+                dev = "CairoPNG", # Uses Cairo png instead of pdf for images
+                dpi=300#,
+                # cache.path = './cache/'
+             )
+if(!exists("includeapp")) includeapp <- F
+# numbers >= 10^5 will be denoted in scientific
+# notation, and rounded to 2 digits
+options(scipen = 1, digits = 2)
+@
+
+
+
+<<import-data-confront, cache=F>>=
+if( !exists("wesa")) source('~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/data_cleaning_fromPython_and_MasterFiles.r', chdir = T)
+wesa <- wesa.final %>%  mutate(SiteID = substr(RecordID, 1, 4), 
+                                      Year = substr(RecordID, 5, 8),
+                                      Month = substr(RecordID, 9,9),
+                                      Day = substr(RecordID, 10, 11),
+                           n.survey.sites = 1) 
+which.avg <- "avg.max"
+source("../Rscripts/importdata.r",chdir=T)
+
+
+@
+\chapter{Confronting reality with models: Unlocking the mysteries of migratory counts}\label{ch:confront}
+
+% \tableofcontents
+\clearpage
+
+% \begin{abstract}
+
+
+% \end{abstract}
+
+\section{Abstract}
+Counts of shorebirds at migratory stopovers are used to develop indices of population trends. Such indices are trailing indicators because they require long-term time series to detect any population trend. The behaviour of migrants, each optimizing their decisions on migration should play a role in shaping these observed counts. My goal in this chapter was to examine if I could use a model of mortality-minimizing behaviour on migration to understand the processes that shape the distributions of western sandpiper (\textit{Calidris mauri}) between small and large stopover sites on southward migration. I developed and led five years (2013-2017) of citizen-scientist conducted surveys across the Salish Sea region of British Columbia and Washington state. Surveys were conducted over a weekend in each of the adult and the juvenile migratory periods. I used the model of migratory behaviour developed in Chapter 2 to explore if population change, sandpiper arrival mass, sandpiper arrival timing, predator migratory arrival timing, predator flyway abundance, or local food abundance could explain the observed distribution of sandpipers between small and large survey sites. I found the proportion of birds at the large sites for both adult and juvenile western sandpipers shifted by over 50\% between years. The shifts were most parsimoniously explained by the timing of peregrine falcon (\textit{Falco peregrinus}) in the region. Independent data was able to confirm the shifts in model estimates of falcon arrival. The overall abundance of peregrines and interannual and seasonal variation in food abundance could also explain the shifts between sites but lacked independent data to assess the reliability of model estimates. Across all scenarios juveniles appear to be behaving differently than adults and are using the small sites more than was expected from the model. My approach to exploring migratory shorebird counts suggests that shorebird survey counts can be shaped by non-linear behavioural responses to changing conditions and shifts between sites should be accounted for in analysing surveys of shorebirds on migration.
+
+
+
+
+ 
+ \linenumbers
+ \defaultspacing
+
+
+% \input{Introduction_Confrontation.tex}
+ <<intor-confront, child='Introduction_Confrontation.Rnw'>>=
+ 
+ @
+
+
+
+\section{Methods}
+    \subsection{Western sandpipers}
+
+Western sandpipers depart on their annual southward migration from their breeding grounds in western Alaska by flying directly to the west coast of North America between British Columbia and California \citep{Butler1996b}. Those that arrive along the northern portion of the coast will pass through the Salish Sea on their way toward non-breeding grounds that stretch from Oregon and California to Peru to South Carolina. The Salish Sea is an important region for western sandpipers on northward migration also, but for those that arrive  in the region on southward migration it can be the first area of landfall after a >2000 km flight from Alaska. As such, the decision of stopover habitat is important to the birds who must recover from their flight and load fuel to power the remainder of their migration. Stopover sites for western sandpipers are often estuarine mudflats, but they can also be found in flooded fields or along rockier shores. Adults arrive in the region a month before juveniles \citep{Butler1987} with some variation in this timing \citep{Niehaus2006}. Sandpipers' body condition on arrival can vary between years and age groups, and this should affect migrants' stopover decisions. Predators are another factor influencing stopover decisions. Peregrine falcons arrive in the region in early August \citep{lank_effects_2003}, with strong variation in this timing between years \citep{Niehaus2006}. Peregrine falcon numbers have been increasing continentally since the 1980s and their influence on western sandpiper behaviour has been strong \citep{Ydenberg2002,ydenberg_western_2004,Hope2011,Hope2014}.
+
+
+\subsection{Survey Sites}
+
+
+I selected 39 sites as survey locations across the Salish Sea region of British Columbia and Washington State (\autoref{fig:survey-loc}). 34 of these sites are within the Salish Sea, three are within the Tofino Mudflats area, and two are on Malcolm Island. Four sites are in Puget Sound WA, with the remainder in British Columbia. I divided Boundary Bay into 6 survey locations along the shoreline and Jensens Bay in Tofino into two survey sites. Otherwise, the sites are independent habitats though survey sites could still be close to each other in flight distance. 
+
+Sites ranged from large sites along the Fraser River Estuary, an area classified of hemispheric importance to western sandpipers, to saline lakes to tiny ponds in fields. I divided the sites into small and large sites, with sites outside the Fraser River Delta complex classified as small (all were smaller than 10 km$^2$ in total habitat) and Boundary Bay (58 $\text{km}^2$), Roberts Bank (21 $\text{km}^2$), and Iona Beach (15 $\text{km}^2$) classified as ``large'' (\autoref{fig:danger-plot}). In total the large sites encompassed 95 $\text{km}^2$, while the small sites encompassed 39 $\text{km}^2$ of habitat all together. A complete description of the survey sites is found in \autoref{app:wesa}.
+
+<<survey-loc, fig.cap="Overview of survey site locations within the Salish Sea Region. Survey sites included in the analysis are shown in blue circles, while those excluded due to lack of data are shown in red triangles. Exact locations and descriptions of survey sites are described in detail in \\autoref{app:wesa}.">>=
+require(tidyverse)
+
+map_WA <- ggplot2::map_data(map ='state', 'WA')
+map_BC <- ggplot2::map_data(map='world2', c('Canada', "USA")) #%>% filter(long>230&long<238 &lat<51 & lat>47)
+ 
+overviewPlot <- 
+ggplot(map_BC) + geom_polygon(aes(x = long, y = lat, fill = region, group =group),alpha=0.1, color = "black") + 
+  scale_fill_brewer(type='qual', palette='Set1')+
+   coord_fixed(1.3,xlim=c(232,238),ylim=c(47,51)) +
+     guides(fill=FALSE)  # do this to leave off the color legend 
+ database.loc <- '~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/'
+ site.codes <- read.csv(paste(database.loc, 'AreaCalculations/AreaComparison.csv', sep = ""),
+                        stringsAsFactors = FALSE)
+sitestoremove <- c("ALHE", "PANM", "KALE", "DEEP", "WINT", "SQUA", 
+                   "SHPO",#"EIDE",#"JENB","CROC",
+                   "VRYL") 
+
+ locations <- read.csv(paste(database.loc,'/ShinyResults/Shiny_Map/.data/sitelocations_decdegree.csv', sep = ""), header = T, stringsAsFactors=F) %>% 
+   rename(SiteID = SITEID) %>% 
+   filter(SiteID != "") %>% left_join( site.codes, by="SiteID") %>% mutate(
+     Region = factor(ifelse(SiteID %in% c("MAPL", "SQUA"), "Van", Region),
+                     levels=c("Malc", "EVanIs", "Tofino", "SVanIs", "FRD", "Van", "Puget")),
+     inres = ifelse(SiteID %in% sitestoremove, "Excluded", "Included")) 
+end.lines <- read_tsv(paste(database.loc, "/AreaCalculations/EndLines.txt", sep=""), col_types = cols())
+ 
+
+ overviewPlot +  
+   geom_point(data = locations, mapping = aes(x = 360+lon, y = lat, color = inres,shape=inres)) +
+   labs(x="Longitude (E)", y= "Latitude (N)", colour = "Included in\nanalysis?", shape ="Included in\nanalysis?" )
+
+@
+
+%         \subsubsection*{Predation danger}\label{sec:danger}
+
+% I calculated an index of the predation danger at each survey location using the proportion of habitat that was within 150 meters of cover or the habitat edge. This habitat is considered the most dangerous to small sandpipers \citep{dekker_raptor_2004,pomeroy_tradeoffs_2006,Taylor2007,pomeroy_experimental_2006}. For each site I estimated the amount of habitat available for each site by manually drawing the habitat in Google Earth imagery. I then extracted a shape file and calculated area of habitat, the area of ``dangerous'' habitat, and the proportion of habitat that was within 150 meters of cover in R \citep{R2018} (\autoref{fig:danger-plot}).
+
+<<danger-plot, fig.cap='The proportion of habitat at each survey site that is considered the most dangerous and the classification of sites based on their total size on a logarithmic scale.', out.width = "0.8\\textwidth">>=
+ggplot(danger.est, aes(area_km2, prop.danger, colour = size, shape=size)) + geom_point() + scale_color_brewer(type='qual', palette='Set1', direction = -1) + coord_trans(x=scales::log10_trans()) + scale_x_continuous(breaks = c(0.1,0.5,1,5,10,25,50)) + labs(x=expression ("Area of habitat"~(km^2)), y="Proportion of habitat within 150m of cover", colour = "Site size",shape = "Site size") + ylim(0,1)
+@
+
+\subsection{Surveys of western sandpiper abundance}
+I developed and organized a citizen-scientist program to conduct standardized surveys in July and August throughout the Salish Sea region of British Columbia and Washington State. Surveys were conducted during one weekend during the adult migration (July) and one weekend during juvenile migration (August). Survey dates were chosen to attract surveyors, include appropriate tides, and be within the peak of either the juvenile or adult migrations. Surveys were held over a 4-day period in each month from a Friday to Monday. Surveyors were encouraged to survey 3 of the 4 days, though most surveyed 1-2 days (\autoref{sec:effort} in \autoref{app:wesa}).
+
+I assigned survey times for each site based on tidal conditions. I attempted to have all surveys conducted at the same time within a sub-region and on the rising tide across the study region. However, the timing was not always synchronized across the region due to differences in tidal timing between the sub-regions. Nonetheless, for the weekend dates survey coverage was consistently over 20 sites for each date. Survey effort did vary between days however (\autoref{fig:surveyeffort}).
+
+    <<surveyeffort, fig.cap="The number of sites surveyed in each of the survey days within the western sandpiper Summer Survey program. Each round of surveys was conducted from Friday until Monday over a weekend in July and August.">>=
+    surveydates_full %>% mutate_all(as.numeric) %>% 
+    arrange(Year, Month, Day) %>% group_by(Year, Month) %>% 
+    mutate(s_day = Day-min(Day),
+        dow = ifelse(s_day+6<8, s_day+6, s_day-1),
+        dowL = wday(dow, label=T)) %>% 
+    ungroup %>%  ggplot(aes(as.numeric(Year), n, colour = dowL)) + geom_line() + facet_wrap(~month(as.numeric(Month), label=T) ) + scale_colour_brewer(type='seq', palette = "Set1")+ labs(x="Year",colour = "Day Number of Monthly Survey (1st - 4th)", y="Number of sites surveyed") + theme(legend.position = 'bottom')
+    @
+
+Surveys were conducted for 2.5 hours on the rising tide. Surveyors arrived at the site, noted basic weather and site condition information and then noted the number of western sandpipers at the site every 15 minutes. Numbers were noted as ``peeps'' where western sandpipers could not be distinguished from least sandpipers (\textit{Calidris minutilla}), which I determined were the only potential species for which western sandpipers could be misidentified as that are present in significant numbers in the region in July and August. I used estimates of the proportion of least and western sandpipers observed at the sites to separate counts where westerns could not be identified to species (See \autoref{app:wesa}). Surveyors also noted the presence of peregrine falcons (\textit{Falco peregrinus}) or merlin (\textit{Falco columbarius}) and any attacks on sandpipers during the survey period. Surveys concluded after 2.5 hours or earlier if the entire habitat was covered by the tide.   Surveyors recorded observations on standardized sheets that were available to volunteers on the project webpage. %The data sheets and instructions included a map where observers noted the tide at given points in the survey and the location of any sandpipers or falcons. The tidal maps were often not completed and therefore I did not perform any analysis of this portion of the data.
+
+\subsubsection*{Data Processing}
+Surveyors submitted data to me by sending the raw data sheets, entering their data via online web forms or entering their data into excel spreadsheets. I also asked volunteers send in an electronic or hard copy of their original data sheets for verification. I entered any data not done by surveyors. I cleaned and processed the data using Python (v3.5) and R (v3.4.4) \citep{R2018,tidyverse,Idris2011,Eric2001,VanderWalt2011}. 
+
+From the model analysis (Chapter 2) I concluded that the distribution across sites and the total number of birds present in the region are key indicators that shift as conditions change. For each weekend of surveys, I calculated measures of the distribution of birds across small and large sites and of the total abundance in each round of surveys.
+
+
+To calculate each site's survey abundance, I took the maximum count per survey and calculated the mean maximum daily count across the survey weekend for each site. I eliminated the data from 5 sites for which there was insufficient surveys to analyse (Kavela Road, Malcolm Island; Deep Bay, Vancouver Island; Winter Cover, Saturna Island; Squamish River Estuary, Squamish; and View Royal, Victoria). Of the remaining sites, 17 did not have surveys in every survey period (less than 5\% of surveys). Within each month the numbers were generally only one or two sites though 2017 had four sites missing in both July and August and 2014 had three missing in July. For these sites, I interpolated the data using the mean of two interpolated estimates. First, I estimated the site's count using the site's mean proportion of sandpipers counted and with the given month's relative total counted. Second, I used the site's mean count across the other years as an index to calculate the missing counts. I took the average of these estimates to try to avoid biasing both my measures of abundance. I found no evidence that using the interpolated values would bias the estimated values of proportion at the large sites or total numbers of birds counted for each month (See \autoref{sec:interpolate} for details).
+
+As Boundary Bay and Jensens Bay had multiple survey sites along their shores and there was evidence that the same birds could be counted twice at different locations in one survey I pooled the surveys at these sites. I combined the surveys at these to locations by taking the sum of all survey counts at each count time and then taking the maximum of the summed count for each survey. I then calculated the mean across each survey period weighted by the number of survey sites within the pooled site on each date. This decision is explored in more detail in \autoref{sec:bb}.
+
+For each month of surveys, I generated two index measures: the proportion of birds counted on a survey weekend that were found at the large sites (\autoref{fig:danger-plot}), and the total number of birds counted that month. 
+
+         % - How data processed to for confrontation.
+
+    \subsection{Migratory model}
+
+<<arrival-dates>>=
+original <- c(22,55)
+new <- c(24,53)
+require(lubridate)
+
+getmd <- function(d){
+  date_ <- mdy("6-20-2013") + d
+  m <- month(date_ , label=T, abbr=F)
+  d <- day(date_)
+  return(paste(m, d, sep = " "))
+}
+
+@
+
+To generate specific predictions of abundance across my survey sites I used a dynamic state variable model of western sandpiper migration through a landscape of stopover sites. The model allows me to calculate the decision that optimizes an individual migrant's survival across migration based on their current location, the current date, and their current fuel load. I can then simulate the migration of a population of sandpipers moving through a landscape of small and large stopover site types. I describe the model in full in Chapter 2. In this chapter I modified the two arrival parameters from the original model's baseline. I expanded the standard deviation on the arrival date $\sigma_t^2$ from 5 days to 6 and I modified the mean arrival dates, $t_a$, from \Sexpr{getmd(original[1])} for adults and \Sexpr{getmd(original[2])} for juveniles to \Sexpr{getmd(new[1])} and \Sexpr{getmd(new[2])} respectively. All simulated migrants arrive using decisions that optimize future survival based on condition on arrival. For a full description of parameters used in the model and a description of the model in detail see Chapter 2.%\autoref{ch:model}.
+
+
+<<mod-variables, results='asis', eval=F, include=F>>=
+nosensitivity <- TRUE
+source('../Rscripts/GenerateTables.r')
+
+xtable_sd <- tab_base %>% 
+    arrange(GroupOrder, Name) %>% 
+      select(Parameter2, `Initial Values`, Units, Description, Eqn) %>% 
+      rename(Parameter = Parameter2, `Baseline value`= `Initial Values`) %>% 
+      separate(`Baseline value`, sep = ",", into=c("Adult","Juvenile")) %>%
+      mutate_at(vars(Adult, Juvenile), as.numeric) %>% 
+      xtable(label = "tab:mod-variables",
+             caption="Variables modified from baseline to increase stochasticity between runs of dynamic state variable model of western sandpiper movement through the Salish Sea.") 
+
+print(xtable_sd,include.rownames=F, sanitize.text.function=function(x){x}, floating=T)
+
+@
+
+
+%I did not change the mean relative food abundance between small and large sites despite collecting macrofaunal invertebrate data (\autoref{app:food}). Without the inclusion of meiofanual invertebrates and biofilm data I decided the macrofaunal invertebrate abundance did not reflect an accurate picture of the sites' potential refuelling rates. I increased the variation in site specific refuelling rate to account for this lack of information.
+
+
+
+
+\subsection{Scenarios}\label{sec:methods-scenarios}
+% \autoref{eq:mort}\autoref{eq:falc_attacks}\autoref{eq:forward}\autoref{eq:food}\autoref{eq:mod_arr}\autoref{eq:forward}
+I ran six model scenarios of potential underlying causes that could explain patterns in migratory counts. Predators, namely the peregrine falcon, have been shown to elicit strong effects on migratory decisions of western sandpipers. I modified the timing of the arrival of migratory predators ($m_t$; Equation 1.5 Chapter 2) and the total number of predators ($\digamma$; Equation 1.4 Chapter 2) in two separate scenarios. As population trends of shorebirds is a common use of surveys at stopover sites I ran a western sandpiper population scenario where I modified the number of western sandpipers moving through the region ($N$; Equation 1.16 Chapter 2). I examined the potential for regional food abundance to shape counts by modifying the global fuelling rate ($e_g$; Equation 1.15 Chapter 2). As the timing of passage has been shown to vary between years \citep{Niehaus2006}, I explored this scenario using the mean timing of sandpiper arrival parameter for adults and juveniles ($t_a$; Equation 1.16 Chapter 2). Finally, I explored migrant condition on arrival by using the mean fuel load on arrival($f_a$; Equation 1.16 Chapter 2) for western sandpipers. To generate fingerprints for each scenario, I iteratively modified a parameter across a reasonable range and ran 1000 Monte Carlo simulations for each modification. For each Monte Carlo simulation I modified the random seed for the stochastic variables. The full descriptions of the scenarios and their predictions are detailed in \autoref{app:scenario}.
+
+Each scenario adjustment generated 1000 predicted counts at the small and large site for each date between June 20 and September 18. 
+
+\subsection{Scenario fitting}
+
+For each scenario and survey period I selected the model parameter that created the closest match to the observed distribution between small and large sites. I used the proportion of birds at the large model site or across all large survey sites for a given survey as my index of distributions. For example, for the falcon arrival scenario I modified $m_t$ until the distribution proportion of simulated birds on the large site on the survey date matched the observed proportion of western sandpipers counted at the large survey sites for that survey period. I repeated this for each scenario ($n=5$) and each survey periods ($n=10$). I then refit the models 50 times to see if the best fit varied between runs. As the distribution between sites does not vary with population size, I did not attempt to fit the proportion of birds at the large site to this scenario.
+
+After fitting the model to the proportion of birds counted at the large sites, I fit the total numbers of birds counted at both sites in each survey period. For all six scenarios I modified the number of birds simulated in the model ($N$) to fit the survey measure of total abundance for each survey period. For each scenario, fitting the model to the data generated a measure of the number of simulated birds required to create the observed numbers counted in each survey period. I excluded the birds which were simulated but chose to depart immediately and therefore would not be included in the counts. 
+
+The sandpiper arrival mass and timing scenarios failed to converge on an estimate of the proportion of birds at the large site within 2000 iterations and so I have removed these two scenarios from the analysis and focus on the remaining four scenarios.
+
+I compared how well each scenario was able to match the observed survey pattern in distribution between large and small stopover sites and how the estimate of birds passing through the region varied for each survey period and between the two months.
+
+
+\subsection{Confirmation with independent data}
+
+I was able to examine how the model estimates compared to falcon timing based on snowmelt dates in Alaska and falcon abundance observed in my shorebird surveys. Independent data are not available for the food abundance or population scenarios.
+
+\citet{Niehaus2006} examined the interannual timing of arrival of peregrine falcons in the Fraser River Delta. They found that mean arrival date very correlated with the date of snowmelt in western Alaska. I used annual snowmelt dates from calculated from publicly available snowmelt data to estimate the annual variation in timing of arrival for peregrine falcon migration between 2013 and 2017. I used daily snow depth from weather stations in Nome, Kotzebue, and Bethel, Alaska to determine the last day of the year where greater than 12.5 mm of snow was recorded at each station. 
+
+During the surveys of western sandpipers, surveyors also recorded any observations of peregrine falcons or merlin. I calculated the variation in the numbers of falcons observed and compared this to the model estimates of falcon population variation between years.
+
+\section{Results}
+
+    \subsection{WESA surveys}
+    <<import-survey-dat, include=F, echo=F, s1 = file.info("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/data/cleaned_surveyor_names.ods")$mtime,s2 =  file.info("../Rscripts/ComparingPredictions_ish.r")$mtime, s3= file.info("../Rscripts/Model_Predictions.R")$mtime>>=
+cleaned.names <- readODS::read_ods("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/data/cleaned_surveyor_names.ods", sheet = "2018_version")
+rm(surveydates)
+source("../Rscripts/ComparingPredictions_ish.r", chdir=T)
+source('../Rscripts/Model_Predictions.R') 
+modat <- dat
+    @
+
+I organized 10 weekends of citizen-scientist conducted surveys across five years. \Sexpr{cleaned.names$CleanName %>% unique() %>% length} surveyors counted \Sexpr{floor(sum(wesa$counts.cleaned))} western sandpipers in \Sexpr{length(unique(wesa$ID))} counts across \Sexpr{length(unique(wesa$RecordID))} surveys. The detailed survey results are presented in \autoref{app:wesa}. I present here the results in relation to their confrontation with model predictions (\autoref{fig:survey-results}).
+
+<<survey-results,dpi=300, fig.width=8, fig.height=8,out.width = "0.9\\textwidth", fig.align='center', fig.cap='Results of western sandpiper surveys conducted in the Salish Sea region between 2013 and 2017. Results include a small number of interpolated points (<5\\%). Survey sites included here are the same across years. Bootstrapped 95\\% CI are shown around each value. (A) The distribution of western sandpiper between small and large sites in July (left) and August (right). Large sites include those within mudflat complex at the Fraser River Estuary, BC. Measures are the proportion of birds all birds counted in each month that are found at the large sites. (B) The sum across all sites of the average number of western sandpipers counted within a given month.'>>=
+wesa_booted <- surveyresults#read_rds(".rds/Results_Bootstrapped_withRelC_wmax.rds")
+
+# resultplots_both <- predictandplot(ressurvey, NA, 'plot', T,sepPlots = T)
+
+scenplot_prop <-   ggplot(ressurvey, aes(x=Year)) +
+        geom_pointrange(aes(ymax = uci_pTotal, ymin=lci_pTotal,y=pTotal)) +
+        # geom_line(aes(y=pTotal)) + 
+        facet_grid(.~month(Date, label = T))+
+        ylim(0,1)+
+        labs(x = "", y="Proportion of birds at large sites") +theme(legend.position = 'none')
+    
+        # labs(x = "Year", y="Proportion of Birds at Large Site") 
+scenplot_Total <- ggplot(ressurvey, aes(x=Year)) + 
+      geom_pointrange(aes(ymax = uci_Total, ymin=lci_Total,y= totalBirds)) +
+      # geom_line(aes(y= totalBirds), linetype='dashed') +
+      facet_wrap(~month(Date, label = T))+
+      # .labs(x = "", y="") + 
+      theme(legend.position = 'none')+
+       labs(x = "Year", y="Total number of birds counted") 
+   
+
+
+
+plot_grid(scenplot_prop , 
+  scenplot_Total,
+          nrow = 2, rel_heights = c(0.5,0.5), labels = "AUTO") 
+    @
+
+The distribution of birds varied substantially between years. For adults, the distribution was as much as \Sexpr{max(wesa_booted$pTotal[wesa_booted$Month == "7"])*100}\% at the largest sites, but as little as \Sexpr{min(wesa_booted$pTotal[wesa_booted$Month == "7"])*100}\%. Juveniles were less shifted towards the largest sites (max: \Sexpr{max(wesa_booted$pTotal[wesa_booted$Month == "8"])*100}\%; min: \Sexpr{min(wesa_booted$pTotal[wesa_booted$Month == "8"])*100}\% ).
+
+The total numbers of birds counted varied by orders of magnitude between years. The variation between years was larger for juveniles than adults and on average, juveniles were found in higher numbers than adults (Juveniles: \Sexpr{mean(wesa_booted$totalBirds[wesa_booted$Month == "8"])}; Adults: \Sexpr{mean(wesa_booted$totalBirds[wesa_booted$Month == "7"])}). These numbers will not be informative on their own however as survey dates were later in the migratory period for some years and a null expectation would be to see lower numbers in those years.
+
+%The values of $r_{si}$ were used to compare to the model results as they are the most comparable to model output and represent together both distribution across sites and relative abundance shifts between years (\autoref{fig:survey-results}). In July, the relative variation was greater at the large sites between years than the small sites, with the relative change shifting between \Sexpr{min(wesa_booted$Large[wesa_booted$Month == "7"])*100}\% change from the mean to \Sexpr{max(wesa_booted$Large[wesa_booted$Month == "7"])*100}\% above the mean. While at the small site the shift was only between \Sexpr{min(wesa_booted$Small[wesa_booted$Month == "7"])*100}\% and \Sexpr{max(wesa_booted$Small[wesa_booted$Month == "7"])*100}\%. The sites did not always shift together for example, in 2016 the large sites shifted lower by \Sexpr{-1*wesa_booted$Large[wesa_booted$Month=="7"&wesa_booted$Year == "2016"]*100}\% while the small sites shifted higher in abundance by \Sexpr{1*wesa_booted$Small[wesa_booted$Month=="7"&wesa_booted$Year == "2016"]*100}\%.
+
+% In August, the large sites varied less than the small sites (\autoref{fig:survey-results}), mostly due the to the 2015 counts at the small sites being \Sexpr{1*wesa_booted$Small[wesa_booted$Month=="8"&wesa_booted$Year == "2015"]*100}\% higher than the mean. In the other years the small sites were much closer to the mean ($r_{S,Aug}=0$) as were the large site counts.
+
+
+    \subsection{Migratory model}
+    \subsection{Scenario Fingerprints}
+
+<<scenario-dat>>=
+require(magrittr)
+
+select <- dplyr::select
+# all_scenario_sum <- read_rds("../Rscripts/.rds/scenario_summary_noDraw_july.rds")
+quantiles <- c("50%", "2.5%","97.5%" )
+
+@
+
+Each model scenario shows independent fingerprints of response to changing conditions when both distribution across sites and the total number of birds are considered (\autoref{fig:scenarioplots-adults}, \autoref{fig:scenarioplots-adults-total}, \autoref{fig:scenarioplots-juveniles}, \autoref{fig:scenarioplots-juveniles-total}). For example, the July 15 model output shows that increasing total food abundance and total predator numbers have similar patterns of the distribution shifting primarily towards the large site as either food or predators increases. However, as food increases the total numbers of birds decreases whereas this does not occur if predator numbers increase. Similarly, increasing the arrival mass of adults leads to a shift towards the large site and a decrease in the total number of birds, but the shape of the response to mass changes is very distinct from that of increasing food abundance. Adjusting predator timing earlier shifts the distribution of adults towards the large site and increases their total numbers. Changes in the total number of birds moving through the region has no impact on the distribution between sites, but the abundance measure increases linearly. Changing the timing of sandpiper arrival leads to only minor shifts between sites, but strong decreases in the total number of birds.
+
+
+
+<<scenarioplots-adults, fig.cap="The predicted proportion of birds found at the large site on July 15 from scenarios run on model of migrate behaviour within the Salish Sea. The food abundance scenario (Food abundance) modified total food abundance from 0.1 to 10 times of baseline. The mass on arrival scenario (Mass) changed the fuel load on arrival in grams of fuel between 0.1 and 5g. The predator population scenario (Predator Numbers) changed the maximum seasonal predator numbers between 0.1 and 10. The timing of predator arrival scenario (Predator Timing) shifted the date of peak predator arrival between 25 days early and 25 days late. The western sandpiper population change scenario (WESA numbers) varied the number of adults and the number of juveniles entering the system between 50\\% and 200\\% of the baseline. The western sandpiper arrival scenario (WESA Timing) modified the mean date of arrival between 15 days early and 15 days late relative to the baseline date for each age class. Full descriptions of the scenarios are described in the text. The median result is shown in the black line with grey shading between the 2.5th and 97.5th quantiles of Monte Carlo outputs.">>=
+allplots_pk$pLarge[[7]] + ylim(0,1)
+@
+
+Juvenile responses to scenario changes are similar in shape to adults', but the magnitudes of change are often smaller. With an increase in food abundance, the adult model abundance increases by 100\% on July 15, but only by about 40\% on August 15th. For the predator numbers scenario, the response to increases in predators is an increase of about 50\% in adult abundance and about 20\% for juveniles. In the mass scenario, reducing arrival mass from 5g to 1g shifts the distribution for adults between 70\% at the large site to 30\% while for juveniles the shift resulting in an equivalent change in arrival mass is only from about 90\% to 80\% at the large site. The shift in total numbers for this scenario is equivalent between age groups. Generally, across all scenarios, adults appear to be more sensitive to shifts within each scenario (\autoref{fig:scenarioplots-adults} to \autoref{fig:scenarioplots-juveniles-total} and \autoref{app:scenario}).
+
+
+\Sexpr{mintiming <- summary_predictions %>% 
+  group_by(time) %>%
+  filter(scen_g=="Predator Timing"&quant_pLarge=='50%'&dist==5000) %>% slice(which.min(pLarge))}
+
+The point at which a shift occurs is modified between months in some scenarios. For adults, the lowest proportion of birds at the large site is \Sexpr{mintiming  %>% filter(time==25)%>%.[['pLarge']]} at $m_t=$\Sexpr{ filter(mintiming,time==25)%>%.[['scenario_f']]}, whereas for juveniles the minimum is \Sexpr{filter(mintiming,time==56)%>%.[['pLarge']]} at $m_t=$\Sexpr{filter(mintiming,time==56)%>%.[['scenario_f']]}. For predator timing the response is opposite between adults and juveniles. As the timing moves later (more negative $m_t$) adults shift toward the safe site, whereas the juveniles shift toward the dangerous site. For the other scenarios, the shape of the response to changing parameters remains similar between months.
+
+Full scenario predictions across all dates and migratory distances are shown in \autoref{app:scenario}.
+
+
+<<scenarioplots-adults-total,fig.cap="The predicted relative total number of birds found at both the large and small sites on July 15 from scenarios run on model of migrate behaviour within the Salish Sea.  The values are the proportional change relative to the median baseline value for that date. The food abundance scenario (Food abundance) modified total food abundance from 0.1 to 10 times of baseline. The mass on arrival scenario (Mass) changed the fuel load in grams of fuel between 0.1 and 5g. The predator population scenario (Predator Numbers) changed the maximum seasonal predator numbers between 0.1 and 10. The timing of predator arrival scenario (Predator Timing) shifted the date of peak predator arrival between 25 days early and 25 days late. The western sandpiper population change scenario (WESA numbers) varied the number of adults and the number of juveniles entering the system between 50\\% and 200\\% of the baseline. The western sandpiper arrival scenario (WESA Timing) modified the mean date of arrival between 15 days early and 15 days late relative to the baseline date for each age class. Full descriptions of the scenarios are described in the text. The median result is shown in the black line with grey shading between the 2.5th and 97.5th quantiles of Monte Carlo outputs.">>=
+allplots_pk$relT[[7]] + ylim(-1, 2)
+@
+
+
+<<scenarioplots-juveniles, fig.cap="The predicted proportion of birds found at the large site on August 15 from scenarios run on model of migrate behaviour within the Salish Sea.  The food abundance scenario (Food abundance) modified total food abundance from 0.1 to 10 times of baseline. The mass on arrival scenario (Mass) changed the fuel load in grams of fuel between 0.1 and 5g. The predator population scenario (Predator Numbers) changed the maximum seasonal predator numbers between 0.1 and 10. The timing of predator arrival scenario (Predator Timing) shifted the date of peak predator arrival between 25 days early and 25 days late. The western sandpiper population change scenario (WESA numbers) varied the number of adults and the number of juveniles entering the system between 50\\% and 200\\% of the baseline. The western sandpiper arrival scenario (WESA Timing) modified the mean date of arrival between 15 days early and 15 days late relative to the baseline date for each age class. Full descriptions of the scenarios are described in the text. The median result is shown in the black line with grey shading between the 2.5th and 97.5th quantiles of Monte Carlo outputs.">>=
+allplots_pk$pLarge[[8]] + ylim(0,1)
+@
+
+
+
+<<scenarioplots-juveniles-total,fig.cap="The predicted relative total number of birds found at both the large and small sites on August 15 from scenarios run on model of migrate behaviour within the Salish Sea. The values are the proportional change relative to the median baseline value for that date. The food abundance scenario (Food abundance) modified total food abundance from 0.1 to 10 times of baseline. The mass on arrival scenario (Mass) changed the fuel load in grams of fuel between 0.1 and 5g. The predator population scenario (Predator Numbers) changed the maximum seasonal predator numbers between 0.1 and 10. The timing of predator arrival scenario (Predator Timing) shifted the date of peak predator arrival between 25 days early and 25 days late. The western sandpiper population change scenario (WESA numbers) varied the number of adults and the number of juveniles entering the system between 50\\% and 200\\% of the baseline. The western sandpiper arrival scenario (WESA Timing) modified the mean date of arrival between 15 days early and 15 days late relative to the baseline date for each age class. Full descriptions of the scenarios are described in the text. The median result is shown in the black line with grey shading between the 2.5th and 97.5th quantiles of Monte Carlo outputs.">>=
+allplots_pk$relT[[8]] + ylim(-1,2) #\\textbf{Note the scales differ between scenarios}.
+@
+
+\subsubsection{Fit to data}
+
+The fitting the model scenarios using the distribution of birds between large and small sites produced a good fit to the data across the three scenarios where fitting was done, and the method converged (\autoref{tab:fit-tab}, \autoref{fig:fit-plarge}). The correlation between counts and surveys was only $r=$ \Sexpr{cor(joined_res$pLarge, joined_res$pTotal, method='pearson')}, though this increased to $r=$ \Sexpr{jrnoN$cor %>% unique} when the population scenario was removed. Between the two months, I was able to create a marginally better fit between the model and survey data in July than August (July: $r=$ \Sexpr{jrnoN$cor.month[jrnoN$Month.name.x=="Jul"]}; August: $r=$ \Sexpr{jrnoN$cor.month[jrnoN$Month.name.x=="Aug"]}).
+
+The models all converged on an estimate of proportion at the large site within \Sexpr{max(joined_res$ncycles_pLarge)} iterations with a mean number of \Sexpr{mean(joined_res$ncycles_pLarge[joined_res$var != "popsize"])} iterations (not including population size scenario, which were not fit nor mass and timing scenarios, which did not converge). The model iterated even faster to convergence on the cycle of fitting the number of birds in the system (maximum \Sexpr{max(joined_res$ncycles_N)}; mean \Sexpr{mean(joined_res$ncycles_N)}).
+
+Between scenarios, the model converged fastest with the food abundance scenario. The predator numbers converged slightly faster than the predator arrival scenario.
+
+The fit to the data was similar between scenarios. The sum of square errors was smallest for the predator numbers scenario in both months and across the three scenarios the fit was better for July than August. The fit for the sandpiper population size scenario was several orders of magnitude worse than the scenarios fit to the distribution between sites and the fit about twice as strong for July than August in this baseline scenario.
+
+
+<<fit-tab, results='asis'>>=
+jrnoScen$Month <- c(paste0("\\multirow{",4,"}{*}{July}"),"", "", "", "\\multirow{4}{*}{August}", "", "", "")
+tabOut <- 
+jrnoScen %>%ungroup%>% select(Month, Scenario, mean_diff, sd_dff, n, sse,  mean_cycles_pLarge ,mean_cycles_N) %>%
+  xtable::xtable(digits=2, caption='Comparison of fits between the distribution of western sandpipers between large and small stopover sites from surveys and a model of migration fit under 5 scenarios. Each scenario was fit to each survey date 40 times and the mean and sd of the difference between survey distribution and model distributions are shown. N is the number of total fitting runs completed for each scenario in each month. The sum of squares error (SSE) shows the fit between the model fits and the data for each scenario. The mean number of iterations to convergence are shown for the fitting of the proportion of birds found at the large sites (Iterations Prop. Large) and the total number of birds observed (Iterations N).',label = "tab:fit-tab")
+
+names(tabOut) <- c("Month","Scenario","Mean\nDifference","SD\nDifference", "N","SSE",
+                   "Iterations\nProp. Large","Iterations\nN"  )
+xtable::align(tabOut) <- paste(c("rllp{1.5cm}p{1.2cm}p{1.2cm}p{1.2cm}", rep("p{1.5cm}", 2)), collapse="")
+
+# unite("var", mean_diff, sd_dff, cor.month, sep="_") %>% 
+#   spread(Month.name.x, var) %>% 
+#   separate(Jul, c("Mean Difference\nAdults","SD Difference\nAdults", "Correlation\nAdults"),sep = "_") %>%
+#   separate(Aug, c("Mean Difference\nJuveniles","SD Difference\nJuveniles", "Correlation\nJuveniles"),sep = "_") %>% 
+#   select(1,2,5,3,6,4,7) %>% mutate_at(vars(-Scenario), as.numeric) %>%  
+#    xtable::xtable(label = "tab:fit-tab",caption="Fit of model with data", digits=2,include.rownames = FALSE)
+
+# xtable::align(tabOut) <- paste(c("rl", rep("p{1.5cm}", 6)), collapse="")
+print(tabOut, include.rownames=F, sanitize.text.function=function(x){x}, floating=T)
+@
+
+
+<<fit-plarge, fig.cap='Comparison of observed distribution between the small and large sites and the best fitted estimate of proportion of birds at the large sites for four model scenarios. 1:1 line (solid line) shows a perfect fit between the model and the data. For the scenarios involving food abundance (red circles), predator numbers (blue triangles), and predator timing (green squares) a single parameter was iteratively adjusted until the closest fit to the data was found.  Each point along the horizontal axis represents a separate survey weekend and is fit independently. The modifying sandpiper population scenario (purple) does not change the distribution between sites (\\autoref{fig:scenarioplots-adults},\\autoref{fig:scenarioplots-juveniles}) and therefore the points for this scenario show the baseline estimates from the model based on the survey dates. The variation within each survey and scenario comes from the algorithm converging on a different point due to model stochasticity.'>>=
+plarge_fit + theme(legend.position='bottom') +guides(colour=guide_legend(nrow=2,byrow=TRUE)) 
+@
+
+\subsection{Annual estimates of passage numbers}
+
+<<scen-means>>=
+sm <- joined_res %>% group_by(Scenario, Month, Year, var) %>%
+    summarize(optN = mean(optN), optVar = mean(optVar))
+@
+
+The predator timing, predator numbers, food abundance, and sandpiper numbers scenarios produce estimates of the numbers of birds passing through the region that fit the survey results in that month. Both the numbers and the patterns between years differ from the total number of birds counted in the surveys (\autoref{fig:survey-results}B; \autoref{fig:pop-est}). The population size scenario predicts that the numbers passing ranged between \Sexpr{round(min(sm$optN[sm$var=="popsize"]),0)} and \Sexpr{round(max(sm$optN[sm$var=="popsize"]),0)}, compared with the survey results which estimate total birds as between \Sexpr{round(min(ressurvey$totalBirds),0)} and \Sexpr{round(max(ressurvey$totalBirds),0)}. The model population size scenario and the surveys estimate that 2014 had the highest number of adults and 2015 the highest number of juveniles. However, in all other scenarios the highest estimate of adult passage population is 2017 and even in the population scenario the 2017 July estimate is close to those of the 2014 peak. The discrepancy is likely in part due to the late timing of the 2017 surveys which in July fell toward the end of the adult migratory period. Otherwise, the counts and model predictions show similar patterns in total numbers of birds with 2013 being low for both adults and juveniles, and 2017 being low for juveniles. The proportion of birds skipping the region shows very little variation between years from the model estimates (\autoref{fig:skippers-plot}) and therefore are unlikely playing a large role in the differences between years.
+
+The estimates of adults and juveniles moving through the system vary by scenario. In the population change scenario the average number of adults (\Sexpr{round(mean(sm$optN[sm$var=="popsize"&sm$Month==7]),0)}) is higher than for juveniles (\Sexpr{ round(mean(sm$optN[sm$var=="popsize"&sm$Month==8]),0)}). For the other three scenarios the average passage population of juveniles (predator timing: \Sexpr{round(mean(sm$optN[sm$var=="f_arrival_mod"&sm$Month==8]),0)}; predator numbers: \Sexpr{round(mean(sm$optN[sm$var=="flywayPredation"&sm$Month==8]),0)}; food abundance: \Sexpr{round(mean(sm$optN[sm$var=="flywayFood"&sm$Month==8]) ,0)}) is much higher than adults (predator timing: \Sexpr{round(mean(sm$optN[sm$var=="f_arrival_mod"&sm$Month==7]),0)}; predator numbers:\Sexpr{round(mean(sm$optN[sm$var=="flywayPredation"&sm$Month==7]),0)}; food abundance: \Sexpr{round(mean(sm$optN[sm$var=="flywayFood"&sm$Month==7]),0)}). The predator timing scenario has the highest estimates of passage population for juveniles whereas the population change scenario has the highest estimates of adult passage numbers. %Overall, the different scenarios show there are large differences in the estimates of a local passage population based on the factors shaping distributions between sites.
+
+<<pop-est, fig.cap='Estimates of annual numbers of adults (blue lines; blue dots) and juveniles (red lines; red triangles) stopping in the region from model scenarios where the distribution between sites is shaped by food abundance, predator numbers, predator timing or sandpiper numbers. Points show the individual estimates for each model fitting iteration. The numbers reflect the estimate of the total numbers of adults or juveniles that pass through and then decide to stop at a small or large site in the region in a year. Estimates are based on fitting first the distribution of birds between sites and then the total number of birds counted in a survey weekend.'>>=
+Pop_Size_Estimates  
+@
+
+
+
+<<skippers-plot, fig.cap="Estimates of the percentage of adults (blue lines; blue dots) and juveniles (red lines; red triangles) that skip the region rather than loading fuel at a site. Estimates are the the percentage of birds that enter the region, but on arrival choose to depart onward rather than landing at either a small or large site.">>=
+skippers_plot
+@
+
+\subsection*{Scenario estimates of factors driving counts}
+
+The predator timing scenario generates predictions of the annual timing of the arrival of migratory falcons into the Salish Sea (\autoref{fig:falcon-arrival-compare}). The predictions are estimates of the number of days that the arrival of falcons is shifted by in a given year. The estimates vary between \Sexpr{abs(min(sm$optVar[sm$var=="f_arrival_mod"&sm$Month==7]))} days late relative to baseline and \Sexpr{abs(max(sm$optVar[sm$var=="f_arrival_mod"&sm$Month==7]))} early for adults and \Sexpr{abs(min(sm$optVar[sm$var=="f_arrival_mod"&sm$Month==8]))} days late and \Sexpr{abs(max(sm$optVar[sm$var=="f_arrival_mod"&sm$Month==8]))} days late for juveniles. Overall, the estimate of falcon passage from the adult surveys is \Sexpr{mean(sm$optVar[sm$var=="f_arrival_mod"&sm$Month==7])-mean(sm$optVar[sm$var=="f_arrival_mod"&sm$Month==8])} days earlier than that from the juvenile surveys. 
+
+The pattern in timing from adults and juveniles varies in the same direction for all but 2014. The correlation between the months is only $r=$ \Sexpr{joined_res %>% group_by(Scenario, Month, Year) %>%
+summarize(optN = mean(optN), optVar = mean(optVar)) %>% group_by(Month) %>% filter(Scenario=='Predator Timing') %>% select(Year, Month, optVar) %>% spread(Month, optVar) %>% summarize(c_= cor(`7`, `8`, method='pearson')) %>% .[['c_']]
+}, but in the years other than 2014, the correlation jumps to $r=$ \Sexpr{joined_res %>% group_by(Scenario, Month, Year) %>%
+summarize(optN = mean(optN), optVar = mean(optVar)) %>% group_by(Month) %>% filter(Scenario=='Predator Timing'&Year!=2014) %>% select(Year, Month, optVar) %>% spread(Month, optVar) %>% summarize(c_= cor(`7`, `8`, method='pearson')) %>% .[['c_']]
+}. 
+
+During the adult migration the value of a given distribution between sites can be achieved through two points along the falcon timing parameter scale (\autoref{fig:scenarioplots-adults}). The model generally converges on a single side, though in the case of 2017, \Sexpr{length(joined_res$optVar[joined_res$var=="f_arrival_mod"& joined_res$Year==2017 & joined_res$Month==7 & joined_res$optVar>0]) / length(joined_res$optVar[joined_res$var=="f_arrival_mod"& joined_res$Year==2017 & joined_res$Month==7] )*100}\% of the model results were in the opposite direction to the rest. That this does not occur more frequently in the model fitting is likely due to the shape of the response in the sandpiper distribution to changing falcon arrival. The model begins fitting at $m_t=0$ and to reach values where $m_t >> 0$ the distribution must shift initially away large sites before sloping upwards. The fitting algorithm takes a conservative approach and generally fits the closest parameter to the baseline value. 
+
+
+<<falcon-arrival-compare, fig.cap="Comparison of model predicted variation in timing of predator arrival (solid lines) and observed variation in snowmelt dates in Alaska (dashed lines). Model estimates are the expected change in the timing of falcon migration ($m_{t}$) where the baseline is 0.0 and positive date denote early arrival. Estimates are the best fit of the distribution between small and large sites between western sandpiper counts and the model output. Survey results are the annual change in snowmelt date in days from the mean snowmelt date between 1924 and 2017 from three sites in Alaska the combined deviation is shown in the black dashed line with the individual sites shown in grey. across years of the monthly mean falcons counted per site. Model estimates are shown for both July (left; blue lines) and August (right; red lines) as means across model fits with 95\\% CI in grey shading. Points show the model estimate for each model fitting run ($n=50$ for each month and year) and are jittered horizontally.",fig.width = 8 , fig.height = 8, out.width="0.8\\textwidth">>=
+f_arrival_compare
+@
+
+
+The predator population scenario generates predictions for the annual variation in the flyway population of falcons (\autoref{fig:falcon-numbers-compare}). The model estimates vary strongly in adults between \Sexpr{min(sm$optVar[sm$var=="flywayPredation"&sm$Month==7])*100}\% and \Sexpr{max(sm$optVar[sm$var=="flywayPredation"&sm$Month==7])*100}\% of the baseline with an overall average of \Sexpr{mean(sm$optVar[sm$var=="flywayPredation"&sm$Month==7])*100}\%. Estimates based on the juvenile surveys are much lower than baseline with a mean of \Sexpr{mean(sm$optVar[sm$var=="flywayPredation"&sm$Month==8])*100}\%. The variation between years is less for juveniles with the estimated minimum predator population size of \Sexpr{min(sm$optVar[sm$var=="flywayPredation"&sm$Month==8])*100}\% and the maximum of \Sexpr{max(sm$optVar[sm$var=="flywayPredation"&sm$Month==8])*100}\%. Despite the differences in estimates between ages, the patterns between years remain very similar ($r=$ \Sexpr{joined_res %>% group_by(Scenario, Month, Year) %>%
+summarize(optVar = mean(optVar)) %>% group_by(Month) %>% filter(Scenario=='Predator Numbers') %>% select(Year, Month, optVar) %>% spread(Month, optVar) %>% summarize(c_= cor(`7`, `8`, method='pearson')) %>% .[['c_']]
+}).
+
+
+<<falcon-numbers-compare,fig.width = 8 , fig.height = 8, out.width="0.8\\textwidth",fig.cap="Comparison of model predicted variation in predator numbers (solid lines) and observed variation in number of falcons observed in shorebird surveys of the Salish Sea (dashed lines). Model estimates are the expected value of overall falcon abundance ($\\digamma$) where the baseline is 1.0. Estimates are the best fit of the distribution between small and large sites between western sandpiper counts and the model output. Survey results are the proportional change from the mean across years of the monthly mean falcons counted per site. Results are shown for both July (left; blue lines) and August (right; red lines).">>=
+f_numbers_compare  
+@
+
+
+The food abundance scenario generates predictions for the annual refuelling rate across sites (\autoref{fig:food-est}). The model estimates vary in adults between \Sexpr{min(sm$optVar[sm$var=="flywayFood"&sm$Month==7])}g day$^{-1}$ and \Sexpr{max(sm$optVar[sm$var=="flywayFood"&sm$Month==7])}g day$^{-1}$ with an overall average of \Sexpr{mean(sm$optVar[sm$var=="flywayFood"&sm$Month==7])}g day$^{-1}$. Estimated refuelling rates based on the juvenile surveys are much lower than baseline with a mean of \Sexpr{mean(sm$optVar[sm$var=="flywayFood"&sm$Month==8])}g day$^{-1}$. The variation between years is slightly less than that of adults with the estimated minimum refuelling estimate of \Sexpr{min(sm$optVar[sm$var=="flywayFood"&sm$Month==8])}g day$^{-1}$ and the maximum of \Sexpr{max(sm$optVar[sm$var=="flywayFood"&sm$Month==8])}g day$^{-1}$. The differences in the patterns between years are also quite large for juveniles and adults, with little apparent linkage between the two ($r=$\Sexpr{joined_res %>% group_by(Scenario, Month, Year) %>%
+summarize(optVar = mean(optVar)) %>% group_by(Month) %>% filter(Scenario=='Food abundance') %>% select(Year, Month, optVar) %>% spread(Month, optVar) %>% summarize(c_= cor(`7`, `8`, method='pearson')) %>% .[['c_']]
+}) and no year that stands out as an outlier as with the other two scenarios.
+
+
+<<food-est, fig.cap='Model estimates of global refuelling rate ($e_g$) based on fitting model estimates to survey data. Model estimates are shown for both July (left; blue lines) and August (right; red lines) as means across model fits with 95\\% CI in grey shading. The baseline refuelling rate is 0.5 g $\\text{day}^{-1}$ and the lines show the best fit refuelling rates in g $\\text{day}^{-1}$.'>>=
+food_estimates_plot_confront     
+@
+
+
+\subsection{Comparing model estimates with data}
+
+
+<<confirmation-data>>=
+f_arrival_cor <- modat %>% filter(var=="f_arrival_mod") %>% 
+  group_by(Month.name) %>% summarize(cor= cor(optVar, -1*dev.snowmelt, method = 'pearson'))
+f_arrival_cor_no14 <- modat %>% filter(var=="f_arrival_mod") %>% 
+  filter(Year!=2014 | Month !=7) %>% 
+  group_by(Month.name) %>% summarize(cor= cor(optVar, -1*dev.snowmelt, method = 'pearson'))
+f_cor <- modat %>% filter(var=="flywayPredation") %>% 
+  # filter(Year!=2014 | Month !=7) %>% 
+  select(Year, optVar, Month.name) %>%
+  left_join(falcons %>% mutate_at(vars(Year), as.numeric)) %>%
+  group_by(Month.name) %>% summarize(cor= cor(optVar, f_mean+1,method = 'pearson'))
+
+f_cor_no14 <- modat %>% filter(var=="flywayPredation") %>% 
+  filter(Year!=2014 | Month !=7) %>% 
+  select(Year, optVar, Month.name) %>%
+  left_join(falcons %>% mutate_at(vars(Year), as.numeric)) %>%
+  group_by(Month.name) %>% summarize(cor= cor(optVar, f_mean+1,method = 'pearson'))
+@
+
+The predator arrival scenario and the predator numbers scenario both have some independent data with which to assess the reliability of their predictions. Neither data are a perfect comparison, but they do provide an initial assessment of the model from independent data. 
+
+The model derived estimates from the predation timing scenario represent the estimated change in timing of the peregrine falcon front. To compare these estimates to independent data I used the annual deviation from historical mean snowmelt date as a proxy for the true timing of peregrine falcon arrival in the Salish Sea. \citet{Niehaus2006} show a strong correlation between snowmelt date and the annual timing of arrival of peregrine falcons at the Fraser River Estuary. However, as the the model estimates and snowmelt estimates are measures of different processes, it is not surprising that they differ in their values within a year. Overall, the snowmelt dates suggest much earlier arrivals than the model estimates (Estimate from mean snowmelt: \Sexpr{a_tmp<-modat %>% select(Year, dev.snowmelt) %>% distinct %>% .[['dev.snowmelt']] %>% mean; -1*a_tmp} days early; estimate from model: \Sexpr{abs(mean(modat %>% filter(var=="f_arrival_mod") %>% .[["optVar"]]))} late). The snowmelt estimate was derived from three weather stations within the western sandpiper breeding range and the interannual trend between them is a good fit between years, except for 2014, when Nome, AK was less early in snowmelt than the other two sites, Bethel, AK and Kotzebue, AK (\autoref{fig:falcon-arrival-compare}).
+
+Model estimates of falcon timing are strongly correlated between years with the deviation from mean snowmelt in Alaska (\autoref{fig:falcon-arrival-compare}). The annual estimates from the juvenile counts have a strong correlation with the snowmelt dates ($r=$\Sexpr{f_arrival_cor$cor[f_arrival_cor$Month.name=="Aug"]}). The estimates derived from the adult counts have a much weaker correlation ($r=$\Sexpr{f_arrival_cor$cor[f_arrival_cor$Month.name=="Jul"]}), but the fit is much stronger without 2014 ($r=$\Sexpr{f_arrival_cor_no14$cor[f_arrival_cor_no14$Month.name=="Jul"]}).
+
+ 
+
+
+The model derived estimates of annual falcon abundance have a moderate fit with the annual observations of falcons in my sandpiper surveys in August ($r=$\Sexpr{f_cor$cor[[2]]}) but not July ($r=$\Sexpr{f_cor$cor[[1]]}). Again, the fit in July improved with the removal of 2014 ($r=$\Sexpr{f_cor_no14$cor[[1]]}). As with the falcon arrival data, the survey counts of falcons are measuring something slightly different than the model estimates and the survey measures by design are centred around zero in each month. Additionally, the falcon data is less independent from the model results than the snowmelt data as the falcon counts come from the same surveys used to fit the model. It is possible the presence of falcons could have shaped the distributions of western sandpipers and therefore make the model fitting indirectly reliant on the falcon observations. I explore the effect of falcon observations on the shorebird counts in \autoref{app:wesa}.
+
+<<dat-compare, fig.width = 12 , fig.height = 8, out.width="\\textwidth", fig.cap="Comparison of survey counts to model predictions based on observed total numbers of western sandpiper, snowmelt date on the breeding grounds, and the number of falcons observed in each year. The relative number of sandpipers is assessed in each month as the proportional relative change in total numbers counted relative to the mean across all five years. The model scenarios are extracted from the date for each survey and using the relative change from baseline numbers of birds in the model. Falcon timing is from earlier on the left (negative = early & dangerous) to later on the right.", eval=F, include=F>>=
+cowplot::plot_grid(
+    predictions_vs_results_pop +
+        theme(strip.text.y = element_blank()),
+    predictions_vs_results_pred_time+
+        ylab("")+theme(strip.text.y = element_blank()), 
+    predictions_vs_results_falcons+ylab(""), nrow=1)
+@
+
+
+
+
+
+
+
+% \input{Discussion_Confrontation.tex}
+<<disc-confront, child="Discussion_Confrontation.Rnw", eval=T>>=
+
+@
+
+
+
+
+<<-begin-comment,cache=F, results='asis'>>=
+if(!includeapp) {cat("\\begin{comment}")}
+# cat("\\begin{comment}")
+@
+
+
+\backmatter%
+  \addtoToC{Bibliography}
+  \bibliographystyle{apa}
+  \bibliography{library}
+
+\begin{appendices}
+
+<<appendices-confront, child="Appendices_Confrontation.Rnw",eval=F, include=F>>=
+@
+
+\end{appendices}
+
+<<-end-comment,cache=F, results='asis'>>=
+if(!includeapp) {cat("\\end{comment}")}
+# cat("\\end{comment}")
+@
+
+
+% \end{document}

@@ -1,0 +1,58 @@
+<<parent-sesa, include=F>>=
+# set_parent("ModelWalkthrough.Rnw")
+# opts_chunk$set(echo=F, # Do NOT repeat code in final document
+#                 message = F, # Do NOT print R messages in document
+#                 warning = F, # Do NOT pring warnings
+#                 cache = T, # Cache runs
+#                 dev = "CairoPNG" # Uses Cairo png instead of pdf for images
+#              ) 
+source("../Rscripts/SESA_model.r")
+@
+% \begin{multicols}{2}
+\begin{tcolorbox}[%
+    enhanced jigsaw,
+breakable,center,
+size=title,
+width=1.2\textwidth,
+colback={grey},
+colframe={black},
+fonttitle=\bfseries,
+title=Box 1. Replicating migratory patterns in semipalmated sandpipers,
+pad at break=2mm,
+break at=-\baselineskip/0pt,
+height fixed for=middle ]
+%[width=\textwidth,colback={grey}]    
+% https://tex.stackexchange.com/questions/173008/how-to-make-a-colored-rounded-text-box
+\begin{singlespacing}
+% \begin{multicols}{2}
+% [
+% \subsection*{Box 1. Replicating migratory patterns in semipalmated sandpipers}\label{box:sesa}]
+\begin{smallsize}\label{box:sesa}
+\citet{Worcester2008} explore how timing of migratory passage of peregrine falcons varies across North America. Falcon passage through sites of similar latitude occurs 4-6 weeks later on the east coast than on the west. Semipalmated Sandpipers (\textit{Calidris pusilla}) are similar to Western Sandpipers in many respects, but those that migrate to the east coast of North America load very large amounts of fuel prior to undertaking a ca. 2-day transoceanic flight. They arrive around the end of July and August for the two age classes, respectively \citep{Lank1983,Hope2011}. While semipalmated and western sandpipers differ in critical life history traits and strategies, the different migratory behaviour and predator landscape presents an opportunity to test the model in another scenario. 
+
+To modify the model to the semipalmated sandpiper system I shifted the timing of arrival of falcons later by 4 weeks (28 days) and the mean arrival dates to July 30 and August 29 for adults and juveniles. As the total numbers of migratory falcons moving through the region appear to be lower than on the pacific coast, I lowered the seasonal maximum falcons per day $F_{max}$ to 0.5.
+
+I shifted the lean body mass ($LBM$) to 21.8g \citep{Lyons1995} and set the maximum relative fuel load to 2.0 to allow for fuel loads observed in the Bay of Fundy \citep{Lank1983}.  I increased the potential food abundance ($e_g=1.5$) to account for the higher observed fuel loading rates in the Bay of Fundy. The large site's fueling rate was therefore $1.5\text{g day}^-1$. The small site's fuelling rate was $2.0\text{g day}^-1$ \citep{Lank1983,Hope2011}. %As the Bay of Fundy has extensive mudflats that could be considered safer than the large sites at the Fraser River Delta, BC I set the large site's danger $\tau(1)$ to 0.14 and the small site's to $1.0$. 
+
+Finally, I adjusted the seasonal minimum in falcon presence $F_{min}$ to zero locally and 0.5 on departure. This assumes semipalmated sandpipers view falcon abundance as higher further south on migration. This is based on the introduction of breeding pairs of peregrine falcons on the northeast coast of North America, the south of the Bay of Fundy prior to such programs being initiated in the Bay of Fundy \citep{Watts2015}. 
+%changed the shape of $S(x)$ to have the rate of change in benefit to survival to be slower, so that the benefit continued to be marginally high at higher fuel loads. This is to account for the demonstrated behaviour and clearly identified benefits of long migrations from the Bay of Fundy on southward migration .
+
+Under these conditions, migrants do not depart the local model landscape until they have loaded large amounts of fuel, comparable those observed in semipalmated sandpipers the 1970s in the Bay of Fundy (\autoref{fig:sesa-fig}a). 
+
+Since the early 1980s, a resident breeding population of peregrine falcons has been introduced to the Bay of Fundy, meaning the previously predator-free habitat during migration has  consistently had predators present in the region \citep{amirault20041995}. To model for this, I added a small number of resident falcons ($F_{min}=0.1$ locally; $F_{min}=0.6$ on migration). Adding resident falcons has the immediate effect of causing the departure fuel load to drop and migrants to shift entirely toward the safe site (\autoref{fig:sesa-fig}b). Increasing the resident predation ($F_{min}= 1$ locally; $F_{min}=1.5$ on future migration) (one falcon present per day across the season) causes departure fuel load and usage of small sites to continue to drop (\autoref{fig:sesa-fig}c).
+
+While the model was not designed around the semipalmated sandpiper migration, it does suggest that semipalmted sandpipers were able to perform the long flights directly from the Bay of Fundy to South America in part because they could load fuel in an essentially predator-free environment \citep{lank_effects_2003}. As breeding peregrine falcons have been introduced to this system, semipalmated sandpipers should be expected to shift strategies towards departing with lower fuel load or avoiding the region.
+
+\end{singlespacing}
+\end{smallsize}
+% \end{multicols}
+
+\end{tcolorbox} 
+
+
+
+<<sesa-fig, fig.cap="Optimal decisions for migrants under a model modified to represent semipalmated sandpipers passage through the Bay of Fundy. In all scenarios falcon arrival is delayed by 28 days relative to the baseline model (\\autoref{fig:decision}) and other changes are made to represent migratory strategies in semipalmated sandpipers and the region they pass through. Colours represent decisions of optimal site choice as coded in \\autoref{fig:decision}. Red is small site, black the large site, and blue the decision to depart the region. (A) Decision matrix from the semipalmated sandpiper model with no resident predators. (B) a small resident predator population ($F_{min}=0.1$) is added to the model. (C) the size of the resident predator population is increased ($F_{min}=1$)", cache=F, out.width=".9\\textwidth">>=
+sesa_plots 
+@
+
+% \end{multicols}

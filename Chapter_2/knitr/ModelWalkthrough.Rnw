@@ -1,0 +1,1026 @@
+% \documentclass{sfuthesis}
+% \usepackage[round,sort&compress]{natbib}
+% \usepackage{multirow} % span in both directions tables
+% \usepackage{array}
+% \usepackage{pdflscape}
+% \usepackage{rotating}
+% \usepackage{import}
+% \usepackage{phaistos}
+% \usepackage{amsmath,amssymb,amsthm}
+% \usepackage[pdfborder={0 0 0}]{hyperref}
+% \usepackage{graphicx}
+% \usepackage{caption}
+% \usepackage{tabularx}
+% % \usepackage{animate}
+% \usepackage{tcolorbox}
+% \tcbuselibrary{breakable}
+% \usepackage{multicol}
+% \usepackage{lineno}
+% \usepackage[noabbrev]{cleveref}
+% \frenchspacing                                    % (1)
+% \renewcommand*{\chapterautorefname}{Chapter}      % (2)
+% \renewcommand*{\sectionautorefname}{Section}      % (2)
+% \renewcommand*{\subsectionautorefname}{Section}   % (2)
+% \renewcommand{\defaultspacing}{\doublespacing}  % (3)
+
+
+% \begin{document}
+% % \SweaveOpts{concordance=FALSE}
+<<setup, echo=F, message=F, warning=F, eval=F>>=
+library(tidyverse)
+library(knitr)
+library(xtable)
+library(cowplot) 
+require(lubridate)
+require(rsample)
+opts_chunk$set(echo=F, # Do NOT repeat code in final document
+                message = F, # Do NOT print R messages in document
+                warning = F, # Do NOT pring warnings
+                cache = T, # Cache runs
+                dev = "CairoPNG", # Uses Cairo png instead of pdf for images
+                dpi=300,
+                out.width="\\textwidth",
+                # cache.path = './cache/'
+             ) 
+if(!exists("includeapp")) includeapp <- T
+
+# numbers >= 10^5 will be denoted in scientific
+# notation, and rounded to 2 digits
+options(scipen = 1, digits = 2)
+select <- dplyr::select
+@
+ \singlespacing
+\chapter{A model of Western Sandpiper migration through a landscape of stopover sites}\label{chap:model}
+\defaultspacing
+\clearpage
+
+\section{Abstract}
+% \begin{abstract}
+Theoretical modelling has provided many insights into avian migration, but much of the effort has focused on the pre-breeding migration. In this chapter I developed a model that explores mortality-minimizing stopover decisions of migrants passing through a landscape of potential stopover sites during post-breeding migration. The model was designed around the passage of western sandpipers (\textit{Calidris mauri}) on southward migration through the Salish Sea region of British Columbia.
+
+The model features a small, food-abundant, but dangerous site and a large, food-poor, but safe site. Migrants optimize their movements through these stopover sites based on the migrants' expected probability of mortality across the remainder of migration. 
+
+Stopover decisions in the model were primarily driven by migrant proximity to seasonal increases in predator abundance, and by the relative food and safety at the two sites. Departure decisions were driven primarily by fuel load with a seasonal trend in the mortality-minimizing fuel load. Allowing migrants to have prior knowledge inform their arrival decision changed the patterns in site usage towards a single site type and reduced movements between sites. Adjusting the remaining migratory distance leads migrants to change how they prioritize their current safety. 
+
+The model  was able to replicate observed differences in mass at capture data from western sandpipers between a small and large site. The model also replicated observed responses to increases in predator abundance, showing a decrease in masses and a shortening of stopover lengths at the small site. Overall, examining the model shows how migrants may prioritize safety and food across a migratory period that faces changing predation pressure. I will use the model developed here in the next chapter to gauge the relative support for model scenarios from surveys of western sandpipers on southward migration.
+
+
+% \end{abstract}
+ 
+ % \linenumbers
+ % \defaultspacing
+<<scripts, cache=F>>=
+select <- dplyr::select
+source('../Rscripts/model_data_import.r')
+# , mod_file = file.info('../Rscripts/model_data_import.r')$mtime
+source("../Rscripts/mcLoopDat.r")
+mday <- lubridate::mday    
+
+@
+
+<<table-script,cache=T,tab_file = file.info('../cpp_version/Migration_Model/noU/global_ch1FinalBackup_August2018.cpp')$mtime, cache.lazy=T >>=
+select <- dplyr::select
+source('../Rscripts/GenerateTables.r', chdir=T) 
+@
+
+
+% \input{Introduction.tex}
+
+<<import-model-intro, cache=F, child="Introduction.tex">>=
+@
+ 
+\section{Model Description}
+
+Western sandpipers migrate southward across thousands of kilometres making multiple stops to forage, rest, and load fuel for continued flight. Each stopover is chosen from a selection of suitable habitats in any given region. Each potential site varies in its suitability for an individual migrant.  Sites differ in size and shape, and abundance of available prey for sandpipers, \citep{Ydenberg2002}. Small, enclosed sites are dangerous for migrating sandpipers, while large, open sites allow easier detection of a predator's approach \citep{dekker_raptor_2004}. Food abundance is often higher at smaller sites, because enclosed mudflats provide idea conditions for prey growth \citep{Pomeroy2008a}. Hereafter, I refer to small, dangerous, food abundant sites as ``small'' sites and large, safe, relatively food-poor sites as ``large''.  
+
+I describe here a model of the migration of mortality-minimizing sandpipers moving through a landscape with small and large sites on their way toward the non-breeding grounds. I use mortality-minimization to refer to the adaptive decision to attempt to minimize the  probability of mortality across the model period. The model often calculates the expected probability of survival across the model period and chooses decisions that maximize survival, but survival-maximization and mortality-minimization can be thought of as equivalent.  
+
+The model landscape for the baseline case contains one site of each type, though the results should be roughly generalizable for multiple sites of each type. Migrants are initially randomly assigned to one site but are assumed to have knowledge of conditions at the other site. Migrants can then choose to remain at the site and forage, shift to the other site type, or to continue migration towards their non-breeding grounds. Migrants assess the decision daily based on the expected probability of surviving the remainder of their migration. Migrants vary in their body condition and timing, and the sites vary in their potential fuel loading rate and danger. The mortality-minimizing decision varies with a migrant's fuel load and current site, and the date. Migrants must trade off the ability to load fuel quickly with safety as well as survival within their current landscape against survival on the remainder of migration.
+
+I use a dynamic state variable model (DSVM) to calculate mortality-minimizing decisions over a range of potential conditions and locations. DSVMs use a terminal reward function to optimize the mortality-minimizing decisions for each potential state, time, and location of individuals \citep{ClarkMangel2000}. The model's state variables that impact migrant decisions are date ($t$), fuel load ($x$), and location ($s$). The model runs for 151 days from June 20 until November 17. Each date is assigned a value $t$ between 0 and 150. The terminal date is $T$, where $t=150$.  Migrant fuel load, $x$, is the mass of fuel in fat or other tissue expended during migration that can be used to power onwards flight ($f$) relative to the lean body mass ($LBM$) of the migrant ($x=f/LBM$\label{eq:x} ).  An individual migrant, while alive and after arriving in the region will always be at one of three locations ($s$): the small site ($s=0$), the large site ($s=1$) or departed onward ($s=D$).
+
+% $x$ varies between 0 and 1.0, broken into 1000 intervals of 0.001 units of relative fuel load. 
+
+% See \autoref{eq:x}
+% \begin{equation}\label{eq:x}
+% x = \frac{f}{LBM}
+% \end{equation}
+
+Decisions across the model are optimized to maximize the probability of surviving to the end of the model ($t=T$ and $s=D$) given their current state, location, and the date. The total expected probability of surviving includes surviving locally, surviving the remainder of migration to the non-breeding grounds and then surviving any remaining days until the terminal date. Migrants that depart early will spend a larger portion of the model on the non-breeding grounds, while migrants that depart late may only spend a short time at the non-breeding area before the model ends. Migrants that depart with insufficient time to reach the non-breeding grounds are assumed to die.
+
+\subsubsection*{Survival on non-breeding grounds from the end of migration to final model date}
+
+Parameter symbols, definitions, and values are summarized in \autoref{tab:variables}
+
+The daily survival probability on the non-breeding grounds ($\phi_{nb}$) for migrants that have departed the model area and completed the remainder of migration is based on a constant daily risk of mortality ($m_{nb}$.
+
+\begin{equation}\label{eq:nbsurv}
+\phi_{nb} = \mathrm{e}^{-m_{nb}}
+\end{equation}
+
+
+% \subsubsection*{Vulnerability to falcon attack}
+
+The total probability of a migrant surviving from arrival on the non-breeding ground until the end of the model is ${\phi_{nb}}^{t_{nb}}$, where $t_{nb}$ is the number of days spent on the non-breeding grounds. The non-breeding ground here is defined as the location at which individual migrants terminate their seasonal migration from the breeding grounds. 
+
+Upon departing the model landscape, but prior to reaching the non-breeding grounds, migrants must survive the remainder of their migration. Daily survival on migration is influenced by the probability a migrant is caught in a single predator attack $\psi(x,s)$, related to fuel load $x$ and current location $s$. For departed birds ($s=D$), daily mortality for each attack is a constant, $m_D$.
+
+
+For migrants that have not yet departed the probability of being caught in a predator attack ($\psi(x,s)$) is related to the migrant's fuel load and current location (\autoref{eq:mux}; \autoref{fig:mu-x}).  The cost in vulnerability to capture of carrying additional fuel increases with the fuel load which reduces escape flight performance \citep{burns_effects_2002}. I modified the mortality function used by \citet{Weber1998} to remove foraging intensity and include a site-specific predation danger parameter ($\tau(s)$). I also allowed the rate of change in vulnerability to predation ($\psi(x,s)$) with $x$ to differ between sites ($A(s)$). At sites where food abundance is higher the change in vulnerability across a day will be greater. $\triangle x(s)$ is the daily gain in fuel load, dependent on current site location. 
+
+
+\begin{equation}\label{eq:mux}
+\psi(x,s) = \begin{cases}
+        m_D & \text{if \ } s=D\\
+        \frac{\left[x+\triangle x(s)\right]^{A(s)} -x^{A(s)}}{A(s)\triangle x(s)}\nu [\tau(s)]^{\digamma} & \text{if \ }  s\neq D
+        \end{cases}
+\end{equation}
+
+\begin{equation}\label{eq:A_mod}
+A(s) = (a + 1) + a'(1-\tau(s))
+\end{equation}
+
+
+
+The safety impact of fuel load will be modified by the site-specific danger parameter ($\tau(s)$). At sandpiper stopover sites, the habitat closest to shore is considered the most dangerous for sandpipers due to shoreline habitat providing cover to mask predator approach and therefore increasing the chances of a successful attack \citep{dekker_raptor_2004,pomeroy_experimental_2006,pomeroy_tradeoffs_2006,Cresswell2010a,VandenHout2016}. Smaller sites have a greater proportion of the site closer to cover and are therefore considered more dangerous. The cost of higher fuel loads is greater at these sites. Predation danger \citep{lank_ydenberg2003} is expressed relative to the large site ($s=1$) where $\tau(1) = 1$. 
+
+The impact of a site's danger ($\tau(s)$) is also modified by the predator population ($\digamma$), so as the flyway predator population increases, the small site becomes disproportionally more dangerous.  The parameter $\nu$ modifies the maximum chance of being captured; $a$ must be greater than 1 and modifies the shape of $\psi$ as $x$ increases.
+
+<<mu-x, fig.cap="Vulnerability to capture $\\psi(x)$ (\\autoref{eq:mux}) with changing values of $x$ at the large (black line;$\\tau(1)$) and small (red line;$\\tau(0)$) sites under baseline conditions. The inset enlarges the area in the box and highlights the capture risk for light birds, which is the region of the graph occupied by western sandpipers in the baseline scenario (See \\autoref{fig:decision}). The capture risk on departure ($m_D$; blue dashed line) and daily mortality risk on the non-breeding grounds ($m_{nb}$; green dashed line) are also shown.", dependson="table-script">>=
+flywayPredationX <- tab_base$`Initial Values`[tab_base$Name=="flywayPredationX"] %>% as.numeric()
+flywayFood <- tab_base$`Initial Values`[tab_base$Name=="flywayFood"] %>% as.numeric()
+wetleanbodymass <- tab_base$`Initial Values`[tab_base$Name=="wetleanbodymass"] %>% as.numeric()
+flywayPredation <- tab_base$`Initial Values`[tab_base$Name=="flywayPredation"] %>% as.numeric()
+a <- tab_base$`Initial Values`[tab_base$Name=="a"] %>% as.numeric()
+s0 <- tab_base$`Initial Values`[tab_base$Name=="Danger_small_site"] %>% as.numeric()
+f0 <- tab_base$`Initial Values`[tab_base$Name=="Food_multiplier_small_site"] %>% as.numeric()
+flywayPredationDep  <- tab_base$`Initial Values`[tab_base$Name=="flywayPredationDep"] %>% as.numeric()
+wintering_mortality  <- tab_base$`Initial Values`[tab_base$Name=="wintering_mortality"] %>% as.numeric()
+a_mod <- tab_base$`Initial Values`[tab_base$Name=="a_mod"] %>% as.numeric()
+  
+siteDanger <- c(s0,1)
+siteFuelIntake <- c(f0,1)
+
+plot_X <- function(x,s){
+    rf = x
+    deltaF = (siteFuelIntake[s] * flywayFood) / wetleanbodymass;
+    x_ = flywayPredationX*(siteDanger[s]**flywayPredation);
+    shapemod = (a + 1) + a_mod*(1 - siteDanger[s] );
+    y1 = (rf + deltaF)**shapemod - (rf**shapemod);
+    y2 = deltaF * (shapemod);
+    mu_ = x_ * y1 / y2;
+    }
+
+data_i <- tibble(x=seq(0,1, 0.00001)) %>% mutate(y=plot_X(x,s=2), yS= plot_X(x,s=1))
+labelsX <- tibble(x = rep(0.75,4), y = c(0.0070,0.0015, flywayPredationDep+0.0001, wintering_mortality-0.0001), 
+    labs = c("small site", "large site", "m[D]", "m[nb]"))
+plotA <- ggplot(data_i) + geom_line(aes(x,y)) + geom_line(aes(x=x,y=yS), colour='red') +
+#+ ylim(0,0.002)
+    geom_rect(aes(xmin = 0, ymin=0-0.0001, xmax=0.5, ymax =max(data_i$y[data_i$x<=0.55])+0.0001), linetype=1,
+        colour = 'black',
+        fill=NA, alpha = 0.6)  + 
+    geom_text(data = labelsX[3:4,], aes(x=x, y=y, label = labs ), parse=T )+
+    geom_text(data = labelsX[1:2,], aes(x=x, y=y, label = labs ), parse=F )
+
+plotB <- ggplot(data_i[data_i$x<=0.55,]) + geom_line(aes(x,y)) + geom_line(aes(x=x,y=yS), colour='red') + ylim(0,data_i$y[data_i$x==0.55]) +
+        geom_hline(yintercept=flywayPredationDep, colour = "blue", linetype=2)  +
+        geom_hline(yintercept=wintering_mortality, colour = "green", linetype=3) +
+        theme(panel.border = element_rect(colour = "black", fill=NA)) 
+
+
+ggdraw() + 
+   draw_plot(plotA +
+        geom_hline(yintercept=flywayPredationDep, colour = "blue", linetype=2)  +
+        geom_hline(yintercept=wintering_mortality, colour = "darkgreen", linetype=4) +
+         labs( y=expression(psi(x)), x="Relative fuel load (x)" ),
+             0, 0, 1, 1) +
+   draw_plot(plotB+  labs(x="",y="") ,  0.15,0.5,0.45, .45) 
+
+@
+
+\subsubsection*{Predator population}
+
+ 
+
+
+On migration a sandpiper may have to survive more than one attack per day. The daily attack rate on migration is related to the expected daily number of falcon attacks a migrant experiences $\delta(t)$. The daily exposure to falcon attacks is related to continental falcon population ($\digamma$), the seasonal maximum and minimum daily number of falcons at the migrant's location ($F_{min}\text{ and } F_{max}$), the daily attack rate per falcon ($\zeta$) and the seasonal pattern in regional falcon presence $\theta(t)$ (\autoref{fig:falconpresence}).
+
+
+
+
+
+\begin{equation}\label{eq:falc_attacks}
+\delta(t) = \digamma\zeta\left[(F_{max}-F_{min})\theta(t) + F_{min}\right]
+\end{equation}
+
+\begin{equation}\label{eq:mort}
+\theta(t) = \frac{1}{1 + \exp(-B_0 - B_1(t-m_t))}
+\end{equation}
+
+The seasonal increase in predator abundance has been well-documented both locally and throughout North America \citep{lank_effects_2003,Worcester2008}. The trend in peregrine falcon numbers in the migratory landscape ($\theta(t)$) is based on the relative daily probability of predator presence from daily survey counts in the Fraser River Delta region between 1985 and 2001 \citep{lank_effects_2003}. As there was a recovery in the falcon population during this period, I excluded years prior to 1994 to reduce the effect of population recovery on the seasonal trend in occurrence.
+
+
+I used a logistic regression to fit the seasonal trend in falcon presence between day of year 150 and 300, with dates recentered to make June 20 $t = 0$. The model had random intercept and slopes based on the year. I defined the daily predation danger as a logistic function fitted with the parameters from the regression, with two modifications. 
+
+Parameter $m_t$, which modifies the timing of arrival of falcons in days, though this is initially set to 0. The probability of predator presence varies between 0 and 1  which is the asymptote of $\theta(t)$. The results of the logistic regression with the variation in the trend across years are shown in \autoref{fig:falconpresence}.
+
+
+
+<<falconpresence, fig.cap="Probability of falcon presence by day of year as the inverse logit function of the estimated variables from a mixed model linear regression of detection over time with year as a random effect \\citep*[data from ][]{lank_effects_2003}. The solid vertical lines show the start and end of the model dates ($t=0 \\text{& } t=T$). Vertical dashes indicate a presence or absence on a daily count. The fixed effect trend is the curve of predator presence $\\theta(t)$ in \\autoref{eq:mort} (shown with estimated 95\\% CI in black line with grey shading). The grey lines show the variation in estimated intra-annual trends amongst the years analysed. Data are from daily survey counts in the Fraser River Delta region between 1994 and 2001 published in \\citet{lank_effects_2003}">>=
+dat_f <- read_rds(".rds_files/falcon.rds")
+
+fullplot_falc <- 
+ggplot(dat_f[["newobs"]], aes(date_mdy, .predict))  + 
+  geom_ribbon(aes(ymin=blo, ymax=bhi), colour = 'grey', alpha =0.5) +
+  geom_point(data = dat_f[["falcons"]], aes(y=presence), shape = "|", alpha=0.3) +
+  geom_line(data =  dat_f[["falcons.aug"]], aes(y=dat_f[["logit2prob"]](.fitted), group = Year),
+            alpha = 0.3)+ geom_line() +
+  # geom_line(aes(y=halfmu), colour='red')+
+  # geom_line(aes(y=uci), colour = 'red')+
+  # geom_line(aes(y=lci), colour = 'blue') +
+  geom_vline(xintercept = c(mdy("6-20-2013"), mdy("6-20-2013") + 150)) +
+  labs(y="Probability of Predator Presence",x =""
+       ) 
+fullplot_falc
+@
+
+\subsubsection*{Migration after departure}
+
+As I am not explicitly modelling migration after departure, I assume values of $\theta(t)$ based on date of departure and fuel load at departure. For migrants that have not yet departed the number of falcon attacks in a day ($\delta(t)$) is calculated for the current date. I assume that at departure migrants can adjust their position relative to the seasonal change in falcon abundance, $\theta(t)$, based on their fuel load. Migrants that depart heavier can essentially jump ahead of the falcon migration and thereby lower their exposure to falcons for the remainder of migration (\autoref{fig:departure-ex}). 
+
+For departed migrants, I modelled the daily number attacks as $\delta(t+\partial_t(x,s))$, where $\partial_t(x,s)$ is the change in position relative to the migration of peregrine falcons from a migrant's first flight on departure.
+
+A migrant's flight range ($Y(x)$) on departure was calculated as described by \citet{Pennycuick1975} and used by \citet{Alerstam1990} and \cite{Pennycuick1975}.
+
+\begin{equation}\label{eq:range}
+Y(x) = c\left(1-\frac{1}{\sqrt{1+x}}\right)
+\end{equation}
+
+I calculated the migrants change in position relative to the falcon migration ($\partial_t(x,s)$) as the difference in time it took the sandpiper to cover $Y(x)$ relative to the time it would take the falcons to cover the same distance. Assuming a western sandpiper flight speed of $1340\text{ km day}^{-1}$ ($S_w$) \citep{Reurink2016,Duijns2017} and a falcon migratory speed of $172\text{ km day}^{-1}$ ($S_f$) \citep{Fuller1998}, the change in position can be described as follows:
+
+\begin{equation}\label{eq:headstart}
+\partial_t(x,s) = \begin{cases}
+Y(x)\left[\frac{1}{S_w} - \frac{1}{S_f}\right] & \quad \text{if } s=D\\
+0 & \quad \text{if } s\neq D 
+
+\end{cases}
+\end{equation}
+
+\subsubsection*{Daily survival}
+
+The daily survival ($\phi(x,t,s)$) for migrants is the probability of surviving all attacks in a given day. 
+
+\begin{equation}\label{eq:mu}
+\phi(x,t,s) = \exp(-\psi(x,s)\delta(t+\partial_t(x,s))) + \mathcal{N}(0,{\sigma_\phi}^2)
+%m_{\mu}\left[\delta(t) + \psi(x,s) \right] + \mathcal{N}(0,{\sigma_\mu}^2)
+\end{equation}
+
+where $\partial_t(x,s)$ is zero if the migrant has not departed and $\psi(x,s)$ and $\delta(t)$ are described in \autoref{eq:mux} and \autoref{eq:falc_attacks}.
+
+\subsubsection*{Survival to terminal date}
+
+The expected probability of surviving after departure to the terminal date $T$ is the probability of surviving migration and surviving on the non-breeding grounds. This is related to the daily probability of surviving on migration $\phi(x,t,D)$, the daily probability of surviving on the non-breeding grounds $\phi_{nb}$ and the time spent on migration and at the non-breeding grounds ($t_m\text{ and } t_{nb}$).
+
+\begin{equation}\label{eq:phi}
+\Phi(x,t) =  \begin{cases}
+  0 & \quad \text{if } x<x_{c}\\
+{\phi(x,t,D)}^{t_m}{\phi_{nb}}^{t_{nb}} & \quad \text{if \ } x \geq x_{c}
+\end{cases}
+\end{equation}
+
+
+ The total length of these two periods is the time between the departure and the terminal date $T-t_d$. The time on the non-breeding grounds is therefore $t_{nb} = T-t_d-t_m$ where $t_m$ is the time on migration.
+
+The time on migration ($t_m$) is determined by the fuel load on departure and the distance a migrant must migrate. Assuming a remaining migratory distance after departure of $\mathbb{D}$ kilometres (initially set to 5000km), the time on migration is based on the distance of that first flight and the speed of migration after this point. I used the speed of migration formula from \citet{Alerstam1990} to determine speed of migration. 
+
+\begin{equation}\label{eq:time-mig}
+t_m = \frac{\mathbb{D} - Y(x)}{S(x)} + \frac{Y(x)}{S_w}
+\end{equation} where $S(x)$ is the optimal speed of migration formula.
+
+\begin{equation}\label{eq:speed}
+S(x) = \frac{Y(x)}{t_e + x/k}
+\end{equation} where $t_e$ is the settling time and $k$ is the expected fuel loading rate. 
+
+
+
+
+
+<<departure-ex, fig.cap="Example of how sandpiper migratory position is calculated for individuals departing with relative fuel loads of 0.1 (solid line) and 0.5 (dashed line), migrating to six non-breeding locations, relative to the migratory progression of falcons (red dotted line). Each black line shows the position of birds on  each date after departure.  Migrants progress with first flight on departure and then based on estimated speed of migration. Migrants move ahead of the falcon migration through their first flight and then are exposed to attacks based on the number of remaining migratory days and their position relative to falcons. Horizontal lines show migrant's arrival at the non-breeding grounds, where daily survival is constant.", dependson="table-script">>=
+flight_par <- tab_base$`Initial Values`[tab_base$Name=="flight_par"] %>% as.numeric()
+settle_time<- tab_base$`Initial Values`[tab_base$Name=="settle_time"] %>% as.numeric()
+fuel_loading_rate<- tab_base$`Initial Values`[tab_base$Name=="fuel_loading_rate"] %>% as.numeric()
+SpeedOfMigration<- function(fuel,rangeonly)
+{
+  range = flight_par * (1-1/sqrt(1 + fuel))
+   if(isTRUE(rangeonly)) return(range)
+   else return(range/(settle_time + fuel/fuel_loading_rate) )
+}
+
+
+
+returnmigration <- function(fuel, winter_loc)
+{
+  headstart <- SpeedOfMigration(fuel,T)
+  timeinflight <- headstart/1340
+  speed <- SpeedOfMigration(fuel,F)
+  locdf <- tibble(time_afterdeparture=0:90) %>% 
+    mutate(loc = pmin(winter_loc ,ifelse(time_afterdeparture<timeinflight, timeinflight*time_afterdeparture, speed*time_afterdeparture + headstart)),
+           fuel = fuel, winter_loc=winter_loc)
+  return(locdf)
+} 
+
+df <- expand.grid(fuel=seq(0,1, by=0.05), winter_loc = c(1300, 2300, 3500,5000, 7000, 9000) )
+outdf <- pmap_df(df, returnmigration)
+
+ggplot(outdf %>% filter(time_afterdeparture<60 &
+                          fuel %in% c(0.1,0.5)), 
+       aes(time_afterdeparture, loc,linetype=as.character(fuel), group = interaction(fuel, winter_loc))) + geom_line() + scale_y_reverse() +
+  geom_abline(slope=-172,intercept = 0, colour = 'red', linetype='dotted') + 
+  labs(y="Distance from departure (km)", x=" Days after departure", linetype= "Fuel load\non\ndeparture") 
+@
+
+
+
+
+\subsection{Local decisions}
+
+
+Movement through the model landscape is driven by the reward function $F(x,t,s)$ which is the maximum expected probability of surviving to the terminal date ($T$) based on current state ($x$), location ($s$), and date ($t$). 
+
+%If migrants have not departed with sufficient time to reach the non-breeding grounds prior to time $T$ their survival is assumed to be zero. Otherwise ($s = D$) the reward is equal to $\Phi$.
+
+At the start of each day migrants decide to stay at their current location, move to another site, or depart the region and continue their migration towards the non-breeding ground. $F(x,t,s)$ is defined as the value from the decision that maximizes their expected future survival. 
+
+\begin{equation}\label{eq:reward}
+F(x,t,s) = \begin{cases}
+  0 & \text{if \ } x = 0\\
+  max(V_{local}, V_{Depart}) &
+    \text{if \ } 0 \leq x \leq x_{max}
+\end{cases}
+\end{equation}
+
+If the migrant has a fuel load ($x$) of zero, it starves and $F(x,t,s)$ drops to zero. 
+
+If $x>0$, the value of departing is $F(x,t,D)$ described in \autoref{eq:f_dep}.
+
+\begin{equation}\label{eq:f_dep}
+F(x,t,D) = V_{Depart} = \begin{cases} 
+            \Phi(x,t) & \text{if  \ } t<=T-t_m\\
+            0 & \text{if \ } t>T-t_m
+            \end{cases}
+\end{equation}
+
+If migrants have not departed with sufficient time to reach the non-breeding grounds prior to time $T$ their survival is assumed to be zero. 
+
+
+The value of remaining locally $V_{local}$ is the maximum of staying at the current site ($s'=s$) or moving to the other site ($s'\neq s$).
+
+\begin{equation}\label{eq:vlocal}
+\max_{s'} V_{local} = \begin{cases}
+  \mathbb{E}\phi(x,s',t) F(x + \mathbb{E}\triangle x(s'), t + 1,s') &
+    \text{if \ } s' = s\\
+  \mathbb{E}\phi(x-\rho,s',t) F(x +  \mathbb{E}\triangle x(s') - \rho,  t + 1,s') &
+    \text{if \ } s' \neq s
+\end{cases}
+\end{equation}
+
+
+In addition to differences in mortality between sites, the expected fitness value for the next day varies between the decisions based on the cost in fuel of moving between sites ($\rho$) and the amount of fuel that a migrant can load at the two sites ($\triangle x(s)$).
+
+\begin{equation}\label{eq:food}
+\triangle x(s) = \frac{e_g e(s) + \mathcal{N}(0, \sigma_e^2)}{LBM}
+\end{equation}
+
+Each site allows a migrant to increase its relative fuel load by amount $\triangle x$ per day. This amount depends on a global maximum fuel loading rate ($e_g$; in grams fuel$^{-1}$), and a site's relative food availability ($e(s)$; grams fuel$^{-1}$). There is also some stochasticity in the daily fuel loading rate ($\mathcal{N}(0, \sigma_e^2)$), with decisions  made on the expectation. I do not include here a seasonal pattern in food availability or fuel loading rate as there is no evidence for depletion within the western sandpiper southward migratory system \citep{Ydenberg2002} and my limited macroinvertebrate data showed no seasonal pattern and even a small increase in abundance at the two sites I sample multiple times (Chapter 3 Appendix B). 
+
+
+
+The dynamic programming equation calculates the mortality-minimizing decision for each combination of fuel load, location, and date, as well as the value of $F(x,t,s)$ for that decision. Daily values of $F(x,t,s)$ are initially calculated for time $T$, and for birds that have departed ($s=D$). The calculation then iteratively steps backwards from $T-1$ to $t=0$. For each step of the backwards iteration values of $F(x,t,s)$ for all potential fuel loads and site location are calculated. Values of relative fuel load $x$ are discretized between $x=0 \text{ and } x=x_{max}$ into 1000 steps of 0.001. I used linear interpolation to calculate estimates between the steps of $x$. The equation produces decision matrices and reward estimates for each fuel load step, date, and site. The decision matrix is then used to guide decisions in the forward simulation.
+
+
+
+
+
+
+\subsection{Decision Matrix}
+%Figure to appendix and just describe main results here and why it happens this way
+The dynamic programming equation (\autoref{eq:reward}) calculates the optimized decision (depart, stay, or move) for every combination of fuel load ($x$), location ($s$) and date ($t$) described in the model. The resulting decision matrix $D[x,t,s]$ provides the mortality-minimizing decision for a migrant with a given fuel load at a given site on a given date. The decision matrix is under baseline conditions is shown in \autoref{fig:decision} and discussed in detail below. Variables used in the dynamic programming equation under initial condition are described in \autoref{tab:variables}.
+
+%The decision matrix is described in more detail in \autoref{app:decision}. The basic pattern shows that light birds remain shift to the small site and then depart as they get heavier (\autoref{fig:decision}). Birds that arrive heavier in July should stay at the large site until departure. As time progresses, even the lighter birds should stay at the large site. The mortality-minimizing departure fuel load differs between sites with migrants departing lighter at the small site. Later migrating birds also depart heavier and only from the large site.
+
+
+
+<<variables, results='asis', eval=TRUE, dependson='table-script'>>=
+print(xtab_1, sanitize.text.function=function(x){x},
+       floating = TRUE, floating.environment = "sidewaystable",
+       include.rownames = FALSE) 
+@
+
+
+<<decision, fig.cap="Basic mortality-minimizing decision matrices of migrant behaviour based on location, time, and fuel load under initial conditions (See \\autoref{tab:variables}). Migrants are located at the small (left) and large (right) sites. Migrants can either move to or stay at the small site (red), move to or stay at the large site (black), or depart the region (blue). The optimal decision varies with current location, fuel load and time.",back_time=file.info("../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/full_back_single.txt")$mtime>>=
+back_dat <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/full_back_single.txt", dat_type = 'back', pk = 'No')
+plotres(back_dat,plot_type =  'back') + labs(x= "Relative Fuel Load (x)", y="Date (t)")
+@
+
+\section{Forward Simulation}
+% What does it do and what does it produce? Why did you choose particular paramaters, AJ diffs and why/
+
+The dynamic programming equation calculates the expected mortality-minimizing decision for a migrant in a given state but lacks stochasticity and does not include many specific biological traits important for understanding a migratory system. To generate simulated counts and movements of birds from the model, I created a forward simulation of 20 000 birds (10 000 adults and 10 000 juveniles) moving through a landscape using the decision matrix to guide their way. 
+
+The simulation creates a bird and selects its characteristics stochastically, based on those measured in previous research. The virtual bird $bird_i$ is assigned an age $a$, adult or a juvenile, and arrives on an assigned date $t$ at an assigned location $s$, with an assigned fuel load $x$. Each characteristic is drawn at random as follows:
+\begin{equation}\label{eq:forward}
+bird_i  \begin{cases} t_i = \mathcal{N}\left( t_a, \sigma_{t_a}^2 \right) \\
+x_i = min \left[ max \left(0.001, \frac{\mathcal{N}(f_a, \sigma_a^2)}{LBM}  \right), x_{max}\right] \\
+s_i = U(0,1)\\
+d_i = D[x_i, s_i, t_i]
+\end{cases}
+\end{equation} where $t_a$ is the age-specific (adult or juvenile) timing of arrival and $f_a$ is in mass of fuel on arrival. Under baseline conditions timing and expected fuel load on arrival are the only differences between adults and juveniles in the model; no other intrinsic ``age effect'' is considered. Mean juvenile arrival is set a month after adult arrival. 
+
+
+At the start of each day, migrants make the decision for their current date. If $x < x_{c}$ or if they have not departed by time $T-t_m$, or $x=0$ on any date fitness is zero, otherwise, their decision is assessed from the decision matrix based on the date and their fuel load and current location (\autoref{fig:decision}). If their decision for that day is to stay at the current site they increase their fuel load by a stochastic amount based on the site's food availability, $\triangle x(s)$ (\autoref{eq:food}). The migrant's survival is assessed with probability $P(x,t,s) = 1-Pr\{\phi(x,t,s)\}$. If a migrant's decision is to move, they move to another site and gain fuel $\triangle x(s) - \rho$. Finally, migrants that move also die with probability $P(x,t,s)$ based on their new site's danger. 
+
+If the migrant's decision is to depart the study region, their fitness is calculated based on their current fuel load and date of departure. If the migrant is still alive and has not departed the model advances one time step. The model iterates through all virtual birds individually. The model then outputs either a virtual count of abundances at the small and large site for each date and the fuel load for each bird on each date. From this detailed output I can calculate daily site abundances, and the mass, lengths of stay and migratory paths of individual birds as they move through the simulated system (\autoref{fig:baseline-res}). Masses here are defined as $m_i=x_iLBM + LBM$ in grams. Lengths of stay are the number of days an individual has spent at a site on departure or move. Results are presented in calendar dates, where $t=0$ is equivalent to June 20 and $t=T$ is November 17. As migrants all depart prior to time $T$, model output is truncated on the last date migrants are present.
+
+<<variables-forward, results='asis', eval=TRUE, dependson='table-script'>>=
+print(xtab_2, sanitize.text.function=function(x){x},
+       floating = TRUE, floating.environment = "sidewaystable",
+       include.rownames = FALSE)   
+@
+
+The model is parametrized from the literature where available. The relative food at the large and small sites are based on estimates of relative fuel loading ability for migrating sandpipers at Boundary Bay, BC and Sidney Island, BC \citep{Ydenberg2002} and the relative proportion of the site's habitat that is within 150m of cover. The cost of moving between the sites is based on the flight costs of moving between Boundary Bay and Sidney Island using the estimated costs in energy of flight from \citet{Maggini2017a} (0.26 kJ km$^{-1}$), the energy costs per gram of fat from \citet{Jenni-Eiermann2017} (37.6 kJ g$^{-1}$), and the distance between the sites (57 km). This is higher than the value from the flight range equation, but I assume more accurate for local movements between sites rather than longer migratory flights.  The lean body mass estimate is a simplification of reality as this value would vary between individuals, age-classes and sexes, but for clarity I have held the value constant at that used in \citet{Hope2011}. \citet{Guglielmo2003} explore the seasonal variation in lean body mass in more detail. %The parameters used in $\delta(t)$,$\theta(t)$, $\psi(x,s)$, and $S(x)$ are described above in the descriptions of \cref{eq:mort,eq:mux,eq:Sx}.
+
+
+
+
+
+\section{Model output}
+
+
+\subsection{Baseline model output}\label{sec:baseline}
+<<baseline-dat, for_time=file.info("../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/forwards_sim.txt")$mtime>>=
+for_dat <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/forwards_sim.txt", dat_type = 'forward', pk = 'No Prior Knowledge')
+masses <- for_dat %>% 
+  group_by(age, SiteName) %>% 
+  summarise(n = n(),
+            sd = sd(mass),
+            mean.mass= mean(mass, na.rm=T),
+            uci = quantile(mass, probs= 0.975),
+            lci = quantile(mass, probs= 0.025, na.rm=T)
+  )
+
+
+max.counts <- for_dat %>% filter(s!=2) %>%
+      mutate(date = mdy("06-20-17") + t) %>% 
+      group_by(age, SiteName, date) %>%
+       summarize(n=n()) %>% group_by(age,SiteName) %>%
+       slice(which.max(n))
+
+
+los <- for_dat %>% 
+  filter(!is.na(MaxLoS)) %>%
+  mutate(MaxLoS = MaxLoS + 1) %>%
+  group_by(age, SiteName) %>% summarize(
+  mean.los= mean(MaxLoS, na.rm=T),
+            uci = quantile(MaxLoS, probs= 0.975),
+            lci = quantile(MaxLoS, probs= 0.025, na.rm=T) )
+ 
+@
+
+% Basic model output in 6x6 table of small large, and census, mass and los
+
+ Under the baseline variable settings (See \autoref{tab:variables}; \autoref{tab:variables-forward}) simulated daily abundances have two distinct peaks representing adult and juvenile migrations (\autoref{fig:baseline-res}a). Abundances are higher at the large site for juveniles, but lower for adults. Peak numbers are much higher in juveniles at the large site, but higher in adults at the small site. The peak counts at the large site of \Sexpr{max.counts$n[max.counts$age == "Adult" & max.counts$SiteName=="Large"]} and \Sexpr{max.counts$n[max.counts$age == "Juvenile" & max.counts$SiteName=="Large"]} occur at the large site on July \Sexpr{mday(max.counts$date[max.counts$age == "Adult" & max.counts$SiteName=="Large"])} for adults and August  \Sexpr{mday(max.counts$date[max.counts$age == "Juvenile" & max.counts$SiteName=="Large"])} for juveniles respectively. At the small site peak counts are \Sexpr{max.counts$n[max.counts$age == "Adult" & max.counts$SiteName=="Small"]} on July \Sexpr{mday(max.counts$date[max.counts$age == "Adult" & max.counts$SiteName=="Small"])} for adults and \Sexpr{max.counts$n[max.counts$age == "Juvenile" & max.counts$SiteName=="Small"]} on August  \Sexpr{mday(max.counts$date[max.counts$age == "Juvenile" & max.counts$SiteName=="Small"])} for juveniles. Juvenile usage at the small site drops to zero in mid-august, while usage at the large site continues into September. 
+
+ Adult mass at the large site increases slightly throughout the migratory period as birds arrive and load fuel (\autoref{fig:baseline-res}b). At the small site, mean daily mass changes in a similar manner through the adult migratory period. In juveniles, masses at the large site increase toward the end of the migratory period. At the small site, juvenile masses show little change across the migratory period.  Juveniles are heavier on departure (adults: \Sexpr{masses$mean.mass[masses$SiteName=='Depart' & masses$age=='Adult']} [\Sexpr{masses$lci[masses$SiteName=='Depart' & masses$age=='Adult']},\Sexpr{masses$uci[masses$SiteName=='Depart' & masses$age=='Adult']} CI] grams; juveniles: \Sexpr{masses$mean.mass[masses$SiteName=='Depart' & masses$age=='Juvenile']} [\Sexpr{masses$lci[masses$SiteName=='Depart' & masses$age=='Juvenile']},\Sexpr{masses$uci[masses$SiteName=='Depart' & masses$age=='Juvenile']} CI] grams). Masses are heavier at the large site for adults (small \Sexpr{masses$mean.mass[masses$SiteName=='Small' & masses$age=='Adult']} [\Sexpr{masses$lci[masses$SiteName=='Small' & masses$age=='Adult']}, \Sexpr{masses$uci[masses$SiteName=='Small' & masses$age=='Adult']} CI] g; large \Sexpr{masses$mean.mass[masses$SiteName=='Large' & masses$age=='Adult']} [\Sexpr{masses$lci[masses$SiteName=='Large' & masses$age=='Adult']},\Sexpr{masses$uci[masses$SiteName=='Large' & masses$age=='Adult']} CI] g), and in juveniles the difference is slightly larger between sites compared with adults, with birds at the large site being slightly heavier than adults (small \Sexpr{masses$mean.mass[masses$SiteName=='Small' & masses$age=='Juvenile']} [\Sexpr{masses$lci[masses$SiteName=='Small' & masses$age=='Juvenile']}, \Sexpr{masses$uci[masses$SiteName=='Small' & masses$age=='Juvenile']} CI] g; large \Sexpr{masses$mean.mass[masses$SiteName=='Large' & masses$age=='Juvenile']} [\Sexpr{masses$lci[masses$SiteName=='Large' & masses$age=='Juvenile']}, \Sexpr{masses$uci[masses$SiteName=='Large' & masses$age=='Juvenile']} CI] g). 
+
+Simulated migrants have different lengths of stays between sites and ages under baseline conditions. Adults spend on average \Sexpr{los$mean.los[los$SiteName=='Small' & los$age=='Adult']} [\Sexpr{los$lci[los$SiteName=='Small' & los$age=='Adult']}, \Sexpr{los$uci[los$SiteName=='Small' & los$age=='Adult']} CI ] days at the small site and \Sexpr{los$mean.los[los$SiteName=='Large' & los$age=='Adult']} [\Sexpr{los$lci[los$SiteName=='Large' & los$age=='Adult']}, \Sexpr{los$uci[los$SiteName=='Large' & los$age=='Adult']} CI ] days at the large, while juveniles spend \Sexpr{los$mean.los[los$SiteName=='Small' & los$age=='Juvenile']} [\Sexpr{los$lci[los$SiteName=='Small' & los$age=='Juvenile']}, \Sexpr{los$uci[los$SiteName=='Small' & los$age=='Juvenile']} CI ] days at the small site and \Sexpr{los$mean.los[los$SiteName=='Large' & los$age=='Juvenile']} [\Sexpr{los$lci[los$SiteName=='Large' & los$age=='Juvenile']}, \Sexpr{los$uci[los$SiteName=='Large' & los$age=='Juvenile']} CI ] at the large. Across the model time period, lengths of stay increase slightly for adults at the both sites, but strongly increase at the large site for juveniles (\autoref{fig:baseline-res}c).
+
+ % Adult migration without prior knowledge peaked at the small site on \Sexpr{for_dat} July 13th [July 11, July 14 CI]
+
+ % The peaks of daily counts also varied by age groups and with and without prior knowledge.  one day after the mean arrival date (N=246 [227, 270 CI]), which matched the peak at the large site (July 13th [July 10, July 16 CI] at the large site (N=70 [61, 84 CI]). The counts of adults at the large site had a broader peak while at the small site there was a very sharp peak around July 13th. Adding prior knowledge shifted the peak date earlier by a day at the small site (July 12th [July 11, July 14 CI], N=277 [256, 300 CI]) and by five days at the large site (July 16th [July 13, July 21 CI], N=39 [32, 49 CI]). 
+
+
+
+<<baseline-res, fig.cap="Forward simulation model output under baseline conditions (See \\autoref{tab:variables}). Adult (solid lines) and juvenile (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move are counted at the new site for that day. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", for_time=file.info("../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/forwards_sim.txt")$mtime,dpi=300, fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center'>>=
+a <- plotres(for_dat,plot_type =  'hist')# + scale_linetype_manual(values=c("solid", "dotted"))
+a2 <- plotres(for_dat,plot_type =  'mass') + theme(legend.position = 'none')
+a3 <- plotres(for_dat ,plot_type =  'los')+ theme(legend.position = 'none')
+pg1 <- plot_grid(a, a2, a3, nrow=3, labels='auto')
+# now add the title 
+title1 <- ggdraw() + draw_label("Baseline model", fontface='bold')
+plot_grid(title1, pg1, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
+ 
+@
+
+<<mc-dat>>=
+MC_noprioK <- read_tsv("../cpp_version/Migration_Model/OrganizedResults/noU/MonteCarloRuns/no_pk/MC_Counts_full.txt") %>%  
+  mutate(priorK = "No Prior Knowledge") %>% 
+  mutate(tot = site0+site1,
+         p_Large = ifelse(tot == 0, NA, site1/ tot)) %>% ungroup %>% 
+  mutate(
+         date = mdy("06-20-17") + time)
+@
+
+
+
+<<get-max, dependson='mc-dat', cache=F>>=
+runs <- tibble("a" = c(0,0,1,1), "s"=c("site0","site1","site0","site1"))
+sitemaxes <- bind_rows(getmaxdate(runs[1,1], runs[1,2], dat = MC_noprioK),
+                       getmaxdate(runs[2,1], runs[2,2] ,dat = MC_noprioK),
+                       getmaxdate(runs[3,1], runs[3,2] ,dat = MC_noprioK),
+                       getmaxdate(runs[4,1], runs[4,2] ,dat = MC_noprioK))
+a <- sitemaxes %>% group_by(age, priorK, siteN) %>% 
+  summarize_at(c("time", "site"), .funs = list("mean", "median"))
+max.sum <-
+  sitemaxes %>%group_by(age, priorK, siteN) %>% 
+    summarise_at(c("time", "site"), funs(list(quantile(., probs = c(0.025, 0.5, 0.975))))) %>% ungroup %>% 
+    # separate(time, into = c("t2.5,tseparateseparate")) %>% separate(site)
+    unnest %>% 
+    mutate(q =  rep(c('2.5%', '50%', '97.5%'), 4)) %>% 
+    unite("time_site",c(time, site), sep = "_") %>% 
+    spread(key = q, value = time_site) %>% 
+    separate(col = `2.5%`, sep = "_", into = c("t2_5", "n2_5"), convert = T) %>% 
+    separate("50%", sep = "_", into = c("t50", "n50"), convert = T) %>% 
+    separate( "97.5%", sep = "_", into = c("t97_5", "n97_5"), convert = T ) %>%
+    mutate_at(vars(4,6,8), .funs = funs(mdy("06-20-17") + .)) %>% 
+    left_join(a) 
+@
+
+
+
+To get a sense of the natural variation in model output I ran 1000 Monte Carlo simulations under baseline conditions. The Monte Carlo simulation returns the number of birds present at each site on each model date. The full description of the results is described in \autoref{app:other-res}. 
+
+Across simulations the dates of peak counts vary only slightly between runs. At the large site the median peak date is July \Sexpr{mday(max.sum$t50[max.sum$age==0 & max.sum$siteN == "site1"])} [\Sexpr{mday(max.sum$t2_5[max.sum$age==0 & max.sum$siteN == "site1"])}, \Sexpr{mday(max.sum$t97_5[max.sum$age==0 & max.sum$siteN == "site1"])} CI] for adults and August \Sexpr{mday(max.sum$t50[max.sum$age==1 & max.sum$siteN == "site1"])} [\Sexpr{mday(max.sum$t2_5[max.sum$age==1 & max.sum$siteN == "site1"])}, \Sexpr{mday(max.sum$t97_5[max.sum$age==1 & max.sum$siteN == "site1"])} CI] for juveniles. At the small site the median peak dates are earlier than at the large site (July \Sexpr{mday(max.sum$t50[max.sum$age==0 & max.sum$siteN == "site0"])} [\Sexpr{mday(max.sum$t2_5[max.sum$age==0 & max.sum$siteN == "site0"])}, \Sexpr{mday(max.sum$t97_5[max.sum$age==0 & max.sum$siteN == "site0"])} CI] for adults and August \Sexpr{mday(max.sum$t50[max.sum$age==1 & max.sum$siteN == "site0"])} [\Sexpr{mday(max.sum$t2_5[max.sum$age==1 & max.sum$siteN == "site0"])}, \Sexpr{mday(max.sum$t97_5[max.sum$age==1 & max.sum$siteN == "site0"])} CI] for juveniles). 
+
+The number of birds on the peak count dates show only slight variation between model runs. At the large site the median peak of daily number of birds is \Sexpr{(max.sum$n50[max.sum$age==0 & max.sum$siteN == "site1"])} [\Sexpr{(max.sum$n2_5[max.sum$age==0 & max.sum$siteN == "site1"])}, \Sexpr{(max.sum$n97_5[max.sum$age==0 & max.sum$siteN == "site1"])} CI] for adults and \Sexpr{(max.sum$n50[max.sum$age==1 & max.sum$siteN == "site1"])} [\Sexpr{(max.sum$n2_5[max.sum$age==1 & max.sum$siteN == "site1"])}, \Sexpr{(max.sum$n97_5[max.sum$age==1 & max.sum$siteN == "site1"])} CI] for juveniles. At the small site the median peak number of birds is \Sexpr{(max.sum$n50[max.sum$age==0 & max.sum$siteN == "site0"])} [\Sexpr{(max.sum$n2_5[max.sum$age==0 & max.sum$siteN == "site0"])}, \Sexpr{(max.sum$n97_5[max.sum$age==0 & max.sum$siteN == "site0"])} CI] for adults and \Sexpr{(max.sum$n50[max.sum$age==1 & max.sum$siteN == "site0"])} [\Sexpr{(max.sum$n2_5[max.sum$age==1 & max.sum$siteN == "site0"])}, \Sexpr{(max.sum$n97_5[max.sum$age==1 & max.sum$siteN == "site0"])} CI] for juveniles. 
+
+<<arrival, eval=F>>=
+j <- rpois(10000, 55)
+a <- rpois(10000, 22)
+@
+The for any give date the numbers of birds present in the region are less than the total number of birds moving through the region within a simulation (20 000 birds). The peak count at the large site is \Sexpr{ (max.sum$n50[max.sum$age==0 & max.sum$siteN == "site1"]) / 100}\% of the total number of adults moving through the system in a simulation where length of stay is \Sexpr{los$mean.los[los$SiteName=='Large' & los$age=='Adult'] } days, while peak juvenile counts at the large site are \Sexpr{(max.sum$n50[max.sum$age==1 & max.sum$siteN == "site1"]) / 100}\% of all juveniles simulated, with mean lengths of stay of \Sexpr{ los$mean.los[los$SiteName=='Large' & los$age=='Juvenile']} days. In this case the length of stay difference between adults and juveniles is strongly influencing the peak counts in the two migratory periods.
+
+
+\section{Food/Safety Titration}
+
+<<mcloop-dat, mcfile = file.info("../cpp_version/Migration_Model/OrganizedResults/noU/MC_Loop/noU.txt")$mtime, eval=F>>=
+# require(lubridate)
+# cedar_noPriorK <- read_tsv("../cpp_version/Migration_Model/output/MC_Loop/MC_loops_no_priorK.txt", col_names = F)
+# headers <- read_tsv("../cpp_version/Migration_Model/output/MC_Loop/withU/header.txt", col_names = F) %>% .[1,]
+# names(cedar_noPriorK) <- headers
+# # write_rds(cedar_noPriorK, "../Rscripts/.rds_files/cedar_noPriorK.rds")
+# # cedar_noPriorK <- read_rds("../Rscripts/.rds_files/cedar_noPriorK.rds")
+
+# mcLoop <- dataimport(input_data = cedar_noPriorK, dat_type = 'loop', 'nl')
+
+# # str(mcLoop)
+
+# filt_dat <- filter(mcLoop, time %in% c(25, 56) & (danger == 0.24  | food == 0.5)) %>% 
+#         filter(danger > 0.)
+# # write_rds(filt_dat, "../Rscripts/.rds_files/cedar_noPriorK.rds")
+# rm(mcLoop)
+source('../Rscripts/mcLoopDat.r') 
+
+readMCLoopDat(file_ = "../cpp_version/Migration_Model/OrganizedResults/noU/MC_Loop/noU.txt",
+  pk = "no", u="no"
+  )
+
+@
+
+
+<<mcloop,fig.cap="Results of sequentially adjusting relative food and safety at the large site. For each adjustment the food and safety at the large site were held at 1.0 and $\\tau(0)$ and $e(0)$ adjusted. a. The number of birds at the small (red) and large (black) sites as well as the proportion at the large site on model (green) date July 15 (Adult) and August 15 (Juvenile) as the relative danger of the small site is adjusted between 1 and 10 by 0.1. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey shading. For the runs here, the relative food ($e(0)$) was held at the baseline value (\\textasciitilde2). b. The number of birds at the small (red) and large (black) sites as well as the proportion at the large site (green) on model date July 15 (Adult) and August 15 (Juvenile) as the relative food of the large site is adjusted between 1 and 10 by 0.1. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey. For the runs here, the relative danger ($\\tau(0)$) was held at the baseline value (\\textasciitilde4)." , dependson='mcloop-dat'>>=
+
+
+filt_dat <-read_rds(".rds_files/cedar_nou.rds") %>% filter(danger > 0.) %>% filt_mcdat %>% filter(pk==0)
+
+
+danger_plot <- plotProp(filt_dat, var=2)
+  # 
+  # ggplot(filter(filt_dat, food == 0.5), aes(danger, p_at_Large)) + geom_line() + facet_wrap(~age)+
+  # geom_ribbon(aes(ymax = q975_p, ymin=q25_p), colour = 'grey', alpha =0.25) +
+  # labs(x="Relative danger of large site", y = "Proportion of Birds at Large Site")
+# food_plot <- ggplot(filter(filt_dat, danger == 0.24), aes(food, p_at_Large)) + geom_line() + facet_wrap(~age) +
+#   geom_ribbon(aes(ymax = q975_p, ymin=q25_p), colour = 'grey', alpha =0.25) +
+#   labs(x="Relative food of large site", y = "Proportion of Birds at Large Site")
+
+food_plot <- plotProp(filt_dat, type = 'food', var = 4)
+pg2 <- plot_grid(danger_plot, food_plot, nrow=2, labels='auto', align='hv')
+# now add the title
+title2 <- ggdraw() + draw_label("Baseline model - food/danger adjustment", fontface='bold')
+plot_grid(title2, pg2, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
+
+
+@
+
+Individuals in most non-breeding systems must make the fundamental tradeoff between food and safety. In my migratory landscape I examined this tradeoff by sequentially adjusting the relative food abundance and safety between the two sites. I held the food and danger parameters at the large site at 1.0 ($\tau(1)$ \& $e(1)$) and adjusted relative food abundance ($e(0)$) at the small site between 1.0 and 10 by 0.5 and danger ($\tau(0)$) between 1 and 10 by 0.25. When food or danger were at their baseline parameter values, I adjusted the other parameter by 0.1. For each adjustment, I ran 1000 Monte Carlo simulations of the model. The simulations generated counts of abundance at each site for each time step. I then explored the relative abundance between the sites and trends in counts within sites to explore how adjustments of relative food and safety affected migrant decision. 
+
+\autoref{app:titration} shows the full response on each model date to all adjustments food/safety adjustments. I present here the effect of sequentially adjusting $\tau(0)$ and then $e(0)$ while holding the other parameter at baseline. I show results of simulated counts for the adult and juvenile migrations from a time slice around the peak dates (July and August 15).
+
+Shifts in the distribution of migrants between sites occur suddenly as food or predation danger change (\autoref{fig:mcloop}). When danger is similar between sites ($\tau(0)$ close to 1), adults and juveniles are almost entirely found at the small site.  As the small site's danger $\tau(0)$ increases the number of both adults and juveniles at the small site drops almost linearly up to $\tau(0)\text{\textasciitilde }4.8$ and then very quickly  (\autoref{fig:mcloop}a). The initial decline in numbers at the small site does not result in a change in numbers at the large site, suggesting migrants are departing earlier rather than shifting their distribution. Between $\tau(0)=2$ and $\tau(0)=3$ the proportion of adults at the large site on July 15 shifts between \Sexpr{filt_dat$meanp[filt_dat$danger == 2& filt_dat$food==2 & filt_dat$time == 25]} and \Sexpr{filt_dat$meanp[filt_dat$danger == 3& filt_dat$food==2 & filt_dat$time == 25]}. This is due to a continued drop in abundances at the large site, but also from an increase in abundances at the small site, leading to a shift in the distribution across sites. For juveniles, the there is a similar pattern with increasing danger at the small site, though the number of birds at either site never reaches the numbers recorded in adults. For juveniles between $\tau(0)=2$ and $\tau(0)=3$ the proportion of juveniles at the large site on August 15 shifts between \Sexpr{filt_dat$meanp[filt_dat$danger == 2& filt_dat$food==2 & filt_dat$time == 56]} and \Sexpr{filt_dat$meanp[filt_dat$danger == 3& filt_dat$food==2 & filt_dat$time == 56]}.
+
+Adjustments in food lead to a sudden transition similar to that from adjusting danger (\autoref{fig:mcloop}b). As the food parameter $\triangle x$ is included in the mortality parameter $\psi$, changing $e(0)$ has stronger non-linear effects than changing $\tau(0)$. When $\tau(0)=4$ and relative food at the small site ($e(0)$) is below 2, adults and juveniles are primarily at the large site, however as $e(0)$ increases between 1.5 and 2, the proportion of birds at the large site shifts between \Sexpr{filt_dat$meanp[filt_dat$danger==4 & filt_dat$time ==25 & round(filt_dat$food,1)==1.5]} and \Sexpr{filt_dat$meanp[filt_dat$danger==4 & filt_dat$time ==25 & round(filt_dat$food,1)==2]}. The shift in the proportion is a result of individual birds shifting away from the large site towards the dangerous site, but at $e(0) <=2$ the number of birds at the larger site is around \textasciitilde6000 whereas the number at the small site when $e(0) >= 4.0$ is \textasciitilde3000. This difference between site responses demonstrates that, as food became more abundant at the small site, birds switched to utilizing primarily the small site, but also departed the region sooner. At higher relative fuel rates birds can load to departure fuel load faster, and therefore the number of birds at the sites drop. When $\tau(0)=4$, juveniles require a slightly higher food benefit at the small site than adults to cause a shift away from the large site and the number of birds at the small site remains lower relative to adults, independent of food availability. Bird numbers at the small site for both age classes increases to a peak around $e(0)= 3$ and then decreases as food becomes more abundant at the safe site due to birds loading fuel faster and departing sooner. 
+
+
+\section{Migratory Distance}\label{sec:dist}
+
+The length and duration of further migration may affect the decisions migrants make in a given region. The non-breeding distribution of western sandpiper stretches across over 8000 km north to south, and a much greater distance in shoreline. 
+
+To explore how migratory distance upon departure would change the behaviour of migrants locally, I adjusted $\mathbb{D}$ (\autoref{eq:time-mig}) to examine migrants that had between 1300 km (roughly San Francisco Bay) and 9000 km (Colombia or Peru) remaining on their migration after departing the Salish Sea region. The distance to migrate affects the remaining time spent on migration and, since fuel load on departure affects the speed of migration, I expected to see shifts in fuel load with migratory distance (\autoref{fig:departure-ex}). Migrants that face greater future predation risk due to longer migration should take relatively more risks locally as the cost of time on migration increases.
+
+<<mig-dist-dat>>=
+source("../Rscripts/MigrationDistance.r", chdir=T)
+source("../Rscripts/multidist.r", chdir=T)  
+@
+
+The remaining migratory distance ($\mathbb{D}$) strongly affects the distribution of both adults and juveniles (\autoref{fig:mig-dist-counts}). Adults with less than 5000 km are primarily found at the large site, but at 5000 km and further the distribution shifts strongly towards the small site, to the point where 80\% of the birds facing 9000 additional km were found at the small site, though the total number of birds is lower than for shorter-distance migrants. The shortest migration has lower numbers on July 15th relative to a migration of 2300 km, likely because migrants can complete this flight in one jump with less fuel.
+
+<<mig-dist-counts, fig.cap="Results of adjusting migratory distance on abundances of migrants at the small and large sites. The number of birds is shown at the small (red) and large (black) sites, and the proportion at the large site (green) on model dates July 15 (Adult) and August 15 (Juvenile) at different migratory distances. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey shading.", dependson='mig-dist-dat',fig.width=8, fig.height=4, out.width="\\textwidth">>=
+nopk_dist_plot
+@
+%($$\\mathbb{D}$$)
+Patterns in the counts are similar for juveniles on August 15 though there are lower numbers at the large site in general. The proportion of the birds at the large site also remains high at for 5000 km migrants, likely as local danger has increased relative to in July.
+
+
+Departure flight range and speed of migration are inversely related as migratory distance changes (\autoref{fig:mig-dist-range-speed}). Migrants that can make the flight to the non-breeding grounds in one flight select their departure fuel load based on their first flight range. For migrants continuing 1300 and 2300 km, the departure flight ranges are on average close their distance to the non-breeding grounds (\Sexpr{all_for_files %>% filter(s==2&pk=="No Prior Knowledge"&dist==1300) %>% .[["range"]] %>% mean} km and \Sexpr{all_for_files %>% filter(s==2&pk=="No Prior Knowledge"&dist==2300) %>% .[["range"]] %>% mean} km). For migrants with greater than 2300 km to migrate, the departure flight range is less than their total remaining distance and these migrants shift toward maximizing speed of migration. For migrants continuing 3500 km, the flight range averages \Sexpr{all_for_files %>% filter(s==2&pk=="No Prior Knowledge"&dist==3500) %>% .[["range"]] %>% mean} km, less the remaining migratory distance and the flight range of birds migrating 2300 km. Speed of migration however increases from \Sexpr{all_for_files %>% filter(s==2&pk=="No Prior Knowledge"&dist==2300) %>% .[["speed"]] %>% mean} $\text{km day}^{-1}$ to \Sexpr{all_for_files %>% filter(s==2&pk=="No Prior Knowledge"&dist==3500) %>% .[["speed"]] %>% mean} $\text{km day}^{-1}$. As migration distance increases the flight range continues to decrease, but the speed of migration increases until the birds that have 9000 km to migrate were only flying \Sexpr{all_for_files %>% filter(s==2&pk=="No Prior Knowledge"&dist==9000) %>% .[["range"]] %>% mean} km on departure but had an expected speed of migration of \Sexpr{all_for_files %>% filter(s==2&pk=="No Prior Knowledge"&dist==9000) %>% .[["speed"]] %>% mean} $\text{km day}^{-1}$.
+
+
+
+<<mig-dist-range-speed, fig.cap="The impact of distances to migrate on (a) flight range (km) and (b) speed of migration (km day$^{-1}$) at departure.  Values are calculated from \\autoref{eq:range} and \\autoref{eq:speed} based on fuel load at departure. For reference, the dotted line shows the estimated speed of falcon migration. The output shows only migrants without prior knowledge of site conditions on arrival, as there were only minor differences with and without prior knowledge.", out.width="\\textwidth", fig.width=10, fig.height=10,dependson='mig-dist-dat'>>=
+plot_grid(flighrange_on_depart+theme(legend.position='none'),speed_on_depart+theme(legend.position='bottom')+labs(colour =""),rel_heights = c(0.9,1), labels='auto', nrow=2)  
+@
+
+
+There are seasonal patterns in flight range and speed of migration that differ across migratory distances. At 3500 and 5000 km, later departing juveniles continue to load large fuel loads, likely to lower their attack rate on future migration by increasing their flight range. This pattern is observed to some degree in longer distance migrants, but to a smaller degree. Early migrants with 1300 km remaining in migration depart with flight ranges greater than 1300 km. This behaviour is likely due to falcon presence being very low early in the season  making it is safer to remain locally than depart onward. As the model forces migrants to load fuel, their fuel load will continue to increase during this time. Across all migratory distances the speed of migration on departure is higher than the falcon speed of migration.
+
+\section{Model modification: Prior Knowledge}\label{seq:pk}
+
+
+The forward simulation of migrant passage initially has migrant initial arrival site determined stochastically, so birds are either placed at the small or large site and must remain there for one day departing or moving. I relaxed this condition to allow migrants to settle at their individually mortality-minimizing location instead. 
+
+In this modified scenario, migrants can move to the site that maximizes their fitness estimate $F$ for their current fuel load and arrival date. For $bird_i$, the initial site is $s_i^* = D[x_i, \max\limits_{s} F[x_i, s, t_i], t_i]$ and the decision for day $t_a + 1$ is $d_i = D[x_i, s_i^*, t_i+1]$. Migrants do not load fuel or die during the first day. I refer to this modification as adding an assumption of ``prior knowledge'' to migrants, as migrants that had previous or gained knowledge of the optimal site to land on arrival should not have a random site as their first stopofver site.
+
+
+<<prior-knowledge, fig.cap="Forward simulation model output for model modified to allow migrant prior knowledge (See \\autoref{seq:pk}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", dpi=300, fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center'>>=
+for_dat_pk <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/PK/changed_x/baseline/forwards_sim.txt", dat_type = 'forward', pk = 'Prior Knowledge')
+
+a_pk <- plotres(for_dat_pk,plot_type =  'hist')
+a2_pk <- plotres(for_dat_pk,plot_type =  'mass') + theme(legend.position = 'none')
+a3_pk <- plotres(for_dat_pk ,plot_type =  'los')+ theme(legend.position = 'none')
+pg5 <- plot_grid(a_pk, a2_pk, a3_pk, nrow=3, align='hv', labels='auto')
+
+
+# now add the title
+title5 <- ggdraw() + draw_label("with prior knowledge", fontface='bold')
+plot_grid(title5, pg5, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
+masses_pk <- for_dat_pk %>% 
+  group_by(age, SiteName) %>% 
+  summarise(n = n(),
+            sd = sd(mass),
+            mean.mass= mean(mass, na.rm=T),
+            uci = quantile(mass, probs= 0.975),
+            lci = quantile(mass, probs= 0.025, na.rm=T)
+  )
+
+
+max.counts_pk <- for_dat_pk %>% filter(s!=2) %>%
+      mutate(date = mdy("06-20-17") + t) %>% 
+      group_by(age, SiteName, date) %>%
+       summarize(n=n()) %>% group_by(age,SiteName) %>%
+       slice(which.max(n))
+
+
+los_pk <- for_dat_pk %>% 
+  filter(!is.na(MaxLoS)) %>%
+  mutate(MaxLoS = MaxLoS + 1) %>%
+  group_by(age, SiteName) %>% summarize(
+  mean.los= mean(MaxLoS, na.rm=T),
+            uci = quantile(MaxLoS, probs= 0.975),
+            lci = quantile(MaxLoS, probs= 0.025, na.rm=T) )
+
+
+@
+
+
+<<compare-pk, dpi=300, fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.cap = "Comparison of forward simulation model outputs between scenarios of random migrant arrival and optimal arrival. Results are shown as the change in daily abundance (a), mean daily mass (b) and lengths of stay at departure (c) from the baseline model. Adults (solid lines) and juveniles (dashed lines) migrants at the small (red) or large (black) sites are shown in all plots. ">>=
+    compare_pk <- bind_rows(for_dat, for_dat_pk) %>% 
+        filter(s !=2) %>% group_by(date, t, SiteName, age, priorK) %>% 
+        summarize(n=n(), los= mean(MaxLoS + 1, na.rm=T),
+            mass = mean(fuel)*22.7+22.7) %>% #select(-los) %>%
+         group_by(date, t, SiteName, age) %>% arrange(priorK) %>% 
+         filter(n()>1) %>%
+         summarize(mass = diff(mass),
+            n= diff(n), los=diff(los)) %>% ungroup
+
+compare_N <- ggplot(compare_pk, aes(date, n, colour = SiteName, linetype=age) )+ 
+            geom_hline(yintercept=0, linetype='longdash')+
+            geom_line() + theme(legend.position = 'none') + 
+            labs(x="Date", y = "Change in\nAbundance" )   + 
+            scale_colour_brewer(type='qual', palette='Set1', direction=-1)
+compare_mass <-ggplot(compare_pk, aes(date, mass, colour = SiteName, linetype=age) )+ 
+            geom_hline(yintercept=0, linetype='longdash')+
+            geom_line() + theme(legend.position = 'none') + labs(x="Date", y = "Difference in\nmasses (g)" )  + 
+            scale_colour_brewer(type='qual', palette='Set1', direction=-1)
+compare_los <-ggplot(compare_pk, aes(date, los, colour = SiteName, linetype=age) )+ 
+            geom_hline(yintercept=0, linetype='longdash')+
+            geom_line() + theme(legend.position = 'none') + 
+            labs(x="Date", y = "Change in\nlengths of stay (days)" ) + 
+            scale_colour_brewer(type='qual', palette='Set1', direction=-1)
+
+pg_compare <- plot_grid(compare_N,compare_mass,compare_los, nrow=3, align='hv', labels='auto')
+
+pg_compare
+@
+
+
+The daily abundances of migrants with prior knowledge are similar to those without prior knowledge (\autoref{fig:prior-knowledge}), with some notable differences (\autoref{fig:compare-pk}). Adults are more abundant at the small than the large site, and juveniles more abundant at the large than small site both with and without prior knowledge. The main difference is that under baseline conditions migrants with 5000 km in migration do not use the small site in the second half of August. Otherwise the model outputted daily counts are very similar between the two arrival scenarios.
+
+In contrast to numbers, estimated masses have greater differentiation between sites with than without prior knowledge. At the small site there are no differences in mean masses for adults (Baseline: \Sexpr{masses$mean.mass[masses$SiteName=='Small' & masses$age=='Adult']} [\Sexpr{masses$lci[masses$SiteName=='Small' & masses$age=='Adult']}, \Sexpr{masses$uci[masses$SiteName=='Small' & masses$age=='Adult']} CI] g; with prior knowledge: \Sexpr{masses_pk$mean.mass[masses_pk$SiteName=='Small' & masses_pk$age=='Adult']} [\Sexpr{masses_pk$lci[masses_pk$SiteName=='Small' & masses_pk$age=='Adult']}, \Sexpr{masses_pk$uci[masses_pk$SiteName=='Small' & masses_pk$age=='Adult']} CI] g). At the large site masses are heavier for adults with prior knowledge on average, but with substantial variation within each model type (Baseline: \Sexpr{masses$mean.mass[masses$SiteName=='Large' & masses$age=='Adult']} [\Sexpr{masses$lci[masses$SiteName=='Large' & masses$age=='Adult']}, \Sexpr{masses$uci[masses$SiteName=='Large' & masses$age=='Adult']} CI] g; with prior knowledge: \Sexpr{masses_pk$mean.mass[masses_pk$SiteName=='Large' & masses_pk$age=='Adult']} [\Sexpr{masses_pk$lci[masses_pk$SiteName=='Large' & masses_pk$age=='Adult']}, \Sexpr{masses_pk$uci[masses_pk$SiteName=='Large' & masses_pk$age=='Adult']} CI] g). For juveniles, there is a much smaller shift in masses for migrants at the large site between arrival scenarios (Baseline: \Sexpr{masses$mean.mass[masses$SiteName=='Large' & masses$age=='Juvenile']} [\Sexpr{masses$lci[masses$SiteName=='Large' & masses$age=='Juvenile']}, \Sexpr{masses$uci[masses$SiteName=='Large' & masses$age=='Juvenile']} CI] g; with prior knowledge: \Sexpr{masses_pk$mean.mass[masses_pk$SiteName=='Large' & masses_pk$age=='Juvenile']} [\Sexpr{masses_pk$lci[masses_pk$SiteName=='Large' & masses_pk$age=='Juvenile']}, \Sexpr{masses_pk$uci[masses_pk$SiteName=='Large' & masses_pk$age=='Juvenile']} CI] g). At the small site juveniles are lighter with prior knowledge, but again with a large amount of variation around these means (Baseline: \Sexpr{masses$mean.mass[masses$SiteName=='Small' & masses$age=='Juvenile']} [\Sexpr{masses$lci[masses$SiteName=='Small' & masses$age=='Juvenile']}, \Sexpr{masses$uci[masses$SiteName=='Small' & masses$age=='Juvenile']} CI] g; with prior knowledge: \Sexpr{masses_pk$mean.mass[masses_pk$SiteName=='Small' & masses_pk$age=='Juvenile']} [\Sexpr{masses_pk$lci[masses_pk$SiteName=='Small' & masses_pk$age=='Juvenile']}, \Sexpr{masses_pk$uci[masses_pk$SiteName=='Small' & masses_pk$age=='Juvenile']} CI] g). Across the season, both model types show a strong increase in fuel loads for late migrants at the large site and little change across the season at the site or for adults at the large site. There is a slightly larger trend in masses in adults at the small site, likely due to migrants being evenly distributed across both sites on arrival without prior knowledge, whereas with prior knowledge migrants are selecting arrival location based on arrival fuel load.
+
+
+The lengths of stay also show different patterns between arrival scenarios. In the baseline model, without prior knowledge, juveniles at the small site and some adults at the large site are essentially forced to stay at the site for one day and then immediately move to the other site or depart. Migrants with prior knowledge avoid ``sub-optimal'' sites. \autoref{fig:path-birds} illustrates how the movement of migrants differs between scenarios. As expected, without prior knowledge, there is substantial movement between sites, but in different directions for adults and juveniles. For adults, the movements are almost entirely from the large to small site, which are lacking prior knowledge is added. These adult movements are simple shifts to their individually optimal site after arrival. For juveniles without prior knowledge the movements are predominantly from the small to large site, and while movements are less common with prior knowledge, some of these movements persist. These are likely mass-dependent movements away from the more dangerous site as juveniles' masses increase. 
+
+ The model scenario with prior knowledge allows migrants to completely skip the region instead of stopping at either of the sites (dark green lines in \autoref{fig:path-birds}). This behaviour emerges in both adults and juveniles, as birds that arrive heavy choose to continue south rather than stopping locally. While the model was not initially developed to detect this behaviour, it is interesting to see, and likely biologically realistic, that under certain conditions migrants should opt to continue migrating rather than stopping in a particular region. Adding prior knowledge allows migrants this option.
+
+<<path-birds,dpi=300, fig.dim=c(10,10), fig.cap="The path of adult (left) and juvenile (right) migrants through the simulated landscape with or without prior knowledge of the system. Results show 2000 birds moving from arrival to one of the two site types and then departing. Each line shows a single movement between one of the locations. Vertical lines from Pre-arrival to Departed show migrants that have optimal arrival (Prior Knowledge) and choose to depart immediately. The lines are jittered randomly to show more clearly the movement of individual birds.", dependson="prior-knowledge",out.width = "\\textwidth", fig.align = 'center' >>=
+# Plot of bird movements
+# Set the initial position
+numberbirds <- 20000
+ids <- as.integer(runif(1000, min = 0, numberbirds/2-1))
+idsj <- as.integer(runif(1000, numberbirds/2, numberbirds-1))
+org_df <- tibble(id=c(ids,idsj), t=0, s = -1, x = 2, y = 3, age = ifelse(id<numberbirds/2, "Adult","Juvenile"),
+                 priorK = "No Prior Knowledge", SiteName="Pre-arrival")
+org_df2 <- tibble(id=c(ids,idsj), t=0, s = -1, x = 2, y = 3, age = ifelse(id<numberbirds/2, "Adult","Juvenile"),
+                 priorK = "Prior Knowledge", SiteName="Pre-arrival")
+# Set location for plot
+labs_i <- tibble(location = c("Small", "Large", "Pre-arrival", "Departed"),
+                 x = c(1.1,3,2,2),
+                 y= c(1.8,1.8,3.,1.))
+# ids <- as.integer(runif(100, min = 0, 9999))
+# idsj <- as.integer(runif(100, 10000, 19999))
+allForward <- bind_rows(for_dat, for_dat_pk) %>%
+        filter(id %in% org_df$id |id %in% org_df2$id )
+pathdat <- bind_rows(org_df2, bind_rows(org_df, allForward)) %>%
+      arrange(priorK, id, t) %>%
+        # filter(id %in% ids | id %in% idsj) %>%
+    group_by(priorK, id ) %>%
+    arrange(t) %>% mutate(delta_s = ifelse(id!=lead(id)|s==2,"Departed",
+      ifelse(lead(s)==s, "Remain at current site", paste(SiteName, "to", lead(SiteName))))) %>% ungroup
+
+
+bird_Path <- ggplot(pathdat, aes(group=id, x = x, y = y, colour=delta_s)) + geom_path(alpha=0.1) + 
+  facet_wrap(priorK~age) + geom_label(data = labs_i, aes(label = location, group = NULL), colour = 'black', size =8) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) + scale_color_brewer(type="qual",palette = 3) +labs(colour = "")+ guides(colour = guide_legend(override.aes = list(alpha = 1, size=2)))
+bird_Path + theme(legend.position='bottom')
+@
+
+Other than the movements on arrival, the lengths of stay were similar between arrival scenarios. The seasonal increase in lengths of stay for adults do not occur with prior knowledge. Lengths of stay increase toward the end of the juvenile migratory period at the large site for both model types but remain constant at the small site for both adult and juvenile migrants with prior knowledge, whereas without prior knowledge lengths of stay increases through the adult migration and decreases through the juvenile migration.
+
+
+
+<<prior-knowledge-mcloop, dependson='mcloop-pk-dat', fig.cap="Results of sequentially adjusting relative food and safety at the large site from the model modified to give migrants prior knowledge of the stopover sites. Plots show the number of birds at the small (red) and large (black) sites as well as the proportion at the large site on model (green) date July 15 (Adult) and August 15 (Juvenile). For each adjustment the food and safety at the large site were held at 1.0 and $\\tau(0)$ and $e(0)$ adjusted. a. the relative danger of the small site is adjusted between 1 and 10 by 0.1. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey shading. The relative food ($e(0)$) was held at the baseline value (\\textasciitilde2). b. the relative food of the large site is adjusted between 1 and 10 by 0.1. The relative danger ($\\tau(0)$) was held at the baseline value (\\textasciitilde4).">>=
+# require(lubridate)
+# cedar_PriorK <- read_tsv("../cpp_version/Migration_Model/output/MC_Loop/MC_loops_priorK.txt", col_names = F)
+# headers <- read_tsv("../cpp_version/Migration_Model/output/MC_Loop/withU/header.txt", col_names = F) %>% .[1,]
+# names(cedar_PriorK) <- headersmcLoop_pk <- dataimport(input_data = cedar_PriorK, dat_type = 'loop', 'nl')
+# 
+# # str(mcLoop)
+# filt_dat_pk <- filter(mcLoop_pk, time %in% c(25, 56) & (danger == 0.24  | food == 0.5))
+# write_rds(filt_dat_pk, "../Rscripts/.rds_files/cedar_PriorK.rds")
+filt_dat_pk <- read_rds(".rds_files/cedar_nou.rds") %>% filt_mcdat %>%
+filter(pk==1)
+# filt_dat_pk <- read_rds(".rds_files/cedar_PriorK.rds") %>% filter(danger > 0.)
+
+ 
+danger_plot_pk <- plotProp(filt_dat_pk, var=2)
+food_plot_pk <- plotProp(filt_dat_pk, type = 'food',var = 4)
+
+pg6 <- plot_grid(danger_plot_pk, food_plot_pk, nrow=2, align='hv', labels='auto')
+# now add the title
+title6 <- ggdraw() + draw_label("with prior knowledge - food/danger adjustment", fontface='bold')
+plot_grid(title6, pg6, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
+
+@
+
+Adjusting the relative food and safety parameters ($\tau(0)$ and $e(0)$) produce almost identical results as their effects within the baseline model (\autoref{fig:prior-knowledge-mcloop}). There are slight differences in the numbers of birds at a site, but the distribution between the sites remains similar. The main difference is that the extremes of the distributions shift toward 100\% at one site with prior knowledge, whereas without prior knowledge random arrival prevents 100\% of the birds being found at their individually mortality-minimizing site.
+
+%  but with the proportion of birds shifting to 100\% rather the shifts were more dramatic and there was less variation. The shift between sites when prior knowledge was included shifted often to 100\% of the birds using one site or the other, with no variation between runs (\autoref{fig:prior-knowledge-mcloop}). For example, while increasing $\mu_{s=1}$ without prior knowledge in juveniles led to a gradual shift in the proportion of birds at the large site, in the model with prior knowledge, 100\% of birds remained at the small site while $\mu_{s=1}<0.5$ (though the abundance of birds at this site decreased in a manner similar to the baseline model).When $\mu_{s=1}>0.5$ a small shift to the proportion at the large site towards 50\% and the pattern became more similar to the baseline model. Beyond this level of relative danger, small changes in abundances at the large site causes large shifts in the proportion at the large site, though the numbers at both sites are very low.  A similar pattern occurs with adults as $\mu_{s=1}$ is adjusted, though the shift is more strongly away from the large site. In both adults and juveniles as $e_{s=1}$ changes the distribution shifts in a manner similar to the model without prior knowledge. 
+
+
+% For details of the results of the model with prior knowledge see \autoref{app:titration}.
+
+<<prior-knowledge-withu, eval=F, fig.cap="Forward simulation model output for model modified to allow migrant prior knowledge and foraging intensity. Adults (solid lines) and juveniles (dashed lines) migrants at the small (red) or large (black) sites are shown in all plots.   a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date. d. Mean $\\pm 95\\%CI$ daily foraging intensities for migrants at the small or large site.">>=
+ufor_dat_pk <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/withU/baseline/pk/forwards_sim.txt", dat_type = 'forward', pk = 'No Prior Knowledge')
+
+ua_pk <- plotres(ufor_dat_pk,plot_type =  'hist')
+ua2_pk <- plotres(ufor_dat_pk,plot_type =  'mass') + theme(legend.position = 'none')
+ua3_pk <- plotres(ufor_dat_pk ,plot_type =  'los')+ theme(legend.position = 'none')
+ua4_pk <- ufor_dat_pk %>% #group_by(id) %>% filter(row_number()!=1) %>% ungroup %>%
+  plotres(plot_type =  'intensity')+ theme(legend.position = 'none')
+pg7 <- plot_grid(ua_pk, ua2_pk, ua3_pk,ua4_pk, nrow=4, align='hv', labels='auto')
+
+# now add the title
+title7 <- ggdraw() + draw_label("with foraging intensity and prior knowledge", fontface='bold')
+plot_grid(title7, pg7, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
+
+
+@
+
+
+
+\clearpage 
+
+<<sesa,child="SESA.Rnw", cache=T, include=T, eval=T>>=
+@
+
+\clearpage
+
+
+\section{Parameter Sensitivity}
+
+\Sexpr{if(!exists("output")) source('../Rscripts/GenerateTables.r', chdir=T)   }
+
+
+I ran one-variable-at-a-time sensitivity analyses to explore how the model output of daily counts at each site was impacted by small changes to the baseline parameter values (see Table~\ref{tab:variables}). I perturbed each parameter $\pm5\%$ and calculated the resulting deviation from the baseline counts at each site on a given date. If a 5\% increase in parameter $\beta$ resulted in an increase of 10\% in birds at the small site, the calculated elasticity would be 2.  Elasticity is a unitless measure of sensitivity to a given variable than can be used to compare the responses in site counts between variables. \autoref{tab:elasticity} outlines the elasticity values for individual parameters. For clarity I consider the mean elasticity on counts at the small and large site on model dates July 15 ($t=25$) and August 15 ($t=56$). For parameters that were initially set to 0, a percentage modification would be meaningless. For these parameters I have modified the variable amount and reported the model output's sensitivity to this perturbation.
+
+The counts are more sensitive to parameter adjustment in the model versions with prior knowledge and juvenile counts are more sensitive than adults. The counts are most sensitive across model types to adjustments in falcon population $\digamma$, shape of cost of fuel in escape probability $a$, baseline predator abundance $B_0$, and site-specific predation danger $\tau(0)$. All these parameters are involved in calculating $\phi$ (\autoref{eq:mu}). The direction of the impacts generally is opposite between sites and stronger at the small site, so a 5\% increase in $\tau(0)$ leads to a \Sexpr{abs( output$"No PK\nNo u\nLarge"[output$Age=="Adult" & output$var=="Danger_small_site"]*5)}\% increase in abundance at the large site for adults, but a \Sexpr{abs( output$"No PK\nNo u\nSmall"[output$Age=="Adult" & output$var=="Danger_small_site"]*5)}\% decrease at the small site. 
+
+The flight range constant parameter $c$ also has a large effect on counts at the large site, showing that if migrants can jump farther and have higher speeds of migration, they will stay longer at the large site. Acting in the opposite direction, increasing the distance to migrate $\mathbb{D}$ reduces counts at the large sites for both adults and juveniles, as I showed in \autoref{sec:dist}.
+
+
+% Counts were influenced  most strongly by the temporal variables related to falcon arrival ($B_0$ and $B_1$gst), as well as the parameters related to fuel load and escape performance ($\alpha$ and $\beta$), but the terminal fitness parameters related to fuel also influenced counts ($p_{max}$ and $x_{c}$).  The direction of the impacts generally was opposite between sites, so a 5\% increase in $B_0$ lead to a \Sexpr{abs( output$"No PK\nNo u\nLarge"[output$Age=="Adult" & output$var=="pred_max"]*5)}\% decrease in abundance at the large site for adults, but a \Sexpr{abs( output$"No PK\nNo u\nSmall"[output$Age=="Adult" & output$var=="pred_max"]*5)}\% increase at the small site. For juveniles, the sensitivities were generally smaller, other than $B_0$ and negligible at the small site because birds only stayed there for one day and were only there due to random arrival location without prior knowledge. Counts at the large site were strongly influenced by the temporal trend in falcons (\autoref{eq:mort}) and variables affected by fuel load (Equations \eqref{eq:Sx} and \eqref{eq:mux}). The juvenile counts were also influenced by shifts in the cost of moving between sites and the wet lean body mass of birds. 
+
+
+
+
+<<elasticity-A, results='asis', tabfun = file.info('../Rscripts/GenerateTables.r')$mtable, dependson='parsen'>>=
+comment <- list(pos = list(0), command = NULL)
+comment$pos[[1]] <- c(nrow(elast_tab))
+comment$pos[[2]] <- c(nrow(elast_tab))
+
+comment$pos[[3]] <- c(-1)
+
+comment$command <- c("\\hline\n\\multicolumn{10}{l}{ \\footnotesize *Sensitivity shown with modification of 1 unit for parameter.} \\\\ ", "\\multicolumn{10}{l}{ \\footnotesize **Sensitivity shown with modification of 0.1 of parameter } \\\\ ", "\\hline\n& & \\multicolumn{4}{c}{ Adults } & \\multicolumn{4}{c}{ Juveniles } \\\\ ")
+
+
+print(elast_tab,sanitize.text.function=function(x){x},
+       floating = TRUE,include.rownames = FALSE, hline.after = 
+        c(-1,0) ,#scalebox='0.75',23
+        add.to.row = comment)#, scalebox=0.7 
+@
+
+
+
+
+
+
+\section{Pattern matching with observational data}\label{sec:matching}
+
+To assess the performance of the model I examined patterns of migrant mass and length of stay relative to available data. The model was parameterized using a comparison between the stopover sites of Boundary Bay, BC and Sidney Island, BC for western sandpipers on southward migration. These two sites have been well studied and inter-site differences have been well established. As well, seasonal and interannual patterns for body mass and lengths of stay have been recorded for one or both sites. I generated comparable model data to evaluate the model's ability to reproduce observed trends in capture data and ran model scenarios to compare with published responses to interannual predation increases.
+
+\subsection{Site-specific mass responses to predation danger and predator abundance}
+
+%Masses of western sandpipers differ between sites and has changed as predation has increased.}
+
+<<banding-dat, eval=F,cache=T,include=F, f_d=file.info("../Rscripts/bandingdat.r")$mtime,modhighpred=file.info("../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/PK/changed_x/highpred/forwards_sim.txt")$mtime,cache.lazy = FALSE>>=
+modver <-  "changed_x" #"mut" #'deltaf'# 
+nboot <- 100
+source("../Rscripts/bandingdat.r", chdir=T)  
+catch_for_ms <- catch_boot[c("L_minus_S", "lci", "uci")][catch_boot$Age=="Adult",]   
+catch_for_ms_j<- catch_boot[c("L_minus_S", "lci", "uci")][catch_boot$Age=="Juvenile",]   
+@
+
+<<load-banding-dat>>=
+bandingdat <- read_rds("../Rscripts/.rds/bandingdata.rds")
+catch_boot=bandingdat$catch_boot;ci_Mod=bandingdat$ci_Mod; modvscapture=bandingdat$modvscapture;mod_scen_los=bandingdat$mod_scen_los
+catch_for_ms <- catch_boot[c("L_minus_S", "lci", "uci")][catch_boot$Age=="Adult",]   
+catch_for_ms_j<- catch_boot[c("L_minus_S", "lci", "uci")][catch_boot$Age=="Juvenile",] 
+@
+
+
+\citet{Ydenberg2002} explored differences in masses of migrant shorebirds between a small, dangerous stopover site (Sidney Island, BC; $48.63^\circ$N, $123.33^\circ$E) and a large, safer site (Boundary Bay, BC; $49.06^\circ$N, $122.96^\circ$E). The two sites are about 60 km apart and many of the baseline parameters in the model are based on these sites. Both adult and juvenile western sandpipers are heavier at Boundary Bay on average (adults \Sexpr{catch_for_ms[[1]]} [\Sexpr{catch_for_ms[[2]]}, \Sexpr{catch_for_ms[[3]]}]g and juveniles \Sexpr{catch_for_ms_j[[1]]} [\Sexpr{catch_for_ms_j[[2]]}, \Sexpr{catch_for_ms_j[[3]]}]g), though this difference has been as high as 7.65g in some years. 
+
+% There are some seasonal patterns though these are complicated by differences in capture effort between years. Pooling captures from 1995-2001 allowed us to look across the migratory period, showing that the difference was generally smaller at the start of the migratory periods and grew larger as the period continued. 1997 was an outlier year in that captures at Boundary Bay had very high masses, especially early juveniles, which appear to have arrived with mean mass over 30g.
+
+
+I modified the dataset to make them comparable with model output. As age was not identified for all captured birds at Sidney Island and Boundary Bay and my model output did not include age specific counts, I limited my measures of mass to avoid the inter-migratory period from July 25 to August 5. I then calculated bootstrapped confidence intervals around the overall mean difference in capture masses between the sites.
+
+To compare model-migrant trends in estimated mass to observed capture data, I sampled data from the model output to match the sampling effort in captured birds. For each date with $n$ captures, I sampled $n$ outputted masses from the model. I resampled 1000 times to create prediction intervals around the overall mean difference in model outputted masses between the small and large sites.
+
+ % made some adjustments to the baseline conditions. Increasing the benefit of departure to $\partial_{s} = 0.958$ reduced the danger to departed migrants to almost zero ($\mu_{s=D}=0.01$). I also shifted the relative food availability at the large site lower ($e_{s=1} = 0.3$). I increased the cost of moving between sites to $\rho = 0.21$, which makes the cost of moving between sites more realistic based on estimates of the cost of flight \citep{Maggini2017a,Jenni-Eiermann2017}. 
+
+% Finally, I reduced the slope of the seasonal increase in predation danger $B_1$ by 50\%. This adjustment was required to shift juvenile usage towards partial use of the small site.
+ 
+% These adjustments shifted the site difference in the model output's mean daily mass to more closely match the observed capture masses (\autoref{fig:MassMatching}). To explore differences between age groups without the impact of arrival mass I also removed the model's age-related difference in arrival fuel loads by setting the mean arrival fuel load ($f_a$) to 1.0g for both adults and juveniles. I examine here the model without foraging intensity.
+
+% To compare the model output with the capture data I ran the modified model's forward simulation of 2000 birds with and without prior knowledge. As the sandpiper capture data did not always include age classification I limited both the capture data and the model outputs to adults prior to July 25 and juveniles after August 5. However, the results do not change with the inclusion of the inter-migratory period. 
+
+The model data closely matches the site differences in capture masses for both adults and juveniles with prior knowledge (\autoref{fig:MassMatching}). The average outputted migrant mass at the large site is \Sexpr{with(ci_Mod,L_minus_S[Age=="Adult"&priorK=="No Prior Knowledge"])} [\Sexpr{with(ci_Mod,lci[Age=="Adult"&priorK=="No Prior Knowledge"])}, \Sexpr{with(ci_Mod,uci[Age=="Adult"&priorK=="No Prior Knowledge"])}]g heavier for adults and \Sexpr{with(ci_Mod,L_minus_S[Age=="Juvenile"&priorK=="No Prior Knowledge"])} [\Sexpr{with(ci_Mod,lci[Age=="Juvenile"&priorK=="No Prior Knowledge"])}, \Sexpr{with(ci_Mod,uci[Age=="Juvenile"&priorK=="No Prior Knowledge"])}]g heavier for juveniles. With prior knowledge the difference between sites in model outputted mean masses increases to \Sexpr{with(ci_Mod,L_minus_S[Age=="Adult"&priorK=="Prior Knowledge"])} [\Sexpr{with(ci_Mod,lci[Age=="Adult"&priorK=="Prior Knowledge"])}, \Sexpr{with(ci_Mod,uci[Age=="Adult"&priorK=="Prior Knowledge"])}]g heavier for adults and \Sexpr{with(ci_Mod,L_minus_S[Age=="Juvenile"&priorK=="Prior Knowledge"])} [\Sexpr{with(ci_Mod,lci[Age=="Juvenile"&priorK=="Prior Knowledge"])}, \Sexpr{with(ci_Mod,uci[Age=="Juvenile"&priorK=="Prior Knowledge"])}]g for juveniles. The trend in capture masses within migratory periods is less clear due to variation in survey effort between years and between sites. The model shows consistent differences in masses between the sites across the season, with the greatest difference at the end of the two migratory periods (\autoref{sec:baseline}, \autoref{fig:baseline-res}). While there is some evidence for this in the capture data, there are insufficient capture data to make a comparison within seasons. The trends in mass at capture within season are shown in \autoref{app:other-res}
+
+
+
+<<MassMatching,  fig.cap="Mean differences between large and small site in capture data and simulations. Capture data show the difference $\\pm$ CI in grams between birds captured at Boundary Bay, BC and Sidney Island, BC. Simulation data are the difference between the large and small sites from the modified model with and without prior knowledge, sampled to match the daily numbers in the original capture data. Modified model described in \\autoref{sec:matching}",dependson='banding-dat'>>=
+bandingdat$modvscapture 
+@
+
+
+ \citet{ydenberg_western_2004} found that as predator populations recovered the mass at capture of migratory sandpipers at the small Sidney Island stopover site decreased but found no decrease at the large Fraser River site (\autoref{fig:captureMasses}). I ran model scenarios that varied the model's overall flyway predator population $\digamma$ between 0.25 and 1.5 to see how site-specific masses would change with predation. 
+
+ Increasing predator abundance does lower mean masses of model outputs for adults and juveniles both with and without prior knowledge, and for juveniles, the model shows a decrease in mass that is much larger at the small site than at the large site, like the pattern observed by  \citet{ydenberg_western_2004} (\autoref{fig:PredMassMatching}). The decline is similar for adults, but there is a larger decrease in masses at the large site in adults than juveniles. The divergent pattern between the sites is due to the small site becoming disproportionally more dangerous as $\digamma$ increases and the sites becoming more alike in danger as $\digamma$ shifted below 1 (See \autoref{eq:mux}). Therefore, when predators are more abundant, the cost of being heavy at the small site is much greater than at the large site compared with when predators are scarce. %There is a smaller decrease in masses at the large site between the baseline and high predation scenario and this likely represents birds departing lighter as the marginal cost of staying longer to gain more fuel is reduced as the daily risk of mortality increases.
+
+
+ % changes are likely partially due to shifts in  mass at departure, but there is also a change in the differences between sites as predation changes. For example, the greatest change in masses across scenarios occurs at the large site with adults, while the smallest change is at the the small site for juveniles. Likely these represent the extremes in flexibility of strategy as conditions change. For juveniles at the small site, it is still relatively dangerous even if overall predation is reduced. For adults, a change in overall predation could change the benefit of remaining in the region versus departing onwards.
+
+
+ <<captureMasses, fig.cap="Trends in mean $\\pm$ CI mass at capture for birds caught at Boundary Bay (black) and Sidney Island (red) between 1995 and 2001. Points are the mean for the month of the year \\textpm95\\%CI. Captures during the intermigratory period (July 25 - August 5) were removed from the estimates to make them more comparable with simulation results. Data from \\citet{ydenberg_western_2004}.",dependson='banding-dat'>>=
+bandingdat$FRPlot + theme(legend.position='none') 
+@
+
+ <<PredMassMatching, fig.cap="The effect of changes in the predator population on the mean mass of adult and juvenile migrants with and without prior knowledge at the small (red, dotted lines) and large (black, solid lines) sites. Means are shown with 95\\% bootstrapped confidence intervals.",dependson='banding-dat'>>=
+bandingdat$Scenario_mass_r 
+ @
+ 
+
+\subsection{Changes in lengths of stay in response to predator abundance}
+%Western sandpipers have reduced lengths of stays at a dangerous stopover site as predator numbers have increased.}
+
+Changes in lengths of stays of individually marked migrant sandpipers at a small site, Sidney Island, as falcon populations increased, were described in \citet{ydenberg_western_2004} and \citet{Hope2011}. To look for similar patterns in the model, I converted the estimated stays from the model and from the mark recapture data into seasonal changes in lengths of stay. The intra-annual trends based on mark-recapture at the small Sidney Island site show lengths of stay increasing throughout the adult migration and decreasing throughout the juvenile period. I used the percentage change from the mean model or capture estimates of lengths of stay to compare model and capture trends in lengths of stay on the same scale. I focus here on the small site model outputs only as they are more directly comparable to the Sidney Island data.
+
+%These trends are estimated from estimates of probability of remaining at the site between weeks. From the model output of individual daily migrant location, I calculated the daily probability of birds staying at their current site. I then compared trends in the model's residence probabilities to those calculated based on the mark recaptures studies at Sidney Island. I averaged these values across a week to make them comparable to the weekly estimated daily survival probabilities from the mark-recapture analysis.
+
+In the baseline model lengths of stay at the small site increase within the adult and decrease through the juvenile migratory periods (\autoref{fig:LOSMatching}). The pattern matches the observed pattern from \citet{Hope2011} except for the first week of juveniles showing a very short length of stay. When prior knowledge is added, the adult seasonal pattern of model generated lengths of stay no longer matches the seasonal trend in lengths of stay from capture data. The juvenile pattern in model lengths of stay continues to match the capture data, but the first week's lengths of stays were no longer as short as in the baseline model.
+
+%For juveniles the deviation from mean length of stay increased from \Sexpr{(sum_resprob_mod$pres[sum_resprob_mod$Age=="Juvenile"&sum_resprob_mod$priorK=="No Prior Knowledge" & sum_resprob_mod$Site=="Large"])[[1]]} for the first arrivals to a maximum of \Sexpr{max(sum_resprob_mod$pres[sum_resprob_mod$Age=="Juvenile"&sum_resprob_mod$priorK=="No Prior Knowledge" & sum_resprob_mod$Site=="Large"])} two weeks later. The daily residence probability then decline through the remainder of the season. 
+
+% In the model with prior knowledge residence probabilities declined for both groups at both sites, though at different rates. Residences for adults and juveniles were higher at the large site, though residence times declined rapidly for adults. For juveniles at the large site residence times gradually declined from a maximum of \Sexpr{max(sum_resprob_mod$pres[sum_resprob_mod$Age=="Juvenile"&sum_resprob_mod$priorK=="Prior Knowledge" & sum_resprob_mod$Site=="Large"])}. At the small site, both adults and juvenile residences quickly declined throughout their migratory periods. 
+
+% Overall, the estimated daily residence times from the mark-recapture work vary between about 0.57 and 0.94, while the model weekly averages ranged between \Sexpr{min(sum_resprob_mod$pres)} and \Sexpr{max(sum_resprob_mod$pres)}, but generally were within the range observed at Sidney Island (mean model: \Sexpr{mean(sum_resprob_mod$pres)}; mean mark-recapture: \Sexpr{mean(BS_Dat$Pred, na.rm=T)}). The comparison is not perfect as the mark-recapture estimates take account of banding effects and therefore do not include the first time period after capture and those estimates are themselves derived from a model that is estimating inter-annual and intra-annual trends in lengths of stay.
+
+
+
+<<LOSMatching, fig.cap="Comparison of model trends in lengths of stay in percent deviation from mean lengths of stay for migrants under baseline conditions (with 95\\% CI;red - small site; dots - adults, triangles - juveniles) and predicted seasonal trends in lengths of stay from Sidney Island (dashed lines, from \\citet{Hope2011}).",dependson='banding-dat', fig.width=4, fig.height=8, out.width="0.6\\textwidth",fig.align='center'>>=
+bandingdat$LoS_compare2  + theme(legend.position='none')
+@
+
+
+Adjusting the overall predator population $\digamma$ between 0.1 and 1.5 results in a decrease in model true lengths of stay at the small site for adults with and without prior knowledge (\autoref{fig:LOS_Danger_Matching}). For juveniles at the large site, the trend is reversed and lengths of stay increased as predator abundance increased. Adults at the large site had higher lengths of stay under both the low and high predation scenarios.
+
+We do not have data on length of stay trends at a large site, but the trends at the small site match those at the Sidney Island. \citet{ydenberg_western_2004} report a decline from 8.4 to 2.4 days in western sandpiper lengths of stay, while my model generated lengths of stays decline for adults from \Sexpr{mod_scen_los$Small[mod_scen_los$priorK=='Prior Knowledge'&mod_scen_los$Scenario=='Low'&mod_scen_los$Age=="Adult"]} days to \Sexpr{mod_scen_los$Small[mod_scen_los$priorK=='Prior Knowledge'&mod_scen_los$Scenario=='High'&mod_scen_los$Age=="Adult"]} days as predation increases. For juveniles, the change is slightly smaller (\Sexpr{mod_scen_los$Small[mod_scen_los$priorK=='Prior Knowledge'&mod_scen_los$Scenario=='Low'&mod_scen_los$Age=="Juvenile"]} days to \Sexpr{mod_scen_los$Small[mod_scen_los$priorK=='Prior Knowledge'&mod_scen_los$Scenario=='High'&mod_scen_los$Age=="Juvenile"]} days).
+
+
+<<LOS_Danger_Matching,  fig.cap="The effect of changes in the predator population on the true length of stay for adult and juvenile migrants with and without prior knowledge at the small (red, dotted lines) and large (black, solid lines) sites. Length of stay is calculated as the number of days spent at the site prior to departing or moving sites. Means are shown with 95\\% bootstrapped confidence intervals.",dependson='banding-dat'>>=
+bandingdat$los_plot   
+@
+
+\citet{ydenberg_western_2004} concluded the number of western sandpipers using Sidney Island did not decrease as predator population recovered, but that declines in census numbers could be entirely accounted for by changes in lengths of stay. I recreated their figure 4 using the model output at the small site under low, baseline and high predator populations (\autoref{fig:count-vs-true}). 
+
+The model output matches the results from Sidney Island in that census declines are substantially larger than declines in the number of birds using the site. There is however some change in the true number of birds using the site between the low and high predator population scenarios as birds shift usage. Although there was no statistically significant decline across their entire study period, the data do suggest a decline in numbers of birds using the sites during the last two years of their study \citep[ their Figure 4]{ydenberg_western_2004}. In Chapter 4 I explore the effect of increasing predator populations in semipalmated sandpipers and show they show a shift in migratory usage toward safer sites and predators increase.
+
+<<count-vs-true,fig.cap="Comparison of annual cumulative daily abundances ($N_C$) with the true number of birds ($N_T$) at the small site. The figure is based on Figure 4 in \\citet{ydenberg_western_2004}.",dependson='banding-dat', out.width="0.7\\textwidth", fig.align="center", fig.width = 6, fig.height=6>>=
+bandingdat$ydenberg_countPlot
+@
+
+
+
+% While our model modifications involved a reduction in the interannual trend in predation danger, similar results could be achieved by adjusting food conditions at the small site. \citep{lank_effects_2003} found food abundance was higher at Sidney Island in August than in July. Adding a seasonal trend in $e_{s=0}$ so that the potential fuelling rate at the small site increased by 1.0g over the 90 days of the model increased juvenile usage at the small site in the model. We found this to be a less useful modification, but the results are described in detail in \autoref{app:food}.
+
+
+
+% \input{Discussion.tex}
+
+<<import-model-discussion, cache=F, child="Discussion.tex">>=
+
+@
+
+
+<<-begin-comment-mod,cache=F, results='asis'>>=
+if(!includeapp) {cat("\\begin{comment}")}
+# cat("\\begin{comment}")
+@
+
+
+
+\backmatter%
+  \addtoToC{Bibliography}
+  \bibliographystyle{apa}
+  \bibliography{library}
+
+
+\begin{appendices}
+
+<<appendices,child="Appendices.Rnw", eval=F>>=
+@
+
+% #print("Appendices not included") #
+
+\end{appendices}
+
+<<-end-comment-mod,cache=F, results='asis'>>=
+if(!includeapp) {cat("\\end{comment}")}
+# cat("\\end{comment}")
+@
+
+% \end{document}

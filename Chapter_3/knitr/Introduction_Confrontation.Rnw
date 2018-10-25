@@ -1,0 +1,47 @@
+\section{Introduction}
+
+Managers and population ecologists commonly use counts at migratory stopovers to assess shorebird population size \citep{Bishop2000} and trends \citep{bart_survey_2007,andres_population_2013,Ross2012,morrison_population_1994,Gratto-Trevor2012}. Statistical models used to detect population trends from these counts generally do not explicitly model migrant behaviour \citep{bart_survey_2007} and when they do, accounting for changes in be behaviour can be difficult \citep{Crewe2015a}. Behaviour of individuals can be a useful indicator of population status \citep{Cresswell2011}. Understanding the optimal behaviour of individuals can lead to a greater understanding of ecological systems beyond what standard statistical models can supply \citep{Sherratt2005,Berger-Tal2011a}. My aim in this chapter is to use mortality-minimizing migrant behaviour to understand factors shaping distributions of shorebirds across stopover sites within a landscape. 
+
+Shorebird species across the globe are considered to be facing conservation crises \citep{Studds2017,andres_population_2013,Piersma2016} and no unifying explanation for apparent survey declines has been found \citep{PEARCE-HIGGINS2017,Amano2017}. Many studies use surveys of shorebird abundances at migratory stopovers to develop trends within a species \citep{bart_survey_2007,andres_population_2013}. By using migratory counts researchers have the potential to count large numbers of birds and therefore often the changes in these numbers are assumed to be indicative in a change in the population. Migrants can be sensitive to conditions on migration and change their behaviour in ways that at a population level can bias counts \citep{Crewe2015a,ydenberg_western_2004}. Changes in the behaviour of individuals can therefore potentially lead to researchers missing true population declines or interpreting behavioural shifts as true population declines.
+
+The standard approach to interpreting migratory counts of shorebirds involves analysing trends from key sites or from many sites after several decades of monitoring.  We use statistical models attempt to control for behaviour and biases in survey effort\citep{Crewe2016,Crewe2015b,Crewe2015a}, but such models do not explicitly model behaviour. Due to the large amount of statistical noise in migratory counts, these analyses often require decades of counts for us to detect a trend and the outputs from such models do not generally provide a causal link. %A change in behaviour across a time period can lead to misinterpreting trends as population changes \citep{ydenberg_western_2004}. 
+
+We can alternatively use behaviour not as a variable to control for, but as an indicator of population status, ecosystem health or individual quality. \citet{Rosenzweig2001} describes optimality as ``the biologist's tricorder'', referring to the Star Trek device that could quickly identify the problem in almost any situation. \citet{Morris2009} describe behaviours as useful indicators due to their being adaptive, responding instantaneously to altered conditions, and being ``reciprocal'', meaning the actions of single individual or group can reciprocate the actions of others. \citet{Cresswell2011} describes the use of lethal space as an indicator of a population's health where reduced carrying capacity in a system forces individuals to use ``lethal'' behavioural space. For example, \citet{macleod2014predicting} found that the tradeoff between starvation and mass-dependent vulnerability to predation predicted the timing and cause of changes in broader population from predation. In this case, higher predation danger lead to increased occurrence of starvation in harbour porpoises. There have been multiple calls to action to include behavioural indicators in conservation programs, but their use remains limited \citep{greggor2016research,caro2013eighteen,brooker2016using}. 
+
+The behaviour of shorebirds on long-distance migration can be shaped by multiple factors. Their behaviour on pre-breeding migration is often driven by timing of arrival at the breeding grounds \citep{Weber1997,clark_fitness_1999,Harts2016,Gill20132161,gunnarsson2006population}. Shorebirds' behaviour on post-breeding migration is more varied and there remains debate over the driving forces pushing birds southward \citep{lank_effects_2003,gallinat2015autumn}. Nonetheless, migrant shorebird behaviour can be influenced by predator population size and timing of predator migration \citep{Ydenberg2002,Hope2011,Hope2014}, food abundance \citep{pomeroy_tradeoffs_2006}, and weather \citep{Butler1996b,Senner2018}. 
+
+To understand how shorebird behavioural responds to changing conditions and how these responses could affect counts of these shorebirds on migration I used a model predicting mortality-minimizing site choice and usage in western sandpipers (\textit{Calidris mauri}) on southward migration. \citet{Taylor2007} modelled individual western sandpipers each optimizing their migratory decisions to generate emergent patterns of sandpiper usage between small and large sites on northward migration. They found that population declines and shorebirds' response to increased predation showed differing patterns when both small and large sites were examined and proposed examining sites that vary in danger or size from year to year as a subsequent study. I made use of the annual variation in the timing of predator arrival in a region to explore if abundances shift between years as predicted from the model.
+
+
+Using the model developed in Chapter 2 I explored how individual shorebirds each attempting to minimize the future probability of mortality on migration respond to the annual conditions through which they migrate and how these mortality-minimizing behaviours can shape the observed counts within a migratory landscape. I analysed six scenarios of potential factors influencing migratory counts to determine if each scenario could  recreate the observed distribution between small and large stopover sites across five years of surveys. I then used independent data to determine if the model estimates are useful indicators of annual conditions shaping sandpiper distributions. Understanding how counts on migratory stopovers of shorebirds are influenced by individual migrant's behaviour is key to understanding if they can provide useful information about the status of a population. 
+
+
+	% \subsection{Difine research territory}
+	% 		- Migration
+	% 		- Behaviour
+	% 		- Shorebirds
+	% 		- Migration surveys
+	% 		- Behaviour as an indicator
+% \subsection{The problem with migratory monitoring}
+% 		\paragraph*{Migratory species are in danger, we don't have problems assessing their population status}
+		% \paragraph*{The general way of assessing migratory population status is as follows}
+		% \paragraph*{Shorebird population status is assessed as follows}
+% \paragraph*{Even perfect information does not provide a causal link, isolating factors can be difficult }
+	% \subsection{Behaviour as an indicator}
+		
+	% 	\paragraph*{Elsewhere behaviour has been shown to be a reasonable indicator of ..(popstatus, individual quality, etc)}
+		% \paragraph*{In migration, behaviour is often complex and not well understood}
+
+	% \subsection{Physicists use fundamental laws for complex predictions}
+	% 		\paragraph*{Example of planets or something}
+	% \subsection{Can optimal behaviour inform us of how migratory counts are shaped?}
+	% \subsection{How migratory counts are shaped by behaviour?}
+	% \subsection{Can we use specific predictions of migrant behaviour to understand migratory surveys?}
+
+
+	% 	\paragraph*{In migration Taylor et al. demonstrated how knowledge of behaviour could differentate between patterns in survey counts}
+	% 	\paragraph*{The method proposed by Taylor et al has not been tested on real data}
+	% % \subsection{Potential factors shaping shorebird populations and surveys}
+	% \subsection{Using a model to determine support for various factors}
+	% 	\paragraph*{My goal is to use a model that generates specific predictions of movements through a landscape of small and large sites to explore support for competing hyptheses to explain counts of shorebird abundances  }
+		% I will use the model of western sandpiper behaviour on southward migration developed in Chapter 2  to confront surveys of the sandpipers from the Salish Sea with several model scenarios exploring potential causes of shorebird survey trends. 

@@ -1,0 +1,453 @@
+<<parent-sesa-app, include=F>>=
+set_parent("Chapter4_SESA.Rnw")
+
+opts_chunk$set(echo = F, # Do NOT repeat code in final document
+                message = F, # Do NOT print R messages in document
+                warning = F, # Do NOT pring warnings
+                cache = T, # Cache runs
+                dev = "CairoPNG" # Uses Cairo png instead of pdf for images
+             )
+select <- dplyr::select
+unloadNamespace("maps")
+map <- purrr::map
+@
+
+<<setup,eval=F>>=
+@
+
+
+
+
+\chapter{Simulations and assumption checking for analysis of the priority matching distribution (PMD) index}\label{app:sesa}
+
+Within this Appendix I examined the details of the priority matching distribution index described in Chapter 1 and examined potential biases within the Atlantic Canada Shorebird Survey that could impact my interpretation of the results. I simulated birds across a series of sites to explore how the PMD changes with changes in how birds spread themselves across sites. I then simulated biases in site types sampled within the sample of survey sites to explore how biases can impact the index. Finally, I simulated shifts in site selection using the true survey sites to determine if shifts could be caused by survey biases alone. 
+
+\section*{Methods}
+
+\subsection*{Simulating distribution of birds across sites}
+
+<<calc-values, cache=F>>=
+yrs <- AUC.results$AUC$Year %>% unique
+glm_danger <- glm(proportionDanger~area_km, data = danger_site, family = gaussian('log'))
+coefs_ <-  coef(glm_danger)
+sd_error <- sd(residuals(glm_danger))
+
+calc_D = function(x, useR = FALSE)  max(0,exp(x*coefs_[[2]] + coefs_[[1]] + ifelse(useR, rnorm(1, 0, sd_error), 0)))
+
+
+glm_A <- glm(area_km~proportionDanger, data = danger_site, family = gaussian('log'))
+coefs_A <-  coef(glm_A)
+sd_errorA <- sd(residuals(glm_A))
+calc_A <- function(x, useR = FALSE)  exp(x*coefs_A[[2]] + coefs_A[[1]]) + ifelse(useR, rnorm(length(x), 0, sd_errorA), 0) 
+fulcalc <- function(x, ur =FALSE){
+  a <- calc_A(x, ur)
+  while (a <= 0) {
+    a <- calc_A(x, ur)
+  }
+  return(a)
+}
+source("../Rscripts/simulation_functions.r")
+# plot_grid(explotsall, simPlotcompare, nrow=2, rel_heights = c(0.4,0.9), rel_widths = c(0.7,1),align = 'v')
+source('../Rscripts/runandplot.r')
+@
+
+I simulated several ways that birds could spread themselves across a simulated set of survey sites to quantify how the PMD would change with in priorities. For each simulation I spread 100 000 birds across 30 sites. Each site's danger was assigned sequentially from 0.1 to 1. To avoid complete linkage between area and danger I assigned area based on the fit of a log-linear equation of area to site danger within the ACSS dataset (\autoref{fig:danger-site}). The equation is as follows
+\begin{equation}
+	 log(A_i) = \alpha  + \beta y_i + \varepsilon_i
+\end{equation} where $\alpha =$ \Sexpr{coefs_A[[1]]}, $\beta =$ \Sexpr{coefs_A[[2]]} and $\varepsilon = \mathcal{N}(0,$\Sexpr{sd_errorA}$)$.
+
+$A_i$ is the area in $\text{km}^2$ and $y_i$  is the proportion of the site further than 150m from shore (site safety) at site i.
+
+Birds that randomly choose a site (Site Matching) were spread across sites using a uniform distribution. Birds that spread across sites using an ideal free distribution based on area of habitat per bird (Area Matching) were spread to equalize birds per $\text{km}^2$. Birds that spread themselves by the amount of safe habitat available per bird (Safe Area Matching) were distributed to equalize the number of birds per  $\text{km}^2$ of habitat further than 150m from shore. Birds that aggregated at only the safest sites (Aggregation distribution) were spread uniformly between safe sites ($x_i<0.2$) and dangerous sites, but the proportion at the safest sites was much greater ($p = 0.9$).
+
+% I refer to the uniform distribution as “site-matching”, as the expectation is that the number of birds should be equal at each site. I refer to the distribution by area of available habitat as “area-matching”, where the density of birds should be equal across sites. I simulated “safe area matching” as the density of birds in the habitat further than 150m from cover should be equal across sites. 
+
+
+<<baseline-pmd-ex, include=F>>=
+seeds <- seq(1,1000)
+test.df <- simulation(pars, T)
+montecarloADM <- map_df(seeds, randomSim,  pars = pars,  runs =c('uniformBirds', 'areaMatchingBirds', 'dangerMatchingBirds',
+	                                                                 'hurdleBirds'))#c("areaMatchingBirds", "dangerMatchingBirds" ) )
+	
+	baselineRes <- test.df$results %>% filter(!col %in% c('betaBirds', 'normalBirds')) %>% 
+	  mutate(grp = factor(col, levels = c('uniformBirds', 'areaMatchingBirds', 'dangerMatchingBirds',
+	                                      'hurdleBirds')))
+source("../Rscripts/Plots_ex_for_WHSG.r")  
+@
+
+
+
+<<hurdle-sim, include=F>>=
+hurdlepoints <- seq(0.6,0.85,0.05)#seq(0.15,0.4, 0.05)
+	hurdleproportions <- seq(0.5, 0.9, 0.2)
+	runs.hurdle <- expand.grid(hurdlepoints, hurdleproportions)
+	
+	results.hurdle <- runAndPlot(runs.hurdle, adjustHurdle, pars, "hurdleBirds", c(0.85,0.75,0.60))#0.15,0.25,0.40))
+	@
+
+
+
+\subsubsection*{Normal Beta, and Hurdle Distributions of Birds}
+
+I subsequently spread birds across the 30 sites using a normal and beta distributions to explore how differing statistical distributions across sites affected the PMD. I chose the beta because it allowed for a wide variety of heavily skewed distributions and more uniformly distributed distributions. I also simulated the bird numbers across sites using a normal distribution which was truncated at zero because it allowed me to adjust the mean site danger of all birds with a single parameter that clearly illustrated how the abundances across sites shifted. I adjusted the parameters within each statistical distribution and observed how counts changed between sites. I then measured the sensitivity of the PMD to changes in the statistical distribution. I held the survey sites constant for each simulation and shifted the distribution towards and away from the safety sites. I estimated elasticity of the PMD index to the mean and standard deviation of the normal distribution and the two shape parameters of the beta distribution.
+
+To simulate the aggregation of birds beyond that expected by area or safe area I used a two-step hurdle function. Most birds in the population were found at a few sites, however many other sites hosted a few hundred birds in a year. To simulate these distributions, I divided a uniform distribution into two points based around a break point associated with a site's characteristics (site danger). A proportion of the population was distributed across the sites safer than the break point and the remainder across the sites more dangerous than the break point. This simple distribution therefore had two parameters: the break point and the proportion of the population above the breakpoint. I varied both parameters and examined how the PMD shifted. 
+
+
+<<norm-sim, include=F>>=
+mns <- seq(0.1, 0.9, 0.1)
+	sds <- c(0.1,0.2,0.3)
+	runs <- expand.grid(mn = mns, sd = sds)
+	# source('runandplot.r')
+	# pdf("normShift.pdf", paper = 'a4r')
+results.norm <- runAndPlot(runs, adjustNorm, pars, "normalBirds", c(0.2,0.5,0.8))
+@
+
+
+<<beta-sim, include=F>>=
+parsB <- seq(1,15)
+	runsB <- expand.grid(par1 = parsB, par2 = c(seq(15,1,-5),1))#rev(parsB))
+	# pdf("betaShift.pdf", paper = 'a4r')
+	results.beta <- runAndPlot(runsB, adjustBeta, pars, "betaBirds", c(1,8, 15))
+	
+@
+
+
+\subsubsection*{Randomization of site safety and area}
+
+While the previous simulations kept the number of sites constant and distributed sequentially, I wanted to examine how random shifts in the sites' characteristics would affect the PMD index. I simulated 30 sites with site safety chosen from a uniform distribution. Area was estimated based on the site's safety index as described in the equation above. I used a beta distribution $Beta(1,14)$ that is skewed towards safe sites to mimic the observed distributions of semipalmated sandpipers across survey sites. I simulated 1000 Monte Carlo runs and calculated the PMD for each run. 
+%As a comparison, I also simulated distributions using the baseline parameters for the site-matching, area-matching, safe area-matching, and aggregation distributions. I randomly drew the site characteristics to generate another estimate of how sensitive the PMD is to survey biases.
+
+<<random-sim, include=F>>=
+seeds <- seq(1,1000)
+	montycarlo <- map_df(seeds, randomSim, pars = pars)
+	mnMC <- mean(montycarlo$aucRatio)
+	
+	
+@
+
+
+\subsection*{Sensitivity to survey biases}
+
+While the PMD should respond to shifts of birds between sites, it is designed to be used on survey data that surveys a different subset of sites every year. To examine how the PMD changes with random and non-random changes in the characteristics of sampled sites I simulated a distribution (Beta(1, 14)) across sites. This distribution heavily skews towards safe sites and is meant to represent the distribution observed by SESA in the ACSS. I initially held the number of sites constant but assigned the danger for the site randomly from a uniform distribution between 0.1 and 1.0. The area for the site was assigned based on the site safety index by the equation described above. I then increased the number of sites and redistributed the site characteristics. For each run, I simulated the calculation 1000 times to get a sense of the variation in the PMD. I then systematically biased the sample of survey sites towards dangerous sites by taking a proportion of the site dangers from a normal distribution (N(0.8, 0.1)) and the remaining proportion from a uniform distribution. 
+
+<<bias-sim, include=F, eval=F>>=
+pars$binned <- TRUE
+	pars$binsize <-  0.10
+	
+	nsites.runs <- c(seq(2, 25,2) ,seq(30, 50, 5))
+	adjustNSites.df <- map_df(nsites.runs, adjustSiteN, pars = pars)
+	
+@
+
+<<danger-bias, include=F, eval=F>>=
+resetPars()
+	biases <- seq(0.1, 0.9, by = 0.1)
+	mnbiases <- seq(0.6,1.0,0.1)
+	allrunBiases <- expand.grid(biases, mnbiases)
+	incBias <- map2_df(allrunBiases[,1], allrunBiases[,2], adjustBiasSites, nsites = 30, pars = pars)
+	
+@
+
+
+
+\subsubsection*{Techniques to account for biases}
+
+I explored a method to attempt to control for the effect of bias in the types and number of sites surveyed on the PMD index. I utilized a binning protocol to account for biases within the survey site set in terms of site danger. To bin based on site danger, I grouped the sites into bins of a given sites, say 0.1, and then sampled from each bin the minimum number of sites within any of the bins. The size of the bin varied based on the heterogeneity of the sites selected across the time periods. A data set with uniform effort across time periods only required small bins to account for biases. To explore the binning effect, I created a survey set with a given distribution of birds that gives a biased PMD. I then implemented a binning analysis and measure if this corrects the biased estimates of the PMD.
+
+<<fix-bias, include=F, eval=F>>=
+resetPars()
+	pars$binned <- T
+	pars$binsize <-  0.10
+	seeds <- seq(1,1000)
+	BinnedincBias <- map_df(biases, adjustBiasSites, pars = pars, meanBias = 0.8)
+@
+
+<<write-biases, eval=F>>=
+write_rds(list(bias_sim = adjustNSites.df, danger_bias = incBias, fix_bias = BinnedincBias),
+	 "../Rscripts/rds_files/simulation_bias.rds")
+@
+
+<<import-bias>>=
+simulations_bias <- read_rds("../Rscripts/rds_files/simulation_bias.rds")
+simulations_bias$bias_sim -> adjustNSites.df
+simulations_bias$danger_bias -> incBias
+simulations_bias$fix_bias -> BinnedincBias
+
+
+@
+
+\subsection*{Atlantic Canada Shorebird Survey Dataset}
+I simulated the PMD index with real survey data using the Atlantic Canada Shorebird Survey dataset (Environment Canada 2009). To complement the analysis performed in Chapter 1, I simulated several scenarios of shifts or lack of shift using the actual survey site characteristics in the data. This allowed me to examine what a true shift in the data would look like when effort across sites and years was distributed unequally and when this was considered.
+
+\subsubsection*{Simulating Trend Analysis}
+To understand the factors shaping the interannual trends in the PMD, I used the ACSS dataset and distributed the birds counted in a year across the sites surveyed in that year. I used the real sites surveyed in each year and just adjusted the distribution of birds at these sites. I used a beta distribution and adjusted one of the shape parameters which affected how skewed the counts were towards safe or dangerous sites. I ran three scenarios and compared the results to the results from the actual counts. First the distribution of birds across site types was constant across years, while the sites and total number of birds counted across all sites varied as in the true dataset. The distribution was held fixed at a moderate skew towards safe sites (Beta(1,8)). Second, I simulated a shift towards safe sites by shifting the beta distribution from being only slightly skewed towards safe sites to being extremely skewed towards safe sites (Beta(1,5) to Beta(1,11)) between 1974 and 2015. Finally, I simulated a shift towards dangerous sites by shifting statistical distribution in the opposite direction from Beta(1,11) to Beta(1,5) across the same time period. 
+
+
+
+
+\subsubsection*{Quantifying population shifts}
+The question remained of how the movements of birds affected the PMD. To develop a sense of the linkage between the counts and the PMD I simulated the shifts of birds from the site-matching distribution to an aggregation distribution, where birds were only located at the safest sites. Using the total number of birds counted and the characteristics of the sites surveyed for each year from the ACSS survey dataset, I redistributed the birds across the sites based on the proportion of total habitat available at each site. I then calculated the PMD, which as expected would be equal to 1.00. I then redistributed a given proportion of the birds into the safest sites (1\textsuperscript{st} quantile of site danger) from the remaining distribution of sites. I increased the percent shifted from 1\% to 100\% and recalculated the PMD for each simulation. I simulated the PMD for each year to see if the pattern differed between years. 
+
+<<sim-trend1, include=F>>=
+source('../Rscripts/simulateDistributionShiftFunctions.r')
+
+
+	runs <- expand.grid(yrs, 6546)
+output_na <- map2_df(runs[,1], runs[,2], run_yr, data_all = ACSS_South_Danger_forAnalysis, runType = 'proportion', quantiles = c(0.9,0.99) )
+
+	
+sum_dat <- summarizeData(ACSS_South_Danger_forAnalysis, 1231, average = T, transform = "None")
+auc.w.p <- 
+  AUC.results$AUC %>% group_by(Year) %>% 
+    mutate(
+      p = output_na[which(output_na$Year == Year),][['proportion']][which.min(abs(output_na[which(output_na$Year == Year),][["aucRatio"]] - aucRatio))]
+           ) %>% 
+    ungroup %>% mutate(
+           Yr.st = arm::rescale(Year),
+           pLg = exp(LgSiteCount) / sum.count, type = "Simulation")
+	
+Proportion_at_safest <- 
+sum_dat %>% mutate(SL = ifelse(propSafety > 0.8, "Safe", "Dangerous")) %>% 
+  filter(Year %in% yrs.w.lg & Year != 1995) %>% 
+  group_by(Year, SL) %>% 
+  summarize(pSL = sum(propBirds)) %>% filter(SL == "Safe") %>% 
+  mutate(p = pSL, type = 'Real Counts')
+
+@
+
+
+To estimate the proportion of birds needed to shift to the safest sites to generate the measured PMD, I calculated the point closest to the measured PMD along the simulated PMD line of increasingly shifted distributions for each year. This analysis generated the estimate of the proportion of birds that shifted to the safest sites. I compare this estimate to the proportion of birds in each year at the safest sites (proportion of site further than 150m from shore was greater than 0.8) within the observed survey dataset.
+
+<<sim-trend2, include=F>>=
+
+noTrend <- map(yrs, simulateCounts, shape2 = 8, dat = sum_dat, returnDat = TRUE) %>% transpose() 
+noTrend.df <- do.call("rbind", noTrend[[1]])
+noTrend.results <- do.call("rbind", noTrend[[2]])
+
+trend <- tibble(Year=1974:2015, beta = seq(5,11, length.out = 42)) %>% 
+  filter(Year %in% yrs)
+
+trend.out <- map2(trend[["Year"]],trend[["beta"]], simulateCounts, dat = sum_dat, returnDat = TRUE ) %>%
+                            transpose
+
+trend.df <- do.call('rbind', trend.out[[1]])
+trend.results <- do.call('rbind', trend.out[[2]])
+
+
+trend.2 <- data.frame(Year=1974:2015, beta = seq(11,5, length.out = 42)) %>% 
+  filter(Year %in% yrs)
+
+trend.danger <- map2(trend.2[["Year"]],trend.2[["beta"]], 
+                     simulateCounts, dat = sum_dat, returnDat = TRUE ) %>%
+                            transpose
+
+trend_D.df <- do.call('rbind', trend.danger[[1]])
+trend_D.results <- do.call('rbind', trend.danger[[2]])
+
+
+@
+
+
+\section*{Results}
+\subsection*{Prioritization simulations}
+\subsubsection*{%Different Distributions of birds}
+Site-, Area-, and Safety-Matching Distributions}
+The site-matching distribution across all sites in the initial layout gave a PMD of \Sexpr{mean(montecarloADM$aucRatio[montecarloADM$col == 'uniformBirds'])}. When I simulated the area- and safety-matching distributions I calculated a PMD of \Sexpr{mean(montecarloADM$aucRatio[montecarloADM$col == 'areaMatchingBirds'])} and \Sexpr{mean(montecarloADM$aucRatio[montecarloADM$col == 'dangerMatchingBirds'])} respectively (\autoref{fig:dist-ex-plot}). Only the aggregation distribution showed PMD index values similar to those observed in semipalmated sandpiper distributions (PMD = \Sexpr{mean(montecarloADM$aucRatio[montecarloADM$col == 'hurdleBirds'])}). The sites were sequentially assigned danger and area in these simulations. \autoref{tab:sesa-elast} outlines the estimates of elasticity for parameters within the following three distributions of birds across survey sites.
+
+<<calc-sens, results='asis'>>=
+elast_tab_sesa <- 
+tibble("Distribution"   = c("Beta", "Normal", "Normal", "Hurdle", "Hurdle"),
+       "Parameter"      = c("b", 'mean', 'sd', 'Break Point', "Proportion of population in safest sites"),
+       "Baseline value" = c(14,0.1,0.2,0.15,0.9)) %>%
+	  mutate(
+       "Elasticity"     = pmap_dbl(list(var = .$`Baseline value`, df = rep(0.1,5), func = c(betaforSen,N_mean_forSen,N_sd_forSen,HurdleLoc_forSen,HurdleProp_forSen) ),
+                                    calculateSensitivity),
+       `Other parameters` = c("a = 1", "sd = 0.2", "mean = 0.1", "Proportion = 0.9", "Break Point = 0.15")
+       )
+	
+	
+print(xtable(elast_tab_sesa, label = "tab:sesa-elast", caption = "Elasticities of the Priority Matching Distribution Index based to several different parameters for simulating bird distribution across sites." ), sanitize.text.function = function(x){x},
+       floating = TRUE, floating.environment = "sidewaystable",
+       include.rownames = FALSE)
+@
+
+
+<<dist-ex-plot, fig.cap = "Simulations of birds across 30 sites using different distribution types. Distributions are described in text. Red line shows the baseline estimate of the PMD index for each distribution when site safety is sequentially assigned while the grey dots show the variation in the index when site safety is randomized. Points are jittered on the horizontal axis to aid in visualization. Above the points are examples of each distribution type showing sites arranged from dangerous to safe (left to right) and site abundance increasing vertically.">>=
+simPlotcompare <- 
+	ggplot(montecarloADM %>% 
+	         mutate(grp = factor(col, levels = c('uniformBirds', 'areaMatchingBirds', 'dangerMatchingBirds',
+	                                                         'hurdleBirds'))), 
+	       aes(grp, aucRatio)) + geom_jitter(width = 0.2, height = 0, alpha = 0.05) +
+	geom_hline(yintercept = 1, linetype = 'dashed')+
+	  # scale_x_discrete(labels = c("Uniform", "Area Matching", "Danger Matching", "Hurdle"))+
+	  scale_x_discrete(labels = c("Site\nMatching", "Area\nMatching", "Safe Area\nMatching", "Aggregation")) +
+	   labs(x = "", y = "Priority Matching Distributions index") + 
+  geom_errorbar(data = baselineRes, width = 0.5, aes(ymin = aucRatio, #Distribution
+	                                                               ymax = aucRatio), colour = 'red') #+
+	  # theme(axis.text=element_text(size=24), text=element_text(size=16))
+
+plot_grid(explotsall, simPlotcompare, nrow=2, rel_heights = c(0.4,0.9), rel_widths = c(1,1),align = 'v')
+@
+
+
+
+\subsection*{Statistical distributions}
+\subsubsection*{Normal Distribution}
+
+I shifted the mean of the truncated normal distribution between site danger measures of 0.1 and 0.9 for distributions with standard deviations of 0.1, 0.2, and 0.3. As expected, shifting the statistical distribution towards safe or dangerous sites shifted the PMD below or above 1 (\autoref{fig:norm-plot}). For a given mean, increasing the standard deviation of the simulated means shifted the PMD closer to 1. 
+
+<<norm-plot, fig.cap = "Simulations of birds across 30 sites using a normal distribution. Mean and standard deviations are adjusted and the abundance across sites (A), cumulative proportion (B) and calculated PMD index are shown. Abundance and cumulative proportion are shown for mean site danger of 0.2, 0.5 and 0.8 and standard deviations of 0.1 (red), 0.2 (green) and 0.3 (blue). The cumulative distribution of area across sites is shown in (b) in the black line.">>=
+  plot_grid(results.norm$histogram +labs(x = "Site Safety", y = "Abundance"),
+            results.norm$cumulative + 
+              labs(x = "Site Safety", y = "Cumulative abundance and\n cumulative area (black)"), 
+            results.norm$resultsPlot + theme(legend.position = 'bottom') +
+              labs(x = "Mean Danger from Normal Distribution", y = "PMD index", colour = "") +
+              geom_vline(xintercept =  c(0.2,0.5,0.8)),
+            ncol = 1, nrow=3, labels = 'auto')
+@
+
+
+
+\subsubsection*{Beta Distribution}
+I shifted the two parameters within the beta distribution to examine how different distributions of birds across sites affected the PMD. When the two parameters are equal, the counts across sites were uniform and the PMD was around 1.5 (\autoref{fig:beta-plot}). However, when the beta distribution was skewed towards the safest sites, the PMD shifted lower and was around 0.2 for the most skewed forms of the beta distribution. If the beta distribution was skewed towards the dangerous sites, the PMD shifted up towards 2.5.  Intermediate beta distributions were closer to one but varied based on where the peak of the statistical distribution was centred. 
+
+<<beta-plot, fig.cap = "Simulations of birds across 30 sites using a beta distribution. The two shape parameters ($\\alpha$ and $\\beta$) are adjusted and the distribution of abundance (A), cumulative proportion (B) and calculated PMD index are shown. Abundance and cumulative proportion are shown for $\\beta$ values of 1,8, and 15 and $\\alpha$ values of 1 (red), 5 (green),10 (blue), and 15 (purple). The cumulative distribution of area across sites is shown in (b) in the black line.">>=
+ plot_grid(results.beta$histogram +labs(x = "Site Safety", y = "Abundance"),
+	            results.beta$cumulative + 
+	              labs(x = "Site Safety", y = "Cumulative abundance and\n cumulative area (black)"), 
+	            results.beta$resultsPlot + theme(legend.position = 'bottom') +
+	              labs(x = "b paramater from Beta Distribution", y = "PMD index", colour = "") +
+	              geom_vline(xintercept =   c(1,8, 15)),
+	            ncol = 1, nrow=3, labels = 'auto')
+@
+
+
+\subsubsection*{Hurdle Distribution}
+To simulate an population that aggregates at a few sites I used a modified uniform distribution where a proportion of the population was uniformly distributed above a given site safety and the remainder below. I shifted the break point between 0.15 danger and 0.4 danger and the proportion in the safest sites between 0.9, 0.7, and 0.5 (\autoref{fig:hurdle-plot}). When the break point was close to the safest sites and the proportion of birds in the safest sites was high, the PMD was very low. For example, if safe sites were considered 85\% of habitat further than 150m of cover and 95\% of birds were in these types of sites the PMD index was \Sexpr{round(results.hurdle$results$results[[18]] %>% filter(col=='hurdleBirds') %>% .[["aucRatio"]],2)}). This measure gradually shifted higher as the break point shifted. If more birds were in the dangerous sites, the PMD was above 1.5 and moved even higher as the breakpoint shifted to more dangerous sites. 
+
+<<hurdle-plot, fig.cap = "Simulations of birds across 30 sites using a hurdle distribution. The parameters (break point and proportion above the break point) are adjusted and the distribution of abundance (A), cumulative proportion (B) and calculated PMD index are shown. Abundance and cumulative proportion are shown for break points of 0.15, 0.25, and 0.4 and proportions of population shifted above the break point values of 0.5 (red), 0.7 (green), and 0.9 (blue). The cumulative distribution of area across sites is shown in (b) in the black line.">>=
+ plot_grid(results.hurdle$histogram +labs(x = "Site Safety", y = "Abundance"),
+	            results.hurdle$cumulative + 
+	              labs(x = "Site Safety", y = "Cumulative abundance and\n cumulative area (black)"), 
+	            results.hurdle$resultsPlot + theme(legend.position = 'bottom') +
+	              labs(x = "Site Danger Break Point", y = "PMD index", colour = "") +
+	              geom_vline(xintercept =   c(1-0.15,1-0.25,1-0.40)),
+	            ncol = 1, nrow=3, labels = 'auto')
+@
+
+
+\subsubsection*{Randomization of site safety}
+Across the 1000 simulations using the Beta(1,14) distribution the PMD varied between 0.09 and 0.36 with a mean of 0.20, but the standard deviation of the PMD was only 0.04 (\autoref{fig:random-site-safety-plot}). The 25th and 75th quantiles were at 0.16 and 0.23 respectively. Overall, while random shifts in the characteristics of the survey sites can affect the PMD, it is robust to unbiased shifts.
+
+<<random-site-safety-plot, fig.cap = "Distribution of PMD index values for birds simulated using a beta distribution Beta(1,14) with randomly drawn site danger. Vertical red lines show the 25th, 50th and 75th quantiles of the simulations.">>=
+ggplot(montycarlo, aes(aucRatio)) + #geom_density(fill = 'red', alpha=0.8) +
+	  geom_histogram(aes(fill = meanSiteD), binwidth = 0.01) + #theme_few() +
+	  labs(x = "PMD Index", y = "N Simulations", caption="25th, 50th and 75th quantiles") + 
+	  geom_vline(xintercept = quantile(montycarlo$aucRatio, 
+	                                   probs = c(0.25,0.5, 0.75)), 
+	             colour ='red', linetype = 2)
+@
+
+
+\subsection*{Sensitivity to survey biases}
+I inserted biases in the survey sites in two ways, first I shifted the proportion of sites that were biased towards being dangerous and secondly, I adjusted the number of sites surveyed. Adjusting the bias had the effect of changing the mean site danger. Across the range of annual mean site danger within the ACSS dataset there was very little impact on the PMD index( \autoref{fig:danger-bias-plot}).
+
+<<danger-bias-plot, fig.cap = "Simulated adjustments to mean site danger. Birds are spread across 30 sites using a beta distribution (Beta(1,14)). The survey sites are adjusted to become more or less biased towards safer or more dangerous. Simulated PMD are shown (black dots $\\pm$ 95\\% CI) and compared with calculated PMD values from the ACSS dataset (triangles coloured by year). The grey bars show the distribution of annual mean site danger for the analysis of Semipalmated Sandpiper distribution.">>=
+
+DangerBiasPlot <- incBias %>% filter(maxSafe > 0.8) %>% 
+	ggplot(aes(round(meanSiteD,2), aucRatio)) + 
+	  geom_histogram(data = AUC.results$AUC, binwidth = 0.01,
+	                 aes(x =meanSiteD, y =..density../50), fill = 'grey', alpha =0.5) + 
+	  geom_point(data = AUC.results$AUC, shape = 24, size = 2,
+	             aes(x =meanSiteD, y =aucRatio, fill = Year)) +
+	  scale_fill_gradient(low = 'red', high = 'blue')+
+	  stat_summary(fun.data = 'mean_cl_boot') +
+	  xlim(0.4,0.8) + labs(x="Mean Site Danger", y = "PMD index")
+	DangerBiasPlot
+@
+
+
+Reducing the number of sites surveyed had a minimal effect on the PMD when more than 20 sites were surveyed (\autoref{fig:site-bias-plot}). Reducing the number of sites from 20 to 10 had a small but noticeable effect. Below 10 sites the PMD exponentially increased, likely due the increased chance of not surveying large sites where all the birds were.
+<<site-bias-plot, fig.cap = "Simulated adjustments to the number of sites surveyed. Birds are distributed across a given number of sites with randomly selected site safety using a beta distribution (Beta(1,14)). Simulated PMD are shown (black dots $\\pm$ 95\\% CI) and compared with calculated PMD values from the ACSS dataset (triangles coloured by year). The grey bars shows the distribution of numbers of sites surveyed across the years for the analysis of Semipalmated Sandpiper distribution.">>=
+filter(adjustNSites.df, maxSafe > 0.8) %>% 
+	ggplot( aes(nsites, aucRatio)) + #geom_jitter(width = 0.2, height = 0)
+	  # geom_boxplot()
+	  stat_summary(fun.data = 'mean_cl_boot') + xlim(5,50)+ 
+	  # coord_cartesian(xlim=c(10,45) ,ylim = c(0,1)) +
+	  geom_histogram(data = AUC.results$AUC, binwidth = 1,
+	               aes(x =n.sites, y =..density..), fill = 'grey', alpha =1) +
+	  geom_point(data = AUC.results$AUC, shape = 24, size = 2,
+	             aes(x =n.sites, y =aucRatio, fill = Year)) +
+	  scale_fill_gradient(low = 'red', high = 'blue')+
+	   # ggthemes::theme_few() +
+	  labs(x="Number of Sites Surveyed", y="PMD Index")
+@
+
+
+
+\subsubsection*{Techniques to account for biases}
+I binned the survey sites in the above analysis of site bias to attempt to correct for the bias. Binning the sites had the immediate effect of correcting the reduction in the PMD from biasing the sites (\autoref{fig:bias-fix-plot}). Beyond 0.5 of the sites being biased towards dangerous sites the binning was unable to correct for the bias effect, likely because in these scenarios there was an increasing likelihood of randomly selecting a survey site set without any safe sites. 
+
+
+<<bias-fix-plot, fig.cap = "Simulation of the impact of biasing survey sites towards danger (red circles) and an attempt to correct for the bias by binning the sites into 0.1 bins of site safety (black circles). The unbiased simulation is shown with a blue triangle. All simulations were run with a beta distribution Beta(1,14).">>=
+BinnedincBias %>% filter(maxSafe > 0.8 & meanBias==0.8) %>% #str
+	ggplot( aes(pbiased, aucRatio)) + stat_summary(fun.data = "mean_cl_boot") +
+	  stat_summary(data = incBias %>% filter(maxSafe > 0.8 & meanBias==0.8), 
+	               fun.data = "mean_cl_boot", colour = 'red') +
+	  stat_summary(data = montycarlo,  fun.data = "mean_cl_boot", shape = 24,
+	               fill = 'blue',  aes(x=0.) ) + #theme_few() +
+	  # geom_point(data=montycarlo, aes(x=0.), colour = 'blue', alpha = 0.01)+
+	  labs(x = "Proportion of sites biased towards danger", y= "PMD Index") 
+@
+
+
+\subsection*{ACSS Dataset}
+\subsubsection*{Simulations of distributions across survey sites}
+To further understand if the observed interannual trend in the PMD could be explained by shifts in surveys alone I simulated counts at the survey sites and either held the distribution constant across years with respect to danger or allowed birds to shift towards or away from dangerous sites. I then estimated the trend in calculated PMD using the simulated counts at the true survey sites for a given year. 
+
+<<trendsimplot, fig.cap ="Comparison of simulated distribution shifts (black circles, blue lines) to actual count data (grey triangles and dashed line) under three scenarios. (A) A scenario of no change in the distribution across time. Each year the number of birds counted is distributed across the sites surveyed using the Beta(1,8) distribution. (B) Simulation of a shift towards danger. The distribution across sites shifts from Beta(1,11) to Beta(1,5) across the time period. (C) Simulation of a shift towards safety. The distribution across sites shifts from Beta(1,5 to Beta(1,11) between 1974 and 2015.", fig.width = 10, fig.height = 5, out.width = "\\textwidth">>=
+yr_aug <- AUC.results$models$`Year linear` %>% broom::augment(AUC.results$AUC)
+plt_NO_trend <- ggplot(filter(noTrend.results,!isTRUE(MAPT_GRAN)), aes(Year, aucRatio)) +  
+	  geom_point( data=yr_aug, colour = 'grey', shape = "triangle")+
+   geom_line(size = .51, data=yr_aug, aes(y=.fitted), colour = 'black', linetype='longdash') +
+  geom_point() + geom_smooth(method='lm')
+
+
+plt_trend_to_safety <- 
+  ggplot(filter(trend.results,!isTRUE(MAPT_GRAN)), aes(Year, aucRatio)) + 
+  geom_point( data=yr_aug, colour = 'grey', shape = "triangle")+
+   geom_line(size = .51, data=yr_aug, aes(y=.fitted), colour = 'black', linetype='longdash') +
+  geom_point() + geom_smooth(method='lm')
+
+plt_trend_to_danger <- ggplot(filter(trend_D.results,!isTRUE(MAPT_GRAN)), aes(Year, aucRatio)) + 
+  geom_point( data=yr_aug, colour = 'grey', shape ='triangle')+
+   geom_line(size = .51, data=yr_aug, aes(y=.fitted), colour = 'black', linetype='longdash') +
+  geom_point() + geom_smooth(method='lm')
+	
+	
+modelPlots <- plot_grid(plt_NO_trend + labs(title = "No trend", y = "Priority Matching Distribution") +
+                          ylim(0,.65),
+                        plt_trend_to_danger + labs(title = "Shift to danger", y = "") +
+                          ylim(0,.65),
+                       plt_trend_to_safety + labs(title = "Shift to safety", y = "") +
+                         ylim(0,.65), ncol = 3, labels = "AUTO")
+modelPlots 
+@
+
+
+When I held the distribution of birds constant across years the PMD remained constant (\autoref{fig:trendsimplot}A). This highlights that the bias in survey sites alone cannot explain the observed shift. Shifting birds increasingly towards dangerous sites caused the PMD to shift steeply up towards 1 (\autoref{fig:trendsimplot}B). Shifting the distribution towards safe sites very closely matched the observed trend in PMD (\autoref{fig:trendsimplot}C). The results suggest the interannual shift in the PMD index is likely caused by a true distribution shift in the birds rather than an effect of survey biases.
+
+<<sim-shift-plot, fig.cap = "Comparison of the trends in the proportion of birds counted annually at the safest sites (greater than 80\\% of the site further than 150m from cover) with a simulated estimate of the proportion that would have to shift towards the safest sites (above the 80th quantile of site safety) to generate the observed PMD index for that year.">>=
+RealvsSim <- 
+bind_rows(auc.w.p, Proportion_at_safest) %>% 
+  ggplot(aes(Year, p) ) + facet_grid(~type, scales = 'free_y') + geom_point() +
+  geom_smooth(method = 'lm') + labs(y = "Proportion of birds at the safest sites")
+
+RealvsSim
+@
+
+
+
+To estimate the magnitude of the shift in birds I simulated increasing proportions of birds moving from a distribution based solely on the area at each site surveyed to the safest sites only. As the proportion of birds shifting to the safest sites moved from 1\% to 100\% the measured PMD shifted from 1.00 linearly down. The estimate of the proportion of birds from more dangerous sites that had to shift towards the safest sites varied between 0.43 and 0.98 across years. There was a similar trend in the proportion shifted from ideal free (0.143; 95\% CIs [0.057, 0.230]) to that of the PMD (-0.133; 95\% CIs [-0.211, -0.055]; \autoref{fig:sim-shift-plot}). While the estimate of the proportion of birds shifted has many more qualifications than the PMD, it does give a sense of how strong the pull towards the safest sites is and how it has changed over time. The trend in the  proportion of surveyed birds at the safest sites (site danger less than 0.2) matched this trend across the time period of the surveys.
+

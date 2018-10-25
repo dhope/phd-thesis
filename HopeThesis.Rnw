@@ -1,0 +1,228 @@
+\documentclass{sfuthesis}
+%   DOCUMENT METADATA  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   Fill in the following information for the title page and approval page.
+%
+
+\title{The role of adaptive behaviour in migratory counts of shorebirds}
+\thesistype{Thesis}
+\author{David Douglas Hope}
+\previousdegrees{%
+  M.Sc., Simon Fraser University, 2010\\
+  B.Sc., University of British Columbia, 2005}
+\degree{Doctor of Philosophy}
+\discipline{Biological Sciences}
+\department{Department of Biological Sciences}
+\faculty{Faculty of Science}
+\copyrightyear{2018}
+\semester{Fall 2018}
+\date{December 10, 2018}
+
+\keywords{western sandpiper; shorebird migration; behavioural ecology; dunlin; semipalmated sandpiper; mortality-minimizing behaviour; survival-maximizing; behavioral plasticity}
+
+\committee{%
+  \chair{Pamela Isely}{Professor}
+  \member{Dr. R.C. Ydenberg}{Senior Supervisor\\Professor}
+  \member{Dr. D.B. Lank}{Supervisor\\University Research Associate}
+  \member{Dr. M.C. Drever}{Supervisor\\Adjunct Professor}
+  \member{Dr. D.C. Bradley}{Supervisor\\Adjunct Professor}
+  \member{Leithen K. M'Gonigle}{Internal Examiner\\Assistant Professor\\Department of Biological Sciences}
+  \member{Bart A. Nolet}{External Examiner\\Professor\\Faculty of Science\\University of Amsterdam}
+}
+
+% \documentclass{sfuthesis}
+\usepackage[round,sort&compress]{natbib}
+\usepackage{multibib}
+\usepackage{multirow} % span in both directions tables
+\usepackage{array}
+\usepackage{pdflscape}
+\usepackage{rotating}
+\usepackage{import}
+\usepackage{phaistos}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[pdfborder={0 0 0},colorlinks=false]{hyperref}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{tabularx}
+% \usepackage{animate}
+\usepackage{tcolorbox}
+\usepackage{multicol}
+\usepackage{comment}
+\usepackage{lineno}
+\usepackage{rotating}
+\usepackage{xr}
+
+
+%   OTHER CUSTOMIZATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   Add any packages you need for your thesis here. We've started you off with
+%   a few suggestions.
+%
+%   (1) Use a single word space between sentences. If you disable this, you
+%       will have to manually control spacing around abbreviations.
+%   (2) Correct the capitalization of "Chapter" and "Section" if you use the
+%       \autoref macro from the `hyperref` package.
+%   (3) The LaTeX thesis template defaults to one-and-a-half line spacing. If
+%       your supervisor prefers double-spacing, you can redefine the
+%       \defaultspacing command.
+%
+\newcites{sec}{R and python packages used}
+\frenchspacing                                    % (1)
+\renewcommand*{\chapterautorefname}{Chapter}      % (2)
+\renewcommand*{\sectionautorefname}{Section}      % (2)
+\renewcommand*{\subsectionautorefname}{Section}   % (2)
+\renewcommand{\defaultspacing}{\doublespacing}  % (3)
+\renewcommand{\bibname{Literature Cited}} 
+
+
+\begin{document}
+\frontmatter
+% \chapter*{The role of behaviour in migratory counts}
+\maketitle
+% \makecommittee
+
+% \SweaveOpts{concordance=FALSE}
+<<setup-full, echo=F, message=F, warning=F, cache=F>>=
+library(tidyverse)
+library(knitr)
+library(xtable)
+library(cowplot) 
+require(lubridate)
+opts_chunk$set(cache.path = "cache/",
+                echo=F, # Do NOT repeat code in final document
+                message = F, # Do NOT print R messages in document
+                warning = F, # Do NOT pring warnings
+                cache = T, # Cache runs
+                cache.comments=T,
+                dev = "CairoPNG", # Uses Cairo png instead of pdf for images
+                dpi=300,
+                fig.align='center'
+             )
+# numbers >= 10^5 will be denoted in scientific
+# notation, and rounded to 2 digits
+options(scipen = 1, digits = 2)
+@
+
+
+\clearpage
+
+
+ \begin{abstract}
+Shorebird population status and trends are commonly generated from counts made at migratory stopovers, where large numbers are concentrated at few locations. Shorebirds migrate long distances, encountering changing and unpredictable conditions. The ability to respond with adjustments in behaviour such as site selection, timing and routing, is likely essential. In this thesis I examine how the adaptive behaviour of migrants affects the use of stopover sites, and hence how many shorebirds are counted. 
+
+I develop a model of mortality-minimizing decisions made by southbound western sandpipers (\textit{Calidris mauri}) moving through a landscape with large and small stopover sites. I use the model to simulate counts that would be observed under different scenarios, each leaving distinct `fingerprints' on the outcomes. These outcomes were compared to counts made over five years by citizen-scientists across the Salish Sea region. The results support the hypothesis that inter-annual variation in the passage timing of peregrine falcons (\textit{Falco peregrinus} - the most important sandpiper predator) strongly affects the distribution of sandpipers across small and large stopover sites. Other scenarios appear less parsimonious.  
+
+An analysis of data collected by the Atlantic Canada Shorebird Survey (2754 surveys, 1974 - 2015) reveals that semipalmated sandpipers (\texctit{C. pusilla}) have steadily shifted their stopover site usage toward larger sites. Surveys of the northbound passage of western sandpipers and dunlins (\texit{C. alpina}) along the Pacific Flyway show that over recent decades (1985 - 2016), both species passage southern sites, but not northern sites earlier. 
+
+Each of these approaches demonstrates that the behavioural response of shorebirds to landscape-level conditions affects counts strongly enough that the accuracy of estimated population trends can be poor. Caution should be exerted when using migratory counts to generate trends in populations.
+
+ \end{abstract}
+ 
+% \begin{dedication}
+%   Dedicated to those who have suffered from my never-ending education.
+% \end{dedication}
+
+
+% \begin{acknowledgements}
+%   Thank you to Jon Snow and Bran.
+% Ron and committee and external
+% Volunteers and surveyors
+% Karen Barry. Undergraduate workers.
+% Rachel
+% CWE folks. 
+% Family etc.
+% \end{acknowledgements}
+
+\addtoToC{Table of Contents}%
+\tableofcontents%
+\clearpage
+
+\addtoToC{List of Tables}%
+\listoftables%
+\clearpage
+
+\addtoToC{List of Figures}%
+\listoffigures%
+\clearpage
+
+\mainmatter%
+
+% \defaultspacing
+\linenumbers
+
+<<ch1, child="GeneralIntroduction.Rnw", cache=F>>=
+@
+
+
+<<app-set, echo=F, cache=F>>=
+includeapp <- F
+@
+
+<<ch2, child="../Model_Description_Chapter/ModelWalkthrough.Rnw", include=T, eval=T, cache.path = '../Model_Description_Chapter/cache/'>>=
+@
+
+
+<<ch3, child="../Confrontation_chapter/Confrontation_chapter.Rnw", include=F, eval=F,cache.path = '../Confrontation_chapter/cache/'>>=
+
+@
+
+
+<<ch4, child="~/Documents/SFU/PhD/SharingFiles_ForWindows/EasternAnalysis/buildthesischapter/Chapter4_SESA.Rnw", include=F, eval=F,cache.path = '~/Documents/SFU/PhD/SharingFiles_ForWindows/EasternAnalysis/buildthesischapter/cache/'>>=
+
+@
+
+
+<<ch5, child="../../../SharingFiles_ForWindows/CWS.Mansucript/Thesis\ Version/ProgressionChapter.Rnw", eval=T>>=
+
+@
+
+
+<<ch6, child="GeneralDiscussiontex.Rnw", include=F, eval=F>>=
+
+@
+
+
+
+\backmatter%
+  \addtoToC{Bibliography}
+  \bibliographystyle{apa}
+  \bibliography{library}
+
+\begin{appendices}
+
+<<appendices,child="../Model_Description_Chapter/Appendices.Rnw", eval=T,cache.path = '../Model_Description_Chapter/cache/'>>=
+
+@
+
+
+<<appendices-confront, child="../Confrontation_chapter/Appendices_Confrontation.Rnw",eval=F,cache.path = '../Confrontation_chapter/cache/'>>=
+
+@
+
+
+<<appendices-sesa,child="~/Documents/SFU/PhD/SharingFiles_ForWindows/EasternAnalysis/buildthesischapter/Appendix_SESA.Rnw",eval=F, include=F, cache.path = '~/Documents/SFU/PhD/SharingFiles_ForWindows/EasternAnalysis/buildthesischapter/cache/'>>=
+
+@
+
+\chapter{Supplemental material for progression chapter }
+
+\hyperlink{http://www.davidhope.ca/blog/_pages/Hopeetal_SuppMaterial.zip}{Please click here to download supplemental material} 
+
+or copy this link to your browser:
+ \url{http://www.davidhope.ca/blog/_pages/Hopeetal_SuppMaterial.zip}
+
+
+\chapter{Software packages used and code availability}
+
+
+
+<<software-app, child="SoftwareUsed.Rnw", eval=T, include=T>>=
+@
+
+
+
+\end{appendices}
+
+
+
+\end{document}
