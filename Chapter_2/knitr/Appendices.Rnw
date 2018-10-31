@@ -9,14 +9,13 @@ source('../Rscripts/model_data_import.r')
 #                 cache = T, # Cache runs
 #                 dev = "CairoPNG" # Uses Cairo png instead of pdf for images
 #              )
-
 @
 
 
 \chapter{Decision Matrices}\label{app:decision}
 
 % \section*{Model with foraging intensity}
-<<foraging-decision, fig.cap="Optimal decision maps for migrants at the small (left) or large (right) sites in modified model that includes foraging intensity (See \\autoref{sec:forage}). Migrants can either move to the small site (red), the large site (black) or depart the region (blue). The optimal decision varies with current location, fuel load and time. Migrants that stay or move to the other site select a foraging intensity that optimizes their fitness based on their condition.", eval=F, include=F>>=
+<<foraging-decision, fig.cap="Optimal decision maps for migrants at the small (left) or large (right) sites in modified model that includes foraging intensity (See \\autoref{sec:forage}). Migrants can either move to the small site (red), the large site (black) or depart the region (blue). The optimal decision varies with current location, fuel load and time. Migrants that stay or move to the other site select a foraging intensity that optimizes their fitness based on their condition.", eval=F, include=F, fig.scap="">>=
 u_dec_dat <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/withU/baseline/no_pk/full_back_single.txt", dat_type = 'back', pk = 'No Prior Knowledge')
 plotres(u_dec_dat,plot_type =  'back') + ggtitle("Modified model with foraging intensity")
 
@@ -33,13 +32,13 @@ plotres(pattern_dec_dat,plot_type =  'back') + ggtitle("Pattern Matching Model")
 
 % 3) High, low predation
 % \subsection*{High predation}
-<<pattern-match-decision-high-d, fig.cap="Optimal decision maps for migrants under a high predation scenario. The global predation parameter $\\digamma$ is increased to 1.5 from baseline 1.0. Migrants at small (left) and large (right) sites can either move to (or stay at) the small site (red), the large site (black) or depart the region (blue). The optimal decision varies with current location, fuel load and time. ">>=
+<<pattern-match-decision-high-d, fig.cap="Optimal decision maps for migrants under a high predation scenario. The global predation parameter $\\digamma$ is increased to 1.5 from baseline 1.0. Migrants at small (left) and large (right) sites can either move to (or stay at) the small site (red), the large site (black) or depart the region (blue). The optimal decision varies with current location, fuel load and time. ", fig.scap="">>=
 pattern_dec_dat_high <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/highpred/full_back_single.txt", dat_type = 'back', pk = 'No Prior Knowledge')
 plotres(pattern_dec_dat_high,plot_type =  'back') + ggtitle("Pattern Matching - High Predation")
 
 @
  
-<<pattern-match-decision-low-d, fig.cap="Optimal decision maps for migrants under a low predation scenario . The global predation parameter $\\digamma$ is decreased to 0.25 from baseline 1.0. Migrants at small (left) and large (right) sites can either move to (or stay at) the small site (red), the large site (black) or depart the region (blue). The optimal decision varies with current location, fuel load and time. ">>=
+<<pattern-match-decision-low-d, fig.cap="Optimal decision maps for migrants under a low predation scenario . The global predation parameter $\\digamma$ is decreased to 0.25 from baseline 1.0. Migrants at small (left) and large (right) sites can either move to (or stay at) the small site (red), the large site (black) or depart the region (blue). The optimal decision varies with current location, fuel load and time. ", fig.scap="">>=
 pattern_dec_dat_low <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/lowpred/full_back_single.txt", dat_type = 'back', pk = 'No Prior Knowledge')
 plotres(pattern_dec_dat_low,plot_type =  'back') + ggtitle("Pattern Matching - Low Predation")
 
@@ -68,7 +67,7 @@ loop_sum_dat <- read_rds(".rds_files/cedar_nou.rds") %>%
 @
 
 
-<<'mcloop-full-nopk-nou', fig.width=7, fig.height=7,fig.align='center', echo=F, message=F, cache=T, dependson='mc-nopk-nou-dat',fig.cap="Changes in daily counts at the small (left) and large (right) sites on July 15 (top) and August 15 (bottom) as the relative danger and food between the sites changes. Migrants do not have prior knowledge of the region and therefore randomly. Food parameter $e_{s=0}$ moves between 1 and 10 from front to back with the food arrow. The danger of the small site relative to the large site ($\\mu_{s=0}$) moves from 1 to 10 from left to right with the danger arrow. The scale of counts is not equal between plots and instead shows how the counts shift at a single site as the parameters change.">>=
+<<'mcloop-full-nopk-nou', fig.scap="", fig.width=7, fig.height=7,fig.align='center', echo=F, message=F, cache=T, dependson='mc-nopk-nou-dat',fig.cap="Changes in daily counts at the small (left) and large (right) sites on July 15 (top) and August 15 (bottom) as the relative danger and food between the sites changes. Migrants do not have prior knowledge of the region and therefore randomly. Food parameter $e_{s=0}$ moves between 1 and 10 from front to back with the food arrow. The danger of the small site relative to the large site ($\\mu_{s=0}$) moves from 1 to 10 from left to right with the danger arrow. The scale of counts is not equal between plots and instead shows how the counts shift at a single site as the parameters change.">>=
 ex25_S <- wireframe(data = loop_sum_dat %>% filter(time==25&food%%0.5==0&danger%%0.25==0&pk==0),
           mean0~danger*food, shade=T, pretty=T, zlab="", main="Small Site - July 15" )
 ex25_L <- wireframe(data = loop_sum_dat %>% filter(time==25&food%%0.5==0&danger%%0.25==0&pk==0),
@@ -81,7 +80,7 @@ ex56_S <- wireframe(data = loop_sum_dat %>% filter(time==56&food%%0.5==0&danger%
 grid.arrange(ex25_S, ex25_L,ex56_S , ex56_L,nrow=2, ncol=2, left = "Daily counts", bottom="Variable modifications") 
 @
 
-<<mcloop-exA-nopk-nou, dependson='mc-nopk-nou-dat', fig.cap="The proportion of birds without prior knowledge (randomly assigned arrival site) at the large site on July 15 ($t=25$) and August 15 ($t=56$) for a given relative danger and food parameter. From left to right the small sites gets progressively more dangerous relative to the large site. Each line represents a mean estimate across danger values for a given food abundance at the small site relative to the abundance at the large site. Grey shading represents the 95\\% prediction intervals from the Monte Carlo simulations.", fig.height=8, fig.width=8, out.width="0.8\\textwidth", fig.align='center'>>=
+<<mcloop-exA-nopk-nou, dependson='mc-nopk-nou-dat', fig.cap="The proportion of birds without prior knowledge (randomly assigned arrival site) at the large site on July 15 ($t=25$) and August 15 ($t=56$) for a given relative danger and food parameter. From left to right the small sites gets progressively more dangerous relative to the large site. Each line represents a mean estimate across danger values for a given food abundance at the small site relative to the abundance at the large site. Grey shading represents the 95\\% prediction intervals from the Monte Carlo simulations.", fig.height=8, fig.width=8, out.width="0.8\\textwidth", fig.align='center', fig.scap="">>=
 # plotres(loop_sum_dat%>% filter(pk==0&food%%0.5==0&danger%%0.25==0), "mc_ex") + ggtitle("No prior knowledge - July 15")+ 
 #   facet_grid(~round(food,0))+ ylim(0,1)+
 #   scale_color_brewer(palette = 1, type='div') + theme(legend.position = 'none')
@@ -101,7 +100,7 @@ plotres(loop_sum_dat%>% filter(pk==0&food%%0.5==0&danger%%0.25==0), "mc_ex", t=5
     facet_grid(~round(food,0)) + theme(legend.position = 'none')
 @
 
-<<mcloop-facet-nopk-nou, fig.width=8, fig.height=9, dpi = 300,dependson='mc-nopk-nou-dat', fig.cap="The proportion of birds without prior knowledge (randomly assigned arrival site) at the large site on each date between June 27 and September 6 for a given relative danger and food parameter. In each plot, from left to right the large sites gets progressively more dangerous relative to the small site. Each line represents a mean estimate across danger values for a given food abundance at the large site relative to the abundance at the small site. Grey shading represents the 95\\% prediction intervals from the Monte Carlo simulations.",fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<mcloop-facet-nopk-nou, fig.width=8, fig.height=9, dpi = 300,dependson='mc-nopk-nou-dat', fig.cap="The proportion of birds without prior knowledge (randomly assigned arrival site) at the large site on each date between June 27 and September 6 for a given relative danger and food parameter. In each plot, from left to right the large sites gets progressively more dangerous relative to the small site. Each line represents a mean estimate across danger values for a given food abundance at the large site relative to the abundance at the small site. Grey shading represents the 95\\% prediction intervals from the Monte Carlo simulations.",fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 
 # ad_plot <- loop_sum_dat%>% filter(pk==0& time%%4==0& food%%0.5==0&danger%%0.25==0&
 #   (time >15 | time<40)) %>% tuftepplot
@@ -207,7 +206,7 @@ loop_sum_dat_pk <- loop_sum_dat %>% filter(pk==1) %>%
 #read_rds(".rds_files/cedar_withpk_no_u.rds")
 @
 
-<<'mcloop-full-pk-nou', fig.width=7, fig.height=7,fig.align='center', echo=F, message=F, cache=T, dependson='mc-pk-nou-dat',fig.cap="Changes in daily counts at the small (left) and large (right) sites on July 15 (top) and August 15 (bottom) as the relative danger and food between the sites changes. Migrants have prior knowledge of the region and therefore arrive optimally. Food parameter $e_{s=0}$ moves between 1 and 10 from front to back with the food arrow. The danger of the small site relative to the large site ($\\mu_{s=0}$) moves from 1 to 10 from left to right with the danger arrow. The scale of counts is not equal between plots and instead shows how the counts shift at a single site as the parameters change.">>=
+<<'mcloop-full-pk-nou', fig.width=7, fig.height=7,fig.align='center', echo=F, message=F, cache=T, dependson='mc-pk-nou-dat',fig.cap="Changes in daily counts at the small (left) and large (right) sites on July 15 (top) and August 15 (bottom) as the relative danger and food between the sites changes. Migrants have prior knowledge of the region and therefore arrive optimally. Food parameter $e_{s=0}$ moves between 1 and 10 from front to back with the food arrow. The danger of the small site relative to the large site ($\\mu_{s=0}$) moves from 1 to 10 from left to right with the danger arrow. The scale of counts is not equal between plots and instead shows how the counts shift at a single site as the parameters change.", fig.scap="">>=
 
 ex25_Spk <- wireframe(data = loop_sum_dat_pk %>% filter(food%%0.5==0&danger%%0.25==0&time==25),
           mean0~danger*food, shade=T, pretty=T, zlab="", main="Small Site - July 15" )
@@ -220,7 +219,7 @@ ex56_Spk <- wireframe(data = loop_sum_dat_pk %>% filter(food%%0.5==0&danger%%0.2
 grid.arrange(ex25_Spk, ex25_Lpk,ex56_Spk , ex56_Lpk,nrow=2, ncol=2, left = "Daily counts", bottom="Variable modifications") 
 @
 
-<<mcloop-exA-pk-nou, dependson='mc-pk-nou-dat', fig.cap="The proportion of birds with prior knowledge at the large site on July 15 ($t=25$) for a given relative danger and food parameter. From left to right the large sites gets progressively more dangerous relative to the small site. Each line represents a mean estimate across danger values for a given food abundance at the large site relative to the abundance at the small site. Grey shading represents the 95\\% prediction intervals from the Monte Carlo simulations.", fig.height=8, fig.width=8, out.width="0.8\\textwidth", fig.align='center'>>=
+<<mcloop-exA-pk-nou, dependson='mc-pk-nou-dat', fig.cap="The proportion of birds with prior knowledge at the large site on July 15 ($t=25$) for a given relative danger and food parameter. From left to right the large sites gets progressively more dangerous relative to the small site. Each line represents a mean estimate across danger values for a given food abundance at the large site relative to the abundance at the small site. Grey shading represents the 95\\% prediction intervals from the Monte Carlo simulations.", fig.height=8, fig.width=8, out.width="0.8\\textwidth", fig.align='center', fig.scap="">>=
 # plotres(loop_sum_dat_pk %>% filter(food%%0.5==0&danger%%0.25==0&pk==1), "mc_ex", t=25) + 
 #  ggtitle("Optimal arrival - July 15") +
 #   scale_color_brewer(palette = 1, type='div') + ylim(0,1)+
@@ -240,7 +239,7 @@ plotres(loop_sum_dat_pk %>% filter(food%%0.5==0&danger%%0.25==0&pk==1), "mc_ex",
     facet_grid(~round(food,0)) + theme(legend.position = 'none')
 @
 
-<<mcloop-facet-pk-nou, fig.width=8, fig.height=9, dpi = 300,dependson='mc-pk-nou-dat', fig.cap="The proportion of birds with prior knowledge (optimal arrival site) at the large site on each date between June 27 and September 6 for a given relative danger and food parameter. In each plot, from left to right the large sites gets progressively more dangerous relative to the small site. Each line represents a mean estimate across danger values for a given food abundance at the large site relative to the abundance at the small site. Grey shading represents the 95\\% prediction intervals from the Monte Carlo simulations.",fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<mcloop-facet-pk-nou, fig.width=8, fig.height=9, dpi = 300,dependson='mc-pk-nou-dat', fig.cap="The proportion of birds with prior knowledge (optimal arrival site) at the large site on each date between June 27 and September 6 for a given relative danger and food parameter. In each plot, from left to right the large sites gets progressively more dangerous relative to the small site. Each line represents a mean estimate across danger values for a given food abundance at the large site relative to the abundance at the small site. Grey shading represents the 95\\% prediction intervals from the Monte Carlo simulations.",fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 # ad_plot3 <- loop_sum_dat_pk%>%
 #    filter(time%%4==0& food%%0.5==0&danger%%0.25==0&
 #   (time >15 | time<40)) %>% tuftepplot
@@ -295,7 +294,7 @@ mc_all <- bind_rows(MC_prioK, MC_noprioK) %>% rowwise %>%
 
 
 
-<<mc-counts, fig.cap='The average seasonal pattern of daily counts at large (black) and small (red) sites. Individual Monte Carlo simulations are shown in grey shading. Model simulations are shown with and without prior knowledge'>>=
+<<mc-counts, fig.cap='The average seasonal pattern of daily counts at large (black) and small (red) sites. Individual Monte Carlo simulations are shown in grey shading. Model simulations are shown with and without prior knowledge', fig.scap="">>=
 CountsByrun <- ggplot(mc_all, aes(date, site0, group = run)) +  
   geom_line(colour = 'grey', alpha = 0.02) + 
   geom_line(aes(y=site1), colour = 'grey', alpha = 0.05) + 
@@ -306,7 +305,7 @@ CountsByrun
 @
 
 
-<<mc-prop, fig.cap="The average seasonal pattern of the distribution of birds between small and large sites as represented by the proportion of total daily birds counted at the safe site (black line). Individual Monte Carlo simulations are shown in grey. Model simulations are shown with and without prior knowledge">>=
+<<mc-prop, fig.cap="The average seasonal pattern of the distribution of birds between small and large sites as represented by the proportion of total daily birds counted at the safe site (black line). Individual Monte Carlo simulations are shown in grey. Model simulations are shown with and without prior knowledge", fig.scap="">>=
 PLarge_mc <- ggplot(mc_all, aes(date, p_Large, group = run)) + 
   geom_line(alpha = 0.05, colour = 'grey') + facet_wrap(~priorK) +
   # geom_ribbon(aes(ymax=uci.p,ymin=lci.p), alpha =0.5, colour = 'grey') +
@@ -321,7 +320,7 @@ PLarge_mc
 
 % \section*{Pattern Matching Plots}
 
-<<patternmatching-baseline-full,fig.cap="Forward simulation model output from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", eval=F>>=
+<<patternmatching-baseline-full,fig.cap="Forward simulation model output from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", eval=F, fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/mut/baseline/forwards_sim.txt", dat_type = 'forward', pk = 'No Prior Knowledge')
 
@@ -335,7 +334,7 @@ plot_grid(title1_pm, pg1_pm, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values
 
 @
 
-<<mass-within-season, fig.cap='Mean $\\pm95\\%CI$ capture masses for western sandpipers caught on southward migration at Sidney Island (July - Blue; August - Red) and Boundary Bay, BC (July - Purple; August - Green). Splines fit with confidence intervals are shown to highlight any trends within the season. Ages are separated by date and the overlap in migratory periods are excluded. The triangle points show an outlier year, where birds were caught with much higher masses than all other years.', eval=T, include=T, fig.width = 8, fig.height=6, out.width="\\textwidth">>=
+<<mass-within-season, fig.cap='Mean $\\pm95\\%CI$ capture masses for western sandpipers caught on southward migration at Sidney Island (July - Blue; August - Red) and Boundary Bay, BC (July - Purple; August - Green). Splines fit with confidence intervals are shown to highlight any trends within the season. Ages are separated by date and the overlap in migratory periods are excluded. The triangle points show an outlier year, where birds were caught with much higher masses than all other years.', eval=T, include=T, fig.width = 8, fig.height=6, out.width="\\textwidth", fig.scap="">>=
 # if(!exists("Mass_plot")) source("../Rscripts/bandingdat.r", chdir=T)
 if(!exists("bandingdat")) read_rds("../Rscripts/.rds/bandingdata.rds")
 bandingdat$Mass_plot + theme(legend.position='bottom')
@@ -358,7 +357,7 @@ plot_grid(title1_pmpk, pg1_pmpk, ncol=1, rel_heights=c(0.1, 1)) # rel_heights va
 
 % \subsection*{High Predation Scenario}
 
-<<patternmatching-baseline-full-highpred,fig.cap="Forward simulation model output under a scenario of high predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center'>>=
+<<patternmatching-baseline-full-highpred,fig.cap="Forward simulation model output under a scenario of high predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm_highpred <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/highpred/forwards_sim.txt", dat_type = 'forward', pk = 'No Prior Knowledge')
 
@@ -373,7 +372,7 @@ plot_grid(title1_pm_highpred, pg1_pm_highpred, ncol=1, rel_heights=c(0.1, 1)) # 
 @
 
 
-<<patternmatching-baseline-full-pk-highpred, fig.cap="Forward simulation model output under a scenario of high predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center'>>=
+<<patternmatching-baseline-full-pk-highpred, fig.cap="Forward simulation model output under a scenario of high predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm_pk_highpred <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/PK/changed_x/highpred/forwards_sim.txt", dat_type = 'forward', pk = 'Prior Knowledge')
 
@@ -388,7 +387,7 @@ plot_grid(title1_pmpk_highpred, pg1_pmpk_highpred, ncol=1, rel_heights=c(0.1, 1)
 
 % \subsubsection*{Low Predation Scenario}
 
-<<patternmatching-baseline-full-lowpred,fig.cap="Forward simulation model output under a scenario of low predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.",fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center'>>=
+<<patternmatching-baseline-full-lowpred,fig.cap="Forward simulation model output under a scenario of low predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.",fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm_lowpred <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/lowpred/forwards_sim.txt", dat_type = 'forward', pk = 'No Prior Knowledge')
 
@@ -403,7 +402,7 @@ plot_grid(title1_pm_lowpred, pg1_pm_lowpred, ncol=1, rel_heights=c(0.1, 1)) # re
 @
 
 
-<<patternmatching-baseline-full-pk-lowpred, fig.cap="Forward simulation model output under a scenario of low predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.",fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center'>>=
+<<patternmatching-baseline-full-pk-lowpred, fig.cap="Forward simulation model output under a scenario of low predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.",fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm_pk_lowpred <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/PK/changed_x/lowpred/forwards_sim.txt", dat_type = 'forward', pk = 'Prior Knowledge')
 

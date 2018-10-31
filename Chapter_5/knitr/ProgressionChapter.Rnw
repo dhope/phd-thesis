@@ -61,9 +61,9 @@ options(scipen = 1, digits = 2)
 
 Long distance migrants timing their arrival on the breeding grounds face the tradeoff of optimal timing
 for breeding vs. optimal timing for survival. For many shorebird species, the flyway northward spans thousands of
-kilometers, and both conditions encountered en route, and priorities of individuals can affect the timing of
+kilometres, and both conditions encountered en route, and priorities of individuals can affect the timing of
 migration. I used data from spring migration surveys of western sandpipers (\textit{Calidris
-mauri}) and Pacific dunlins (\textit{Calidris alpina pacifica)} along the Pacific Flyway of
+mauri}) and Pacific dunlins (\textit{C. alpina pacifica)} along the Pacific Flyway of
 North America to determine if the timing of their northward migration changed from 1985 to
 2016. I compiled survey data of both species from 6 sites of varying size along the northern portion of the
 flyway from Washington, British Columbia, and Alaska, and estimated interannual trends in timing of passage
@@ -130,7 +130,7 @@ strategies.}
 \subsection{Survey Sites }
 
 
-Survey counts were compiled from 6 sites on the northern Pacific Flyway (Figure 1, Table 1), from 5
+Survey counts were compiled from 6 sites on the northern Pacific Flyway (Figure 5.1, Table 5.1), from 5
 stopover areas.  Four of the 5 areas are designated sites under the Western Hemisphere Shorebird Reserve
 Network (WHSRN): the Copper River Delta (encompassing the Copper River Delta and Hartney Bay survey sites)  and
 Fraser River Delta (encompassing the Roberts Bank survey site) are classified as ``Hemispheric Importance'' (at
@@ -147,7 +147,7 @@ Washington \citep{Buchanan1988}. It consists of a small, \textasciitilde1
 km\textsuperscript{2 }mudflat surrounded on 3 sides by vegetative cover. Counts of western sandpipers and dunlins were conducted at this site during 1 - 7 days per week since 1980 with more regular counts
 being conducted since 1985. The entire area can be viewed by a single observer from a single vantage point.  Peak
 counts of western sandpipers and peak counts of dunlins have both exceeded 5,000 \citep{Buchanan1988}, making this
-small estuary one of the most productive in southern Puget Sound (Evenson and Buchanan 1997). In recent
+small estuary one of the most productive in southern Puget Sound \citep{Evenson1997}. In recent
 years peak numbers have dropped to around 2,000 dunlins and less than 100 western sandpipers in some years.
 
 Moving north, Roberts Bank (49.058{\textdegree}N, 123.163{\textdegree}W) is a large mudflat (8
@@ -158,7 +158,7 @@ mudflat. Counts of individual species were then calculated by multiplying total 
 western sandpipers to dunlins for each day determined from a subsample of the flock \citep{drever_monitoring_2014}. Peak
 counts average over 210,000 western sandpipers and 56,000 dunlins for the years surveyed. The median population
 estimate for birds using this site during northward migration is 600,000 western sandpipers (14\%-21\% of the total
-flyway population) and 200,000-250,000 dunlins (30\%-50\% of flyway population; \citep*{drever_monitoring_2014}).
+flyway population) and 200,000-250,000 dunlins \citep[30\%-50\% of flyway population; ][]{drever_monitoring_2014}.
 
 
 Tofino Mudflats (49.117{\textdegree}N, 125.867{\textdegree}W) are a complex of mudflats (55.3
@@ -216,7 +216,7 @@ flyway \citep{Warnock1998,Bishop2004a}. There are also vast unmonitored areas of
 sites around the Fraser River Delta and Puget Sound that are potential stopover sites. The coast between BC
 and AK has many smaller estuaries that are unmonitored and could potentially host some birds each
 spring. Radio-tagged western sandpipers and dunlins have been shown to move between the Fraser River Delta, Copper
-River Delta and Kachemak Bay (Iverson1996, Warnock1998, Warnock2004c). These patterns
+River Delta and Kachemak Bay \citep{Iverson1996, Warnock1998, Warnock2004c}. These patterns
 suggest that observed changes across my study sites would be representative of the birds that use the flyway.
 
 \subsection{Estimating Date of Peak Passage}
@@ -245,7 +245,7 @@ I defined the mean of the truncated distribution as the date of peak passage for
 birds migrating through the site \citep{Jenni2003}. Estimates where the model did not converge within 400
 iterations were not used for subsequent trend analyses. Every estimate that required more than 400 iterations could
 be excluded for other reasons (i.e., unrealistically early or late estimates, estimation of confidence intervals
-failing, or less than 7 survey dates in a year; Supplementary Table S1). I determined confidence intervals
+failing, or less than 7 survey dates in a year; \autoref{app:prog} Supplementary Table S1). I determined confidence intervals
 around the estimates of peak passage date using a jackknife analysis that
 involved sequentially dropping each survey date at a site and re-estimating the date of peak passage without that
 data point. I then calculated the 2.5\% and 97.5\% confidence intervals from the jackknifed estimates. Estimates
@@ -257,7 +257,7 @@ of how dependent an estimate is on a single day of counts.
 
 Owing to large variation in survey effort within and among sites, I used a simulation analysis to explore how the peak
 passage estimates were affected by survey effort. The simulations and their results are described
-in Supplementary Material Appendix A. 
+in \autoref{app:prog} Supplementary Material Appendix A. 
 
 \subsection{
 Trends in Peak Passage Dates}
@@ -301,19 +301,19 @@ by dividing by twice the standard deviation of all estimates.
 
 I used a composite of distance to the breeding ground for each site along the flyway instead of latitude as
 it provided a better indicator of the timing of migration along the flyway. Birds move more westward
-than northward along the northern portion of the flyway in Alaska (Table 1). For example, Copper River Delta lies
+than northward along the northern portion of the flyway in Alaska (Table 5.1). For example, Copper River Delta lies
 at a more northern latitude than Kachemak Bay, but \citet{Iverson1996} and \citet{Warnock2004c} showed
 that birds moved from Copper River towards Kachemak Bay. For both species, I used the mean great circle distance
 from each site to Bethel, Emmonak, and Nome, Alaska. Birds of both species do breed further north than Nome, but
 this centroid represents the core breeding range of both species \citep{Warnock1996,Franks2014}. While
 distance to the breeding grounds provided a better fit to the data, using latitude did not substantially change the
 overall results. I also found no support for an effect of leap year on the date of peak passage and so it was not
-included in the analyzed models.
+included in the analysed models.
 
 
 I modelled western sandpipers and dunlins separately to allow for differing patterns between species. I excluded
 any year where the number of survey dates was less than 7 occasions, based on survey effort simulations
-(see Figure 6 in the Supplementary Material Appendix A). For western sandpipers, 8 site years either failed
+(see Figure 5.6 in the \autoref{app:prog} Supplementary Material Appendix A). For western sandpipers, 8 site years either failed
 to converge or had less than 7 survey dates and therefore were not included in the analysis. We
 removed 2 outlier estimates of peak passage from Kennedy Creek (2007, 2016) that I considered implausible for
 that site. For dunlins, 22 site-years were excluded because of lack of convergence or too few counts within a
@@ -321,7 +321,7 @@ season. I also removed 6 estimates of peak passage from Kennedy Creek that occur
 2010, 2011, 2012, 2014).  As described in the simulation analysis below, these early estimates may have a
 biological explanation relating to the population of winter residents but remained as strong outliers that
 would have violated model assumptions and exerted strong influence on the results. The removed data
-are shown in Supplementary Table S1. After outlier removal, the mixed effects models for both species
+are shown in \autoref{app:prog} Supplementary Table S1. After outlier removal, the mixed effects models for both species
 had normally distributed residuals and random effects, and I found little indication of heterogeneity of residuals
 across any of the predictors. 
 
@@ -360,7 +360,7 @@ temperature across the range of that site's survey dates across all years. There
 between sites, but within sites was held constant across years. 
 
 
-There is no consistent trend in local warming or cooling across the sites (Supplementary Figure S1). Across all years,
+There is no consistent trend in local warming or cooling across the sites (\autoref{app:prog} Supplementary Figure S1). Across all years,
 most sites show a slight decrease in the local minimum temperature, but there is a large amount of variation between
 years. I did not expect that such small-scale local temperatures would explain the interannual trends, but that
 annual local temperatures could explain some of the variation at individual sites around the broader interannual
@@ -384,7 +384,7 @@ sites (Copper River Delta, Hartney Bay, Kachemak Bay). The additional $\beta $ p
 of temperature ($\beta $\textsubscript{5}), categorical location ($\beta
 $\textsubscript{6}) and their interaction ($\beta $\textsubscript{4}).
 
-\subsection{Simulation Analysis: Effects of Behavior on Estimates of Peak Passage Dates}
+\subsection{Simulation Analysis: Effects of Behaviour on Estimates of Peak Passage Dates}
 
 
 I conducted a simulation analysis to assess the effect of migration decisions in shaping my measure
@@ -392,7 +392,7 @@ of the peak passage date at a site. I simulated count data from a simple individ
 through a stopover site. Simulated migrants arrived at a stopover location, spent a given number of days at the site
 and departed onwards. The action of individual birds generated a distribution of counts from which I extracted a peak
 passage date. Specifically, migrants stochastically chose their arrival date and length of stay from a log normal
-distribution \citep{Limpert2001} with a mean value of length of stay based on the literature \citep{Warnock1998,Bishop2004a,Warnock2004}. The model was developed in Python 3.4 using NumPy \citep{Eric2001,VanderWalt2011}. The full Overview, Design concepts and Details (ODD) description \citep{GrimmVolkerandRailsback2005,Grimm2010} of the model is available in Supplementary Material Appendix B of this paper.
+distribution \citep{Limpert2001} with a mean value of length of stay based on the literature \citep{Warnock1998,Bishop2004a,Warnock2004}. The model was developed in Python 3.4 using NumPy \citep{VanderWalt2011}. The full Overview, Design concepts and Details (ODD) description \citep{GrimmVolkerandRailsback2005,Grimm2010} of the model is available in \autoref{app:prog} Supplementary Material Appendix B of this paper.
 
 
 I simulated 2,000 birds moving through the site for each simulation run. I performed 10 baseline runs to get
@@ -407,11 +407,11 @@ response to changes in lengths of stay, population size, and timing of arrival a
 I also modified this basic model to address 2 potential sources of bias that complicate the understanding of
 migratory progression along a flyway. First, distinct migratory populations can have different strategies, which might
 be reflected in spatial or temporal variability in the passage of cohorts, based on factors such as geographic location
-of overwintering area, age or sex (Warnock1998, Bishop2004a). To understand how presence of
+of overwintering area, age or sex \citep{Warnock1998, Bishop2004a}. To understand how presence of
 multiple migration strategies would affect the estimate of date of peak passage, I simulated a population composed of
 2 strategies: the baseline strategy described above, and a population that initiated migration later but migrated
 more quickly \citep{Taylor2007}. These later migrating birds arrived at the simulated site on average 4 days later
-and had a mean length of stay of 3 days shorter than the baseline strategy (Supplementary Appendix B). The proportion
+and had a mean length of stay of 3 days shorter than the baseline strategy (\autoref{app:prog} Supplementary Appendix B). The proportion
 of the baseline strategy was adjusted from 0 to 1 to understand how mixing the 2 strategies affected the
 estimate of peak passage dates.
 
@@ -422,7 +422,7 @@ changes in the size of a wintering population at one site could affect peak pass
 the proportion of overwintering population that was present at the stopover site before the surveys began. The count
 window for the model was set to begin on the date when the first migrant bird arrived. This was a numerical technique
 to ensure a standardization of surveys to the actual migration period but assumes the survey design incorporates
-knowledge of when migrants begin to arrive. I examined the impact this assumption had on the first analyzed survey
+knowledge of when migrants begin to arrive. I examined the impact this assumption had on the first analysed survey
 date and found no change in the first date included in the estimation of peak passage as the proportion of wintering
 birds increased or as the arrival date of migrants changed. This is likely because the distribution of migrant arrivals
 means that even if the mean is at day 4, there is still at least one bird arriving at day 1.
@@ -432,16 +432,16 @@ means that even if the mean is at day 4, there is still at least one bird arrivi
 \subsection{Interannual Trends in Peak Passage Dates}
 
 
-Estimated peak passage dates ({\textmu}) varied by species, year, and site (Supplementary Material Table
+Estimated peak passage dates ({\textmu}) varied by species, year, and site (\autoref{app:prog} Supplementary Material Table
 S1). 
 
 \subsubsection{Western sandpipers.} 
 The mean peak passage date ranged from 28 April (scaled to non-leap
-years; day of year 118; Kennedy Creek) to 10 May (day of year 130; Kachemak Bay; Table 2).  The full
+years; day of year 118; Kennedy Creek) to 10 May (day of year 130; Kachemak Bay; Table 5.2).  The full
 model that included the interaction between distance to breeding grounds and year had moderate
-support from the data (\textit{wi}= 0.47) when compared to models without the
-interaction, or without any fixed effects (Table 3a). The model without the interannual trend had almost equal
-support (\textit{wi} = 0.37). 
+support from the data ($w_i$ = 0.47) when compared to models without the
+interaction, or without any fixed effects (Table 5.3). The model without the interannual trend had almost equal
+support ($w_i$ = 0.37). 
 
 
 As is expected in a northward migration, the date of peak passage occurred earlier at the more southern sites further
@@ -453,15 +453,15 @@ later at the northern site of Kachemak Bay.
 
 \subsubsection{Dunlins. }
 Migration of dunlins generally began earlier and lasted longer than for western sandpipers. Peak passage dates on average (scaled on non-leap years) ranged from 10 April (day of year 100;
-Kennedy Creek) to 9 May (day of year 129; Kachemak Bay and Hartney Bay; Table 2). For the trend analysis, the
+Kennedy Creek) to 9 May (day of year 129; Kachemak Bay and Hartney Bay; Table 5.2). For the trend analysis, the
 full model with a year and distance to the breeding grounds received strong support from the
-data (\textit{wi}= 0.97; Table 3b; Figure 2; Figure 3C).  
+data ($w_i$= 0.97; Table 5.4; Figure 5.2; Figure 5.3C).  
 
 
 The interannual trends in peak passage dates were similar to those of the western sandpipers, but the
 interaction between year and distance to the breeding grounds suggested that the divergence of
 the interannual trends with distance to breeding grounds changed more rapidly in dunlins, driven by earlier peaks at
-southern sites. None of the effects had confidence intervals that overlapped zero (Figure 2). The interannual
+southern sites. None of the effects had confidence intervals that overlapped zero (Figure 5.2). The interannual
 trend in peak passage dates at southern sites would have been stronger if I had included years with peak passage
 estimates before April 1, as these years tended to occur later in the time series of Kennedy Creek and Roberts
 Bank. There was also greater uncertainty in the model results, driven by the years with early estimates of
@@ -472,47 +472,47 @@ peak passage dates at Kennedy Creek and Roberts Bank.
 \subsubsection{Western sandpipers. }
 There was strong support for including temperature in the models of
 western sandpiper peak passage dates. All models that included temperature received more support than those
-without temperature (Table 3a). The model that received the most support from the data included variables from the
+without temperature (Table 5.3). The model that received the most support from the data included variables from the
 previous top model plus an additive temperature parameter that varied based on whether a site was further or closer
 than 2000 km from the breeding grounds (\textit{wi }= 0.63). This parameter divided sites into
 those within Alaska (Copper River Delta, Hartney Bay, and Kachemak Bay) or those south of Alaska (Kennedy Creek,
 Roberts Bank, and Tofino Mudflats). The second model that received most of the remaining support from the data did
 not include the north/south interaction term (\textit{wi }= 0.25). In the top model, only the
 effect of year without the distance to breeding grounds interaction and the difference in temperature effect
-between northern and southern sites had confidence intervals that overlapped zero (Figure 2). 
+between northern and southern sites had confidence intervals that overlapped zero (Figure 5.2). 
 
 
-Mean minimum temperature had different impacts on northern and southern sites (Figure 3B). An increase in
+Mean minimum temperature had different impacts on northern and southern sites (Figure 5.3B). An increase in
 the temperature at southern sites led to earlier departure by 1.22 days
 {\textdegree}C\textsuperscript{-1} and at northern sites earlier by 1.83 days
 {\textdegree}C\textsuperscript{-1}. There was still a strongly divergent trend in the peak
-passage dates between northern and southern sites (Figure 3A). 
+passage dates between northern and southern sites (Figure 5.3A). 
 
 
 After accounting for the impact of temperature, the divergent interannual trends between northern and
-southern sites remained (Figure 2). The 2 most southern sites were estimated to shift 0.08 and 0.09 days
+southern sites remained (Figure 5.2). The 2 most southern sites were estimated to shift 0.08 and 0.09 days
 year\textsuperscript{-1} earlier, while the northern sites shifted later by 0.03, 0.04,
 and 0.05 days year\textsuperscript{-1}. The random effects related to site show how the
 site-specific passage dates differ relative to that expected by their distance to the breeding grounds and
 temperature. There were only small deviations from the expected mean site passage dates with Roberts Bank and
 Copper River Delta occurring earlier by about one day relative to their distance to the breeding
 grounds. Migration at Tofino Mudflats and Kennedy Creek occurred \textasciitilde0.5 days later than expected by their
-distances to the breeding grounds alone (Figure 4). Hartney Bay appears to have peaks that occur \textasciitilde2 days later
+distances to the breeding grounds alone (Figure 5.4). Hartney Bay appears to have peaks that occur \textasciitilde2 days later
 than at the main Copper River Delta site.
 
 \subsubsection{Dunlins.}
 The inclusion of temperature did not substantially change
 the results for dunlins. The top model remained the model that included year, distance to the breeding grounds and
 their interaction, though its support from the data was diminished with the additional models
-(Table 3b; \textit{wi }=0.58). Though the second and third supported
+(Table 5.4; \textit{wi }=0.58). Though the second and third supported
 model included the divergent temporal pattern, they also include the temperature effect and the divergent temperature
-effect respectively (Table 3b). The random effect of site in the dunlin model showed greater variance than in
+effect respectively (Table 5.4). The random effect of site in the dunlin model showed greater variance than in
 the western sandpipers in each site's mean peak passage date relative to that expected by the distance to the
 breeding grounds. Kennedy Creek was relatively early, and Tofino Mudflats was late; however, Roberts Bank, Copper
 River Delta, and Kachemak Bay were closer to the mean. The difference in relative passage intercepts for
-dunlins at Hartney Bay and the geographically adjacent Copper River Delta was even larger than for western sandpipers, with peaks separated by \textasciitilde5 days (Figure 3C).
+dunlins at Hartney Bay and the geographically adjacent Copper River Delta was even larger than for western sandpipers, with peaks separated by \textasciitilde5 days (Figure 5.3C).
 
-\subsection{Simulation Analysis: Effects of Behavior on Estimates of Peak Passage}
+\subsection{Simulation Analysis: Effects of Behaviour on Estimates of Peak Passage}
 
 
 The baseline arrival day of year was 110.0 \textpm 1.3 [all simulation parameters are mean \textpm SD of
@@ -521,22 +521,22 @@ date of peak passage was 112.39 \textpm 0.01 [all simulation effects reported as
 
 Unsurprisingly, changes in mean arrival date by 1 day resulted in changes in the peak passage estimate by \textasciitilde1 day
 (1.11 {\textpm} 0.01 day), which is double the effect size of length of stay. An increase in length of stay of one
-day shifted peak passage date later by one-half day (0.50 {\textpm} 0.02 day; Figure 5A). I found no interactive
+day shifted peak passage date later by one-half day (0.50 {\textpm} 0.02 day; Figure 5.5A). I found no interactive
 effect between length of stay and arrival date (0.00 {\textpm} 0.01 day). Changing the simulation population size had
 no effect on the peak passage estimate above 500 birds using the site. Below this point, the variance between estimates
-increased and the estimate shifted slightly earlier, although only by 0.15 day (Figure 5D).
+increased and the estimate shifted slightly earlier, although only by 0.15 day (Figure 5.5D).
 
 
 The introduction of an alternate migratory strategy had small effects on the estimate of peak passage date. The
 alternative strategy involved arriving later and staying for a shorter time (arrival date: 114.0 {\textpm} 1.2
 (mean {\textpm} SD); length of stay: 2.0 {\textpm} 1.1 day (mean {\textpm} SD)). As the proportion of the
-population adopting the alternative strategy increased, the peak passage date shifted later (Figure 5B). A complete
+population adopting the alternative strategy increased, the peak passage date shifted later (Figure 5.5B). A complete
 shift in strategy within the population using the site only resulted in a shift in peak passage date of 1.5 days. 
 
 The presence of a wintering population at the site prior to migration had a substantial effect on the peak passage
 estimate. For the baseline conditions, increasing the proportion of wintering birds present at the start of surveys to
 75\% of the site's population shifted peak passage earlier by more than 4 days (4.63 days; 95\%CI [4.60,4.64];
-Figure 5C), while when the site population was 50\% wintering residents, peak passage was only 2.69 days earlier
+Figure 5.5C), while when the site population was 50\% wintering residents, peak passage was only 2.69 days earlier
 [95\%CI 2.69, 2.71]. As the date of mean arrival date of migrants was adjusted, there were divergent impacts on peak
 passage estimates of adding winter residents. Shifting the mean arrival date earlier seemed to flatten out the impact
 of winter residents. If mean arrival date was day 1, meaning many of the migrants had arrived when surveys were
@@ -574,7 +574,7 @@ by winter residents at the southern site.
 My estimates of migratory progression were comparable to the direct measures of the
 migrations from radio-tagged individuals. Dunlins radio-tagged in spring 2001 at Gray's Harbour, WA
 (45.90{\textdegree}N, 124.04{\textdegree}W)
-took an average of 9.1 {\textpm} 5.9 days (mean {\textpm} SD; n = 8) to make the 2,140 km journey to the Copper River Delta, AK \citep{Warnock2004c}. For western sandpipers radio-tagged in spring 1995 and 1996, the journey was estimated to take an average of 5.1 {\textpm} 2.2 days (Warnock1998, Bishop2004a,Warnock2004c). Using the fixed-effects from my models, I predicted the differences in dates of peak passage between these
+took an average of 9.1 {\textpm} 5.9 days (mean {\textpm} SD; n = 8) to make the 2,140 km journey to the Copper River Delta, AK \citep{Warnock2004c}. For western sandpipers radio-tagged in spring 1995 and 1996, the journey was estimated to take an average of 5.1 {\textpm} 2.2 days \citep{Warnock1998, Bishop2004a,Warnock2004c}. Using the fixed-effects from my models, I predicted the differences in dates of peak passage between these
 sites as 12.4 days for dunlins and 5.6 days for western sandpipers. Between the Fraser and Copper River
 deltas (\textasciitilde1,900 km), radio-tagged western sandpipers took 4.3 {\textpm} 0.7 days (mean {\textpm}
 SE; \textit{n = } 3) to move between the sites in 1992 \citep{Iverson1996} compared with our
@@ -585,7 +585,7 @@ the 2 sites, and therefore will include a portion of the lengths of stays at bot
 while my estimates are slower than the radio-tagged western sandpipers and dunlin, they
 are comparable, especially if I consider my estimates also include time spent at the 2 sites of comparison.
 
-\subsection{Behavioral Mechanisms for Observed Trends in Peak Passage Dates}
+\subsection{Behavioural Mechanisms for Observed Trends in Peak Passage Dates}
 
 
 My simulation modelling suggests the most likely scenario to explain the divergent shift in peak passage
@@ -593,8 +593,8 @@ dates is based around a shift in arrival date at the southern sites. As I did no
 earlier in passage through northern sites, migrants must be now spending longer at either the southern, northern or
 some intermediate sites. The extra time could be spent at Roberts Bank if the shift in arrival dates was twice the
 change in lengths of stay. Given the measured length of stay for Roberts Bank was 3.6 {\textpm} 0.93 days in
-1992 (\textit{n = } 5; Iverson1996) and was 2.2 {\textpm} 1.2 days in 1995/96
- (\textit{n = } 25; Warnock1998), the model expectation of a 3 day reduction in
+1992 \citep[\textit{n = } 5; ][]{Iverson1996} and was 2.2 {\textpm} 1.2 days in 1995/96
+ \citep[\textit{n = } 25; ][]{Warnock1998}, the model expectation of a 3 day reduction in
 length of stay to shift the peak passage date two days earlier seems unlikely. Alternatively, a shift earlier in
 arrival date of 4 days at Roberts Bank, could be masked by an increase in length of stay of 3-4 days at the site. We
 do see an increase in the standard deviation of the estimated distribution at the site, which is one of the
@@ -614,7 +614,7 @@ arrival could be hidden from my peak passage estimates if lengths of stay had al
 Delta. If this is a larger population-wide trend, the large Copper River Delta provides an ideal location to stage
 prior to departing northward to the breeding grounds. Conditions at the northern sites, such as the Copper River
 Delta are more likely to be tied to conditions at the breeding grounds. As the date of snowmelt and temperatures
-on the breeding grounds can vary widely between years \citep{Niehaus2006,Kwon2016}, there would
+on the breeding grounds can vary widely between years \citep{Niehaus2006,Kwon2016,kwon2018}, there would
 be a benefit to moving quickly northward until the local stopover environment provides information about
 breeding ground conditions. 
 
@@ -683,7 +683,7 @@ Bay (Kennedy Creek, Tofino Flats, Hartney Bay and Copper River Delta), do ensure
 representative of the flyway rather than showing only the sites with the best data coverage. My pooled estimates of
 peak passage dates suggest western sandpiper migration progressed northward at an estimated rate of 199 km
 day\textsuperscript{-1} in 1991 and 153 km day \textsuperscript{-1 }in 2016,
-which is slower than that observed in individual tracking studies of western sandpipers, along the flyway (Iverson1996, Bishop2004a), but within the range of migration speeds observed across species \citep{Schmaljohann2017a}.
+which is slower than that observed in individual tracking studies of western sandpipers, along the flyway \citep{Iverson1996, Bishop2004a}, but within the range of migration speeds observed across species \citep{Schmaljohann2017a}.
 
 \subsection{Dunlins: Impact of Wintering Populations}
 
@@ -720,7 +720,7 @@ flyway. Based on the available data and my simulation analyses, I believe the mo
 observed trends for earlier peak passage dates in western sandpipers resulted from a shift to initiate migration
 earlier and spend longer at a northern site such as the Copper River Delta. Passage timing at these sites closer to
 the breeding grounds seems to be partially driven by temperature, suggesting in warmer years migrants depart onwards
-towards the breeding grounds after shorter length of stays than in colder years. Any behavioral shift could occur
+towards the breeding grounds after shorter length of stays than in colder years. Any behavioural shift could occur
 through individual plasticity or through changes in the composition of migration strategies within the population \citep{vanbuskirk,Gill20132161}. The changes in timing of migration of dunlins are suggestive of non-breeding populations aggregating more at larger sites or shifting northward in some years.
 
 
@@ -730,7 +730,7 @@ analysing each site individually. Although my dataset includes 2 of the most imp
 northern portion of the flyway, counts are nonetheless limited in their scope due to incomplete coverage and would
 benefit from the addition of counts further south on the flyway and at intermediate sites like the Stikine River
 delta. Long term monitoring of all important stopover sites within this or other flyways is an essential tool in
-assessing the health and behavior of migratory populations. Projects such as the Migratory Shorebird Project \citep{PointBlueConservationScience2014} are vital to standardizing protocols across a flyway and ensuring data from sites across a flyway can be brought together for more comprehensive analyses.
+assessing the health and behaviour of migratory populations. Projects such as the Migratory Shorebird Project \citep{PointBlueConservationScience2014} are vital to standardizing protocols across a flyway and ensuring data from sites across a flyway can be brought together for more comprehensive analyses.
 
 I feel that my methodology for assessing peak passage date is more robust than the commonly used mean or
 median capture date. I recommend exploring existing datasets using my methodology as a quick and low-cost way of
@@ -1008,7 +1008,7 @@ Kennedy Creek & 47.1 & -123.08 & 2900 & 3100 & 3170 &
 3057\tabularnewline
 \hline
 \end{tabular}
-\caption{Geographic position of stopover sites and their distance to areas within the breeding range. Latitude (N) and longitude
+\caption[Geographic position of stopover sites and their distance to areas within the breeding range.]{Geographic position of stopover sites and their distance to areas within the breeding range. Latitude (N) and longitude
 (W) are given in decimal degrees. All distances are the great arc distance from the selected breeding locations.}
 \end{sidewaystable}
 \end{centering}
@@ -1022,7 +1022,7 @@ Kennedy Creek & 47.1 & -123.08 & 2900 & 3100 & 3170 &
 \firsthline
 Species & Site & N Years & Survey Days & Survey Initiation Date & Survey Termination Date & Estimated Peak Passage Date & SD (days)\tabularnewline
 \hline
-western sandpiper & Kachemak Bay & 14 & 19.6 \textpm 1.3 & 21-Apr \textpm 1.7 &
+Western sandpiper & Kachemak Bay & 14 & 19.6 \textpm 1.3 & 21-Apr \textpm 1.7 &
 22-May \textpm 1.1 & 11-May \textpm 0.4 & 3.6 \textpm 0.2\tabularnewline
 & Copper River Delta & 4 & 11.3 \textpm 1.4 & 24-Apr \textpm 1.4 & 19-May \textpm 1.1 &
 5-May \textpm 0.9 & 5.0 \textpm 0.4\tabularnewline
@@ -1032,7 +1032,7 @@ western sandpiper & Kachemak Bay & 14 & 19.6 \textpm 1.3 & 21-Apr \textpm 1.7 &
 \textpm 0.4 & 4.2 \textpm 0.2\tabularnewline
 & Kennedy Creek & 13 & 14.1 \textpm 1.1 & 4-Apr \textpm 0.6 & 13-May \textpm 0.6 & 28-Apr
 \textpm 0.7 & 5.3 \textpm 0.8\tabularnewline
-dunlin & Kachemak Bay & 14 & 19.6 \textpm 1.3 & 21-Apr \textpm 1.7 & 22-May \textpm 1.1 &
+Dunlin & Kachemak Bay & 14 & 19.6 \textpm 1.3 & 21-Apr \textpm 1.7 & 22-May \textpm 1.1 &
 10-May \textpm 0.6 & 4.1 \textpm 0.3\tabularnewline
 & Copper River Delta & 3 & 10.7 \textpm 1.8 & 25-Apr \textpm 1.7 & 19-May \textpm 1.5 &
 3-May \textpm 0.8 & 8.2 \textpm 2.8\tabularnewline
@@ -1044,7 +1044,7 @@ dunlin & Kachemak Bay & 14 & 19.6 \textpm 1.3 & 21-Apr \textpm 1.7 & 22-May \tex
 \textpm 1.6 & 10.9 \textpm 0.7\tabularnewline
 \hline
 \end{tabular}
-\caption{Average timing and survey effort at 5 stopover sites on the Pacific Flyway listed north to south. Estimated peak passage
+\caption[Average timing and survey effort at 5 stopover sites on the Pacific Flyway.]{Average timing and survey effort at 5 stopover sites on the Pacific Flyway listed north to south. Estimated peak passage
 dates for both western sandpipers and dunlins were estimated from the mean of a truncated normal distribution fit using iterative maximum
 likelihood estimation. The mean standard deviation (SD) of this distribution describes the shape of the fit distribution and is a value
 in days. Values are means (\textpm SE).}
@@ -1074,7 +1074,7 @@ No Fixed Effects & 3 & 16.15 & 0 & 0.87\tabularnewline
 \lastline
 \textsuperscript{a}Top model AIC\textsubscript{c}: 250.00
 \end{tabular}
-\caption{Support for models predicting peak passage date of migrating western sandpipers on northward migration; n=56 observations.
+\caption[Support for models predicting peak passage date of migrating western sandpipers on northward migration.]{Support for models predicting peak passage date of migrating western sandpipers on northward migration; n=56 observations.
 Model descriptions are related to the full mixed model described in the text. Models either used the distance from each site to the breeding
 area (D) or the latitude of the stopover site (L). All models include a random intercept of site. See the text for a full explanation of all
 parameters used.}
@@ -1101,8 +1101,8 @@ No Fixed Effects & 3 & 7.25 & 0.01 & 0.87\tabularnewline
 \lastline
 \textsuperscript{a} Top model AIC\textsubscript{c}: 270.56
 \end{tabular}
-\caption{Support for models predicting peak passage date of
-migrating dunlin on northward migration; n=44 observations. Model
+\caption[Support for models predicting peak passage date of migrating dunlins on northward migration]{Support for models predicting peak passage date of
+migrating dunlins on northward migration; n=44 observations. Model
 descriptions are related to the full mixed model described in the text.
 Models either used the distance from each site to the breeding area (D)
 or the latitude of the stopover site (L). All model include a random
@@ -1112,8 +1112,10 @@ intercept of site. See the text for a full explanation of all parameters used.}
 
 \clearpage
 \section{Figures}
+\clearpage
 
-<<fig1-prog, out.width='0.8\\textwidth', fig.cap="Map of northeastern coast of the Pacific Ocean from Washington to Alaska. Sites used in this study included Kennedy Creek, Washington; Roberts Bank, British Columbia; Tofino, British Columbia; Copper River Delta, Alaska; and Kachemak Bay, Alaska.",fig.align="center">>=
+
+<<fig1-prog, out.width='0.8\\textwidth', fig.cap="Map of northeastern coast of the Pacific Ocean from Washington to Alaska. Sites used in this study included Kennedy Creek, Washington; Roberts Bank, British Columbia; Tofino, British Columbia; Copper River Delta, Alaska; and Kachemak Bay, Alaska.",fig.align="center",fig.scap="Map of northeastern coast of the Pacific Ocean from Washington to Alaska.">>=
 knitr::include_graphics("/home/dhope/Documents/SFU/PhD/SharingFiles_ForWindows/CWS.Mansucript/AcceptedVersion/ProofEdits/Figure1_thesis.jpeg")
 @
 
@@ -1121,7 +1123,7 @@ knitr::include_graphics("/home/dhope/Documents/SFU/PhD/SharingFiles_ForWindows/C
 \clearpage
 % \textbf{Figure 1.} 
 
-<<fig2-prog, out.width='0.8\\textwidth',fig.cap="Results of a simulation of the impact of survey effort on peak passage estimates. The mean deviation from the true peak passage date (see the text) is shown with 95\\textsuperscript{th} quantile of simulations. Intervals are hidden by the points in some cases. (\\textbf{A}) The impact of changes to the first day of surveys after the first bird arrives and the number of days between surveys on the peak passage estimate. (\\textbf{B}) The impact of the number of days surveyed on the peak passage date. Deviation from the true passage dates are shown in days.", fig.align="center">>=
+<<fig2-prog, out.width='0.8\\textwidth',fig.cap="Results of a simulation of the impact of survey effort on peak passage estimates. The mean deviation from the true peak passage date (see the text) is shown with 95\\textsuperscript{th} quantile of simulations. Intervals are hidden by the points in some cases. (\\textbf{A}) The impact of changes to the first day of surveys after the first bird arrives and the number of days between surveys on the peak passage estimate. (\\textbf{B}) The impact of the number of days surveyed on the peak passage date. Deviation from the true passage dates are shown in days.", fig.align="center", ,fig.scap="Results of a simulation of the impact of survey effort on peak passage estimates.">>=
 
 knitr::include_graphics("/home/dhope/Documents/SFU/PhD/SharingFiles_ForWindows/CWS.Mansucript/AcceptedVersion/ProofEdits/Figure2.jpeg")
 
@@ -1131,7 +1133,7 @@ knitr::include_graphics("/home/dhope/Documents/SFU/PhD/SharingFiles_ForWindows/C
 
 % \textbf{Figure 2.} 
 
-<<fig3-prog, out.width='0.8\\textwidth', fig.cap="Effects of simulated behaviour on the estimated peak passage date. The results show the deviation from the estimate of peak passage taken from the simulation run with baseline parameters. All passage estimates are means with 95\\% CI. The confidence interval is sometimes masked by the points. (\\textbf{A}) The effect of mean length of stay (in days) and mean arrival date (in days) at the stopover site on the date of peak passage. (\\textbf{B}) The effect of relative proportion of two migration strategies in the population: Type A, which is arrives early, but stays longer at a site and type B which arrives later but has a short length of stay. (\\textbf{C}) The effect of proportion of the total population that is present at the start of the simulation. This simulates a non-breeding population that is present at the start of counts. (\\textbf{D}) The effect of changes in the total number of birds using the stopover site.", fig.align="center">>=
+<<fig3-prog, out.width='0.8\\textwidth', fig.cap="Effects of simulated behaviour on the estimated peak passage date. The results show the deviation from the estimate of peak passage taken from the simulation run with baseline parameters. All passage estimates are means with 95\\% CI. The confidence interval is sometimes masked by the points. (\\textbf{A}) The effect of mean length of stay (in days) and mean arrival date (in days) at the stopover site on the date of peak passage. (\\textbf{B}) The effect of relative proportion of two migration strategies in the population: Type A, which is arrives early, but stays longer at a site and type B which arrives later but has a short length of stay. (\\textbf{C}) The effect of proportion of the total population that is present at the start of the simulation. This simulates a non-breeding population that is present at the start of counts. (\\textbf{D}) The effect of changes in the total number of birds using the stopover site.", fig.align="center",fig.scap="Effects of simulated behaviour on the estimated peak passage date.">>=
 
 knitr::include_graphics("/home/dhope/Documents/SFU/PhD/SharingFiles_ForWindows/CWS.Mansucript/AcceptedVersion/Figure3.jpeg")
 
@@ -1140,21 +1142,21 @@ knitr::include_graphics("/home/dhope/Documents/SFU/PhD/SharingFiles_ForWindows/C
 
 % \textbf{Figure 3.} 
 
-<<fig4-prog, out.width='0.8\\textwidth', fig.cap="Standardized fixed effect estimates and their associated bootstrapped 95\\% confidence intervals for the full models describing trends in peak passage for western sandpipers (filled points) and dunlin (open points). The model is described in detail in the text. Year and distance to breeding are standardized by subtracting the mean from the variable and then dividing by twice the standard deviation.", fig.align="center">>=
+<<fig4-prog, out.width='0.8\\textwidth', fig.cap="Standardized fixed effect estimates and their associated bootstrapped 95\\% confidence intervals for the full models describing trends in peak passage for western sandpipers (filled points) and dunlin (open points). The model is described in detail in the text. Year and distance to breeding are standardized by subtracting the mean from the variable and then dividing by twice the standard deviation.", fig.align="center",fig.scap="Standardized fixed effect estimates and their associated bootstrapped 95\\% confidence intervals for the full models describing trends in peak passage for western sandpipers and dunlin.">>=
 knitr::include_graphics("/home/dhope/Documents/SFU/PhD/SharingFiles_ForWindows/CWS.Mansucript/AcceptedVersion/Figure4.jpeg")
 @
 
 \clearpage
 % \textbf{Figure 4.} 
 
-<<fig5-prog, out.width='0.8\\textwidth', fig.cap="The predicted interannual effects on peak passage date estimated from the linear mixed model for western sandpipers (top) and dunlin (bottom). Predicted model patterns are shown for each site with their associated bootstrapped 95\\% prediction interval. Estimated peak passage dates are shown with the estimated standard deviation of counts around that peak.", fig.align="center">>=
+<<fig5-prog, out.width='0.8\\textwidth', fig.cap="The predicted interannual effects on peak passage date estimated from the linear mixed model for western sandpipers (top) and dunlin (bottom). Predicted model patterns are shown for each site with their associated bootstrapped 95\\% prediction interval. Estimated peak passage dates are shown with the estimated standard deviation of counts around that peak.", fig.align="center",fig.scap="The predicted interannual effects on peak passage date estimated from the linear mixed model for western sandpipers and dunlin.">>=
 knitr::include_graphics("/home/dhope/Documents/SFU/PhD/SharingFiles_ForWindows/CWS.Mansucript/AcceptedVersion/Figure5.jpeg") 
 @
 % \textbf{Figure 5.} 
 
 \clearpage
 
-<<fig6-prog, out.width='0.5\\textwidth', fig.cap="The random effect deviations in days from the expected model intercept based on their distance from the breeding ground alone for Kennedy Creek (KENN), Roberts Bank (RBBP), Tofino (TOFN), Copper River Delta (CRD), and Kachemak Bay (KABA) for western sandpipers (triangles) and dunlin (circles) with associated 95\\% confidence intervals.", fig.align="center">>=
+<<fig6-prog, out.width='0.5\\textwidth', fig.cap="The random effect deviations in days from the expected model intercept based on their distance from the breeding ground alone for Kennedy Creek (KENN), Roberts Bank (RBBP), Tofino (TOFN), Copper River Delta (CRD), and Kachemak Bay (KABA) for western sandpipers (triangles) and dunlin (circles) with associated 95\\% confidence intervals.", fig.align="center",fig.scap="The random effect deviations in days from the expected model intercept based on site distance from the breeding ground alone.">>=
 knitr::include_graphics("/home/dhope/Documents/SFU/PhD/SharingFiles_ForWindows/CWS.Mansucript/AcceptedVersion/Figure6.jpeg")
 @
 

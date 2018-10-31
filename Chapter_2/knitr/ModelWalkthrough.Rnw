@@ -37,7 +37,7 @@ opts_chunk$set(echo=F, # Do NOT repeat code in final document
                 message = F, # Do NOT print R messages in document
                 warning = F, # Do NOT pring warnings
                 cache = T, # Cache runs
-                dev = "CairoPNG", # Uses Cairo png instead of pdf for images
+                #dev = "CairoPNG", # Uses Cairo png instead of pdf for images
                 dpi=300,
                 out.width="\\textwidth",
                 # cache.path = './cache/'
@@ -79,7 +79,7 @@ mday <- lubridate::mday
 @
 
 <<table-script,cache=T,tab_file = file.info('../cpp_version/Migration_Model/noU/global_ch1FinalBackup_August2018.cpp')$mtime, cache.lazy=T >>=
-select <- dplyr::select
+select <- dplyr::select 
 source('../Rscripts/GenerateTables.r', chdir=T) 
 @
 
@@ -97,7 +97,7 @@ I describe here a model of the migration of mortality-minimizing sandpipers movi
 
 The model landscape for the baseline case contains one site of each type, though the results should be roughly generalizable for multiple sites of each type. Migrants are initially randomly assigned to one site but are assumed to have knowledge of conditions at the other site. Migrants can then choose to remain at the site and forage, shift to the other site type, or to continue migration towards their non-breeding grounds. Migrants assess the decision daily based on the expected probability of surviving the remainder of their migration. Migrants vary in their body condition and timing, and the sites vary in their potential fuel loading rate and danger. The mortality-minimizing decision varies with a migrant's fuel load and current site, and the date. Migrants must trade off the ability to load fuel quickly with safety as well as survival within their current landscape against survival on the remainder of migration.
 
-I use a dynamic state variable model (DSVM) to calculate mortality-minimizing decisions over a range of potential conditions and locations. DSVMs use a terminal reward function to optimize the mortality-minimizing decisions for each potential state, time, and location of individuals \citep{ClarkMangel2000}. The model's state variables that impact migrant decisions are date ($t$), fuel load ($x$), and location ($s$). The model runs for 151 days from June 20 until November 17. Each date is assigned a value $t$ between 0 and 150. The terminal date is $T$, where $t=150$.  Migrant fuel load, $x$, is the mass of fuel in fat or other tissue expended during migration that can be used to power onwards flight ($f$) relative to the lean body mass ($LBM$) of the migrant ($x=f/LBM$\label{eq:x} ).  An individual migrant, while alive and after arriving in the region will always be at one of three locations ($s$): the small site ($s=0$), the large site ($s=1$) or departed onward ($s=D$).
+I use a dynamic state variable model (DSVM) to calculate mortality-minimizing decisions over a range of potential conditions and locations. DSVMs use a terminal reward function to optimize the mortality-minimizing decisions for each potential state, time, and location of individuals \citep{ClarkMangel2000}. The model's state variables that impact migrant decisions are date ($t$), fuel load ($x$), and location ($s$). The model runs for 151 days from June 20 until November 17. Each date is assigned a value $t$ between 0 and 150. The terminal date is $T$, where $t=150$.  Migrant fuel load, $x$, is the mass of fuel in fat or other tissue expended during migration that can be used to power onwards flight ($f$) relative to the lean body mass ($LBM$) of the migrant ($x=f/LBM$\label{eq:x}).  An individual migrant, while alive and after arriving in the region will always be at one of three locations ($s$): the small site ($s=0$), the large site ($s=1$) or departed onward ($s=D$).
 
 % $x$ varies between 0 and 1.0, broken into 1000 intervals of 0.001 units of relative fuel load. 
 
@@ -112,7 +112,7 @@ Decisions across the model are optimized to maximize the probability of survivin
 
 Parameter symbols, definitions, and values are summarized in \autoref{tab:variables}
 
-The daily survival probability on the non-breeding grounds ($\phi_{nb}$) for migrants that have departed the model area and completed the remainder of migration is based on a constant daily risk of mortality ($m_{nb}$.
+The daily survival probability on the non-breeding grounds ($\phi_{nb}$) for migrants that have departed the model area and completed the remainder of migration is based on a constant daily risk of mortality ($m_{nb}$).
 
 \begin{equation}\label{eq:nbsurv}
 \phi_{nb} = \mathrm{e}^{-m_{nb}}
@@ -146,7 +146,7 @@ The safety impact of fuel load will be modified by the site-specific danger para
 
 The impact of a site's danger ($\tau(s)$) is also modified by the predator population ($\digamma$), so as the flyway predator population increases, the small site becomes disproportionally more dangerous.  The parameter $\nu$ modifies the maximum chance of being captured; $a$ must be greater than 1 and modifies the shape of $\psi$ as $x$ increases.
 
-<<mu-x, fig.cap="Vulnerability to capture $\\psi(x)$ (\\autoref{eq:mux}) with changing values of $x$ at the large (black line;$\\tau(1)$) and small (red line;$\\tau(0)$) sites under baseline conditions. The inset enlarges the area in the box and highlights the capture risk for light birds, which is the region of the graph occupied by western sandpipers in the baseline scenario (See \\autoref{fig:decision}). The capture risk on departure ($m_D$; blue dashed line) and daily mortality risk on the non-breeding grounds ($m_{nb}$; green dashed line) are also shown.", dependson="table-script">>=
+<<mu-x, fig.cap="Vulnerability to capture $\\psi(x)$ (\\autoref{eq:mux}) with changing values of $x$ at the large (black line;$\\tau(1)$) and small (red line;$\\tau(0)$) sites under baseline conditions. The inset enlarges the area in the box and highlights the capture risk for light birds, which is the region of the graph occupied by western sandpipers in the baseline scenario (See \\autoref{fig:decision}). The capture risk on departure ($m_D$; blue dashed line) and daily mortality risk on the non-breeding grounds ($m_{nb}$; green dashed line) are also shown.",fig.scap="Vulnerability to capture $\\psi(x)$ with changing values of $x$ at the large and small sites.", dependson="table-script">>=
 flywayPredationX <- tab_base$`Initial Values`[tab_base$Name=="flywayPredationX"] %>% as.numeric()
 flywayFood <- tab_base$`Initial Values`[tab_base$Name=="flywayFood"] %>% as.numeric()
 wetleanbodymass <- tab_base$`Initial Values`[tab_base$Name=="wetleanbodymass"] %>% as.numeric()
@@ -158,8 +158,9 @@ flywayPredationDep  <- tab_base$`Initial Values`[tab_base$Name=="flywayPredation
 wintering_mortality  <- tab_base$`Initial Values`[tab_base$Name=="wintering_mortality"] %>% as.numeric()
 a_mod <- tab_base$`Initial Values`[tab_base$Name=="a_mod"] %>% as.numeric()
   
-siteDanger <- c(s0,1)
+siteDanger <- c(s0,1) 
 siteFuelIntake <- c(f0,1)
+
 
 plot_X <- function(x,s){
     rf = x
@@ -226,7 +227,7 @@ Parameter $m_t$, which modifies the timing of arrival of falcons in days, though
 
 
 
-<<falconpresence, fig.cap="Probability of falcon presence by day of year as the inverse logit function of the estimated variables from a mixed model linear regression of detection over time with year as a random effect \\citep*[data from ][]{lank_effects_2003}. The solid vertical lines show the start and end of the model dates ($t=0 \\text{& } t=T$). Vertical dashes indicate a presence or absence on a daily count. The fixed effect trend is the curve of predator presence $\\theta(t)$ in \\autoref{eq:mort} (shown with estimated 95\\% CI in black line with grey shading). The grey lines show the variation in estimated intra-annual trends amongst the years analysed. Data are from daily survey counts in the Fraser River Delta region between 1994 and 2001 published in \\citet{lank_effects_2003}">>=
+<<falconpresence, fig.cap="Probability of falcon presence by day of year as the inverse logit function of the estimated variables from a mixed model linear regression of detection over time with year as a random effect \\citep*[data from ][]{lank_effects_2003}. The solid vertical lines show the start and end of the model dates ($t=0 \\text{& } t=T$). Vertical dashes indicate a presence or absence on a daily count. The fixed effect trend is the curve of predator presence $\\theta(t)$ in \\autoref{eq:mort} (shown with estimated 95\\% CI in black line with grey shading). The grey lines show the variation in estimated intra-annual trends amongst the years analysed. Data are from daily survey counts in the Fraser River Delta region between 1994 and 2001 published in \\citet{lank_effects_2003}",fig.scap="Probability of falcon presence in the Fraser River Delta by day of year.">>=
 dat_f <- read_rds(".rds_files/falcon.rds")
 
 fullplot_falc <- 
@@ -256,7 +257,7 @@ A migrant's flight range ($Y(x)$) on departure was calculated as described by \c
 Y(x) = c\left(1-\frac{1}{\sqrt{1+x}}\right)
 \end{equation}
 
-I calculated the migrants change in position relative to the falcon migration ($\partial_t(x,s)$) as the difference in time it took the sandpiper to cover $Y(x)$ relative to the time it would take the falcons to cover the same distance. Assuming a western sandpiper flight speed of $1340\text{ km day}^{-1}$ ($S_w$) \citep{Reurink2016,Duijns2017} and a falcon migratory speed of $172\text{ km day}^{-1}$ ($S_f$) \citep{Fuller1998}, the change in position can be described as follows:
+I calculated the migrants change in position relative to the falcon migration ($\partial_t(x,s)$) as the difference in time it took the sandpiper to cover $Y(x)$ relative to the time it would take the falcons to cover the same distance. Assuming a western sandpiper flight speed of $1340\text{ km day}^{-1}$ \citep[$S_w$; ][]{Reurink2016,Duijns2017} and a falcon migratory speed of $172\text{ km day}^{-1}$ \citep[$S_f$; ][]{Fuller1998}, the change in position can be described as follows:
 
 \begin{equation}\label{eq:headstart}
 \partial_t(x,s) = \begin{cases}
@@ -305,7 +306,7 @@ S(x) = \frac{Y(x)}{t_e + x/k}
 
 
 
-<<departure-ex, fig.cap="Example of how sandpiper migratory position is calculated for individuals departing with relative fuel loads of 0.1 (solid line) and 0.5 (dashed line), migrating to six non-breeding locations, relative to the migratory progression of falcons (red dotted line). Each black line shows the position of birds on  each date after departure.  Migrants progress with first flight on departure and then based on estimated speed of migration. Migrants move ahead of the falcon migration through their first flight and then are exposed to attacks based on the number of remaining migratory days and their position relative to falcons. Horizontal lines show migrant's arrival at the non-breeding grounds, where daily survival is constant.", dependson="table-script">>=
+<<departure-ex, fig.cap="Example of how sandpiper migratory position is calculated for individuals departing with relative fuel loads of 0.1 (solid line) and 0.5 (dashed line), migrating to six non-breeding locations, relative to the migratory progression of falcons (red dotted line). Each black line shows the position of birds on  each date after departure.  Migrants progress with first flight on departure and then based on estimated speed of migration. Migrants move ahead of the falcon migration through their first flight and then are exposed to attacks based on the number of remaining migratory days and their position relative to falcons. Horizontal lines show migrant's arrival at the non-breeding grounds, where daily survival is constant.", dependson="table-script",fig.scap="Example of how sandpiper migratory position is calculated for individuals departing the model region.">>=
 flight_par <- tab_base$`Initial Values`[tab_base$Name=="flight_par"] %>% as.numeric()
 settle_time<- tab_base$`Initial Values`[tab_base$Name=="settle_time"] %>% as.numeric()
 fuel_loading_rate<- tab_base$`Initial Values`[tab_base$Name=="fuel_loading_rate"] %>% as.numeric()
@@ -391,7 +392,7 @@ In addition to differences in mortality between sites, the expected fitness valu
 \triangle x(s) = \frac{e_g e(s) + \mathcal{N}(0, \sigma_e^2)}{LBM}
 \end{equation}
 
-Each site allows a migrant to increase its relative fuel load by amount $\triangle x$ per day. This amount depends on a global maximum fuel loading rate ($e_g$; in grams fuel$^{-1}$), and a site's relative food availability ($e(s)$; grams fuel$^{-1}$). There is also some stochasticity in the daily fuel loading rate ($\mathcal{N}(0, \sigma_e^2)$), with decisions  made on the expectation. I do not include here a seasonal pattern in food availability or fuel loading rate as there is no evidence for depletion within the western sandpiper southward migratory system \citep{Ydenberg2002} and my limited macroinvertebrate data showed no seasonal pattern and even a small increase in abundance at the two sites I sample multiple times (Chapter 3 Appendix B). 
+Each site allows a migrant to increase its relative fuel load by amount $\triangle x$ per day. This amount depends on a global maximum fuel loading rate ($e_g$; in grams fuel$^{-1}$), and a site's relative food availability ($e(s)$; grams fuel$^{-1}$). There is also some stochasticity in the daily fuel loading rate ($\mathcal{N}(0, \sigma_e^2)$), with decisions  made on the expectation. I do not include here a seasonal pattern in food availability or fuel loading rate as there is no evidence for depletion within the western sandpiper southward migratory system \citep{Ydenberg2002} and my limited macroinvertebrate data showed no seasonal pattern and even a small increase in abundance at the two sites I sample multiple times (\autoref{app:wesa}). 
 
 
 
@@ -413,11 +414,11 @@ The dynamic programming equation (\autoref{eq:reward}) calculates the optimized 
 <<variables, results='asis', eval=TRUE, dependson='table-script'>>=
 print(xtab_1, sanitize.text.function=function(x){x},
        floating = TRUE, floating.environment = "sidewaystable",
-       include.rownames = FALSE) 
+       include.rownames = FALSE)  
 @
 
 
-<<decision, fig.cap="Basic mortality-minimizing decision matrices of migrant behaviour based on location, time, and fuel load under initial conditions (See \\autoref{tab:variables}). Migrants are located at the small (left) and large (right) sites. Migrants can either move to or stay at the small site (red), move to or stay at the large site (black), or depart the region (blue). The optimal decision varies with current location, fuel load and time.",back_time=file.info("../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/full_back_single.txt")$mtime>>=
+<<decision, fig.cap="Basic mortality-minimizing decision matrices of migrant behaviour based on location, time, and fuel load under initial conditions (See \\autoref{tab:variables}). Migrants are located at the small (left) and large (right) sites. Migrants can either move to or stay at the small site (red), move to or stay at the large site (black), or depart the region (blue). The optimal decision varies with current location, fuel load and time.",back_time=file.info("../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/full_back_single.txt")$mtime,fig.scap="Basic mortality-minimizing decision matrices of migrant behaviour based on location, time, and fuel load under initial conditions.">>=
 back_dat <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/full_back_single.txt", dat_type = 'back', pk = 'No')
 plotres(back_dat,plot_type =  'back') + labs(x= "Relative Fuel Load (x)", y="Date (t)")
 @
@@ -444,7 +445,8 @@ If the migrant's decision is to depart the study region, their fitness is calcul
 <<variables-forward, results='asis', eval=TRUE, dependson='table-script'>>=
 print(xtab_2, sanitize.text.function=function(x){x},
        floating = TRUE, floating.environment = "sidewaystable",
-       include.rownames = FALSE)   
+       include.rownames = FALSE)
+
 @
 
 The model is parametrized from the literature where available. The relative food at the large and small sites are based on estimates of relative fuel loading ability for migrating sandpipers at Boundary Bay, BC and Sidney Island, BC \citep{Ydenberg2002} and the relative proportion of the site's habitat that is within 150m of cover. The cost of moving between the sites is based on the flight costs of moving between Boundary Bay and Sidney Island using the estimated costs in energy of flight from \citet{Maggini2017a} (0.26 kJ km$^{-1}$), the energy costs per gram of fat from \citet{Jenni-Eiermann2017} (37.6 kJ g$^{-1}$), and the distance between the sites (57 km). This is higher than the value from the flight range equation, but I assume more accurate for local movements between sites rather than longer migratory flights.  The lean body mass estimate is a simplification of reality as this value would vary between individuals, age-classes and sexes, but for clarity I have held the value constant at that used in \citet{Hope2011}. \citet{Guglielmo2003} explore the seasonal variation in lean body mass in more detail. %The parameters used in $\delta(t)$,$\theta(t)$, $\psi(x,s)$, and $S(x)$ are described above in the descriptions of \cref{eq:mort,eq:mux,eq:Sx}.
@@ -500,7 +502,7 @@ Simulated migrants have different lengths of stays between sites and ages under 
 
 
 
-<<baseline-res, fig.cap="Forward simulation model output under baseline conditions (See \\autoref{tab:variables}). Adult (solid lines) and juvenile (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move are counted at the new site for that day. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", for_time=file.info("../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/forwards_sim.txt")$mtime,dpi=300, fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center'>>=
+<<baseline-res, fig.cap="Forward simulation model output under baseline conditions (See \\autoref{tab:variables}). Adult (solid lines) and juvenile (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move are counted at the new site for that day. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", for_time=file.info("../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/baseline/forwards_sim.txt")$mtime,dpi=300, fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center',fig.scap="Forward simulation model output under baseline conditions.">>=
 a <- plotres(for_dat,plot_type =  'hist')# + scale_linetype_manual(values=c("solid", "dotted"))
 a2 <- plotres(for_dat,plot_type =  'mass') + theme(legend.position = 'none')
 a3 <- plotres(for_dat ,plot_type =  'los')+ theme(legend.position = 'none')
@@ -587,7 +589,7 @@ readMCLoopDat(file_ = "../cpp_version/Migration_Model/OrganizedResults/noU/MC_Lo
 @
 
 
-<<mcloop,fig.cap="Results of sequentially adjusting relative food and safety at the large site. For each adjustment the food and safety at the large site were held at 1.0 and $\\tau(0)$ and $e(0)$ adjusted. a. The number of birds at the small (red) and large (black) sites as well as the proportion at the large site on model (green) date July 15 (Adult) and August 15 (Juvenile) as the relative danger of the small site is adjusted between 1 and 10 by 0.1. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey shading. For the runs here, the relative food ($e(0)$) was held at the baseline value (\\textasciitilde2). b. The number of birds at the small (red) and large (black) sites as well as the proportion at the large site (green) on model date July 15 (Adult) and August 15 (Juvenile) as the relative food of the large site is adjusted between 1 and 10 by 0.1. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey. For the runs here, the relative danger ($\\tau(0)$) was held at the baseline value (\\textasciitilde4)." , dependson='mcloop-dat'>>=
+<<mcloop,fig.cap="Results of sequentially adjusting relative food and safety at the large site. For each adjustment the food and safety at the large site were held at 1.0 and $\\tau(0)$ and $e(0)$ adjusted. a. The number of birds at the small (red) and large (black) sites as well as the proportion at the large site on model (green) date July 15 (Adult) and August 15 (Juvenile) as the relative danger of the small site is adjusted between 1 and 10 by 0.1. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey shading. For the runs here, the relative food ($e(0)$) was held at the baseline value (\\textasciitilde2). b. The number of birds at the small (red) and large (black) sites as well as the proportion at the large site (green) on model date July 15 (Adult) and August 15 (Juvenile) as the relative food of the large site is adjusted between 1 and 10 by 0.1. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey. For the runs here, the relative danger ($\\tau(0)$) was held at the baseline value (\\textasciitilde4)." , dependson='mcloop-dat',fig.scap="Results of sequentially adjusting relative food and safety at the large site under baseline conditions.">>=
 
 
 filt_dat <-read_rds(".rds_files/cedar_nou.rds") %>% filter(danger > 0.) %>% filt_mcdat %>% filter(pk==0)
@@ -633,7 +635,7 @@ source("../Rscripts/multidist.r", chdir=T)
 
 The remaining migratory distance ($\mathbb{D}$) strongly affects the distribution of both adults and juveniles (\autoref{fig:mig-dist-counts}). Adults with less than 5000 km are primarily found at the large site, but at 5000 km and further the distribution shifts strongly towards the small site, to the point where 80\% of the birds facing 9000 additional km were found at the small site, though the total number of birds is lower than for shorter-distance migrants. The shortest migration has lower numbers on July 15th relative to a migration of 2300 km, likely because migrants can complete this flight in one jump with less fuel.
 
-<<mig-dist-counts, fig.cap="Results of adjusting migratory distance on abundances of migrants at the small and large sites. The number of birds is shown at the small (red) and large (black) sites, and the proportion at the large site (green) on model dates July 15 (Adult) and August 15 (Juvenile) at different migratory distances. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey shading.", dependson='mig-dist-dat',fig.width=8, fig.height=4, out.width="\\textwidth">>=
+<<mig-dist-counts, fig.cap="Results of adjusting migratory distance on abundances of migrants at the small and large sites. The number of birds is shown at the small (red) and large (black) sites, and the proportion at the large site (green) on model dates July 15 (Adult) and August 15 (Juvenile) at different migratory distances. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey shading.", dependson='mig-dist-dat',fig.width=8, fig.height=4, out.width="\\textwidth",fig.scap="Results of adjusting migratory distance on abundances of migrants at the small and large sites.">>=
 nopk_dist_plot
 @
 %($$\\mathbb{D}$$)
@@ -644,7 +646,7 @@ Departure flight range and speed of migration are inversely related as migratory
 
 
 
-<<mig-dist-range-speed, fig.cap="The impact of distances to migrate on (a) flight range (km) and (b) speed of migration (km day$^{-1}$) at departure.  Values are calculated from \\autoref{eq:range} and \\autoref{eq:speed} based on fuel load at departure. For reference, the dotted line shows the estimated speed of falcon migration. The output shows only migrants without prior knowledge of site conditions on arrival, as there were only minor differences with and without prior knowledge.", out.width="\\textwidth", fig.width=10, fig.height=10,dependson='mig-dist-dat'>>=
+<<mig-dist-range-speed, fig.cap="The impact of distances to migrate on (a) flight range (km) and (b) speed of migration (km day$^{-1}$) at departure.  Values are calculated from \\autoref{eq:range} and \\autoref{eq:speed} based on fuel load at departure. For reference, the dotted line shows the estimated speed of falcon migration. The output shows only migrants without prior knowledge of site conditions on arrival, as there were only minor differences with and without prior knowledge.", out.width="\\textwidth", fig.width=10, fig.height=10,dependson='mig-dist-dat',,fig.scap="The impact of distances to migrate on flight range and  speed of migration at departure.">>=
 plot_grid(flighrange_on_depart+theme(legend.position='none'),speed_on_depart+theme(legend.position='bottom')+labs(colour =""),rel_heights = c(0.9,1), labels='auto', nrow=2)  
 @
 
@@ -659,7 +661,7 @@ The forward simulation of migrant passage initially has migrant initial arrival 
 In this modified scenario, migrants can move to the site that maximizes their fitness estimate $F$ for their current fuel load and arrival date. For $bird_i$, the initial site is $s_i^* = D[x_i, \max\limits_{s} F[x_i, s, t_i], t_i]$ and the decision for day $t_a + 1$ is $d_i = D[x_i, s_i^*, t_i+1]$. Migrants do not load fuel or die during the first day. I refer to this modification as adding an assumption of ``prior knowledge'' to migrants, as migrants that had previous or gained knowledge of the optimal site to land on arrival should not have a random site as their first stopofver site.
 
 
-<<prior-knowledge, fig.cap="Forward simulation model output for model modified to allow migrant prior knowledge (See \\autoref{seq:pk}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", dpi=300, fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center'>>=
+<<prior-knowledge, fig.cap="Forward simulation model output for model modified to allow migrant prior knowledge (See \\autoref{seq:pk}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", dpi=300, fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center',fig.scap="Forward simulation model output for model modified to allow migrant prior knowledge.">>=
 for_dat_pk <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/PK/changed_x/baseline/forwards_sim.txt", dat_type = 'forward', pk = 'Prior Knowledge')
 
 a_pk <- plotres(for_dat_pk,plot_type =  'hist')
@@ -700,7 +702,7 @@ los_pk <- for_dat_pk %>%
 @
 
 
-<<compare-pk, dpi=300, fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.cap = "Comparison of forward simulation model outputs between scenarios of random migrant arrival and optimal arrival. Results are shown as the change in daily abundance (a), mean daily mass (b) and lengths of stay at departure (c) from the baseline model. Adults (solid lines) and juveniles (dashed lines) migrants at the small (red) or large (black) sites are shown in all plots. ">>=
+<<compare-pk, dpi=300, fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.cap = "Comparison of forward simulation model outputs between scenarios of random migrant arrival and optimal arrival. Results are shown as the change in daily abundance (a), mean daily mass (b) and lengths of stay at departure (c) from the baseline model. Adults (solid lines) and juveniles (dashed lines) migrants at the small (red) or large (black) sites are shown in all plots. ",fig.scap="Comparison of forward simulation model outputs between scenarios of random migrant arrival and arrival with prior knowledge.">>=
     compare_pk <- bind_rows(for_dat, for_dat_pk) %>% 
         filter(s !=2) %>% group_by(date, t, SiteName, age, priorK) %>% 
         summarize(n=n(), los= mean(MaxLoS + 1, na.rm=T),
@@ -731,7 +733,7 @@ pg_compare
 @
 
 
-The daily abundances of migrants with prior knowledge are similar to those without prior knowledge (\autoref{fig:prior-knowledge}), with some notable differences (\autoref{fig:compare-pk}). Adults are more abundant at the small than the large site, and juveniles more abundant at the large than small site both with and without prior knowledge. The main difference is that under baseline conditions migrants with 5000 km in migration do not use the small site in the second half of August. Otherwise the model outputted daily counts are very similar between the two arrival scenarios.
+The daily abundances of migrants with prior knowledge are similar to those without prior knowledge (\autoref{fig:prior-knowledge}), with some notable differences (\autoref{fig:compare-pk}). Adults are more abundant at the small than the large site, and juveniles more abundant at the large than small site both with and without prior knowledge. The main difference is that under baseline conditions migrants with 5000 km in migration do not use the small site in the second half of August. Otherwise the model returned daily counts are very similar between the two arrival scenarios.
 
 In contrast to numbers, estimated masses have greater differentiation between sites with than without prior knowledge. At the small site there are no differences in mean masses for adults (Baseline: \Sexpr{masses$mean.mass[masses$SiteName=='Small' & masses$age=='Adult']} [\Sexpr{masses$lci[masses$SiteName=='Small' & masses$age=='Adult']}, \Sexpr{masses$uci[masses$SiteName=='Small' & masses$age=='Adult']} CI] g; with prior knowledge: \Sexpr{masses_pk$mean.mass[masses_pk$SiteName=='Small' & masses_pk$age=='Adult']} [\Sexpr{masses_pk$lci[masses_pk$SiteName=='Small' & masses_pk$age=='Adult']}, \Sexpr{masses_pk$uci[masses_pk$SiteName=='Small' & masses_pk$age=='Adult']} CI] g). At the large site masses are heavier for adults with prior knowledge on average, but with substantial variation within each model type (Baseline: \Sexpr{masses$mean.mass[masses$SiteName=='Large' & masses$age=='Adult']} [\Sexpr{masses$lci[masses$SiteName=='Large' & masses$age=='Adult']}, \Sexpr{masses$uci[masses$SiteName=='Large' & masses$age=='Adult']} CI] g; with prior knowledge: \Sexpr{masses_pk$mean.mass[masses_pk$SiteName=='Large' & masses_pk$age=='Adult']} [\Sexpr{masses_pk$lci[masses_pk$SiteName=='Large' & masses_pk$age=='Adult']}, \Sexpr{masses_pk$uci[masses_pk$SiteName=='Large' & masses_pk$age=='Adult']} CI] g). For juveniles, there is a much smaller shift in masses for migrants at the large site between arrival scenarios (Baseline: \Sexpr{masses$mean.mass[masses$SiteName=='Large' & masses$age=='Juvenile']} [\Sexpr{masses$lci[masses$SiteName=='Large' & masses$age=='Juvenile']}, \Sexpr{masses$uci[masses$SiteName=='Large' & masses$age=='Juvenile']} CI] g; with prior knowledge: \Sexpr{masses_pk$mean.mass[masses_pk$SiteName=='Large' & masses_pk$age=='Juvenile']} [\Sexpr{masses_pk$lci[masses_pk$SiteName=='Large' & masses_pk$age=='Juvenile']}, \Sexpr{masses_pk$uci[masses_pk$SiteName=='Large' & masses_pk$age=='Juvenile']} CI] g). At the small site juveniles are lighter with prior knowledge, but again with a large amount of variation around these means (Baseline: \Sexpr{masses$mean.mass[masses$SiteName=='Small' & masses$age=='Juvenile']} [\Sexpr{masses$lci[masses$SiteName=='Small' & masses$age=='Juvenile']}, \Sexpr{masses$uci[masses$SiteName=='Small' & masses$age=='Juvenile']} CI] g; with prior knowledge: \Sexpr{masses_pk$mean.mass[masses_pk$SiteName=='Small' & masses_pk$age=='Juvenile']} [\Sexpr{masses_pk$lci[masses_pk$SiteName=='Small' & masses_pk$age=='Juvenile']}, \Sexpr{masses_pk$uci[masses_pk$SiteName=='Small' & masses_pk$age=='Juvenile']} CI] g). Across the season, both model types show a strong increase in fuel loads for late migrants at the large site and little change across the season at the site or for adults at the large site. There is a slightly larger trend in masses in adults at the small site, likely due to migrants being evenly distributed across both sites on arrival without prior knowledge, whereas with prior knowledge migrants are selecting arrival location based on arrival fuel load.
 
@@ -740,7 +742,7 @@ The lengths of stay also show different patterns between arrival scenarios. In t
 
  The model scenario with prior knowledge allows migrants to completely skip the region instead of stopping at either of the sites (dark green lines in \autoref{fig:path-birds}). This behaviour emerges in both adults and juveniles, as birds that arrive heavy choose to continue south rather than stopping locally. While the model was not initially developed to detect this behaviour, it is interesting to see, and likely biologically realistic, that under certain conditions migrants should opt to continue migrating rather than stopping in a particular region. Adding prior knowledge allows migrants this option.
 
-<<path-birds,dpi=300, fig.dim=c(10,10), fig.cap="The path of adult (left) and juvenile (right) migrants through the simulated landscape with or without prior knowledge of the system. Results show 2000 birds moving from arrival to one of the two site types and then departing. Each line shows a single movement between one of the locations. Vertical lines from Pre-arrival to Departed show migrants that have optimal arrival (Prior Knowledge) and choose to depart immediately. The lines are jittered randomly to show more clearly the movement of individual birds.", dependson="prior-knowledge",out.width = "\\textwidth", fig.align = 'center' >>=
+<<path-birds,dpi=72, fig.dim=c(10,10), fig.cap="The path of adult (left) and juvenile (right) migrants through the simulated landscape with or without prior knowledge of the system. Results show 2000 birds moving from arrival to one of the two site types and then departing. Each line shows a single movement between one of the locations. Vertical lines from Pre-arrival to Departed show migrants that have optimal arrival (Prior Knowledge) and choose to depart immediately. The lines are jittered randomly to show more clearly the movement of individual birds.", dependson="prior-knowledge",out.width = "\\textwidth", fig.align = 'center',,fig.scap="The path of adult and juvenile migrants through the simulated landscape with or without prior knowledge of the system.">>=
 # Plot of bird movements
 # Set the initial position
 numberbirds <- 20000
@@ -781,7 +783,7 @@ Other than the movements on arrival, the lengths of stay were similar between ar
 
 
 
-<<prior-knowledge-mcloop, dependson='mcloop-pk-dat', fig.cap="Results of sequentially adjusting relative food and safety at the large site from the model modified to give migrants prior knowledge of the stopover sites. Plots show the number of birds at the small (red) and large (black) sites as well as the proportion at the large site on model (green) date July 15 (Adult) and August 15 (Juvenile). For each adjustment the food and safety at the large site were held at 1.0 and $\\tau(0)$ and $e(0)$ adjusted. a. the relative danger of the small site is adjusted between 1 and 10 by 0.1. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey shading. The relative food ($e(0)$) was held at the baseline value (\\textasciitilde2). b. the relative food of the large site is adjusted between 1 and 10 by 0.1. The relative danger ($\\tau(0)$) was held at the baseline value (\\textasciitilde4).">>=
+<<prior-knowledge-mcloop, dependson='mcloop-pk-dat', fig.cap="Results of sequentially adjusting relative food and safety at the large site from the model modified to give migrants prior knowledge of the stopover sites. Plots show the number of birds at the small (red) and large (black) sites as well as the proportion at the large site on model (green) date July 15 (Adult) and August 15 (Juvenile). For each adjustment the food and safety at the large site were held at 1.0 and $\\tau(0)$ and $e(0)$ adjusted. a. the relative danger of the small site is adjusted between 1 and 10 by 0.1. For each adjustment a Monte Carlo simulation of 1000 runs was completed. Lines are shown with 95\\% prediction intervals in grey shading. The relative food ($e(0)$) was held at the baseline value (\\textasciitilde2). b. the relative food of the large site is adjusted between 1 and 10 by 0.1. The relative danger ($\\tau(0)$) was held at the baseline value (\\textasciitilde4).",fig.scap="Results of sequentially adjusting relative food and safety at the large site for migrants with prior knowledge.">>=
 # require(lubridate)
 # cedar_PriorK <- read_tsv("../cpp_version/Migration_Model/output/MC_Loop/MC_loops_priorK.txt", col_names = F)
 # headers <- read_tsv("../cpp_version/Migration_Model/output/MC_Loop/withU/header.txt", col_names = F) %>% .[1,]
@@ -870,6 +872,7 @@ print(elast_tab,sanitize.text.function=function(x){x},
        floating = TRUE,include.rownames = FALSE, hline.after = 
         c(-1,0) ,#scalebox='0.75',23
         add.to.row = comment)#, scalebox=0.7 
+
 @
 
 
@@ -922,7 +925,7 @@ The model data closely matches the site differences in capture masses for both a
 
 
 
-<<MassMatching,  fig.cap="Mean differences between large and small site in capture data and simulations. Capture data show the difference $\\pm$ CI in grams between birds captured at Boundary Bay, BC and Sidney Island, BC. Simulation data are the difference between the large and small sites from the modified model with and without prior knowledge, sampled to match the daily numbers in the original capture data. Modified model described in \\autoref{sec:matching}",dependson='banding-dat'>>=
+<<MassMatching,  fig.cap="Mean differences between large and small site in capture data and simulations. Capture data show the difference $\\pm$ CI in grams between birds captured at Boundary Bay, BC and Sidney Island, BC. Simulation data are the difference between the large and small sites from the modified model with and without prior knowledge, sampled to match the daily numbers in the original capture data. Modified model described in \\autoref{sec:matching}",dependson='banding-dat',fig.scap="Mean differences between large and small site in capture data and simulations.">>=
 bandingdat$modvscapture 
 @
 
@@ -935,11 +938,11 @@ bandingdat$modvscapture
  % changes are likely partially due to shifts in  mass at departure, but there is also a change in the differences between sites as predation changes. For example, the greatest change in masses across scenarios occurs at the large site with adults, while the smallest change is at the the small site for juveniles. Likely these represent the extremes in flexibility of strategy as conditions change. For juveniles at the small site, it is still relatively dangerous even if overall predation is reduced. For adults, a change in overall predation could change the benefit of remaining in the region versus departing onwards.
 
 
- <<captureMasses, fig.cap="Trends in mean $\\pm$ CI mass at capture for birds caught at Boundary Bay (black) and Sidney Island (red) between 1995 and 2001. Points are the mean for the month of the year \\textpm95\\%CI. Captures during the intermigratory period (July 25 - August 5) were removed from the estimates to make them more comparable with simulation results. Data from \\citet{ydenberg_western_2004}.",dependson='banding-dat'>>=
+ <<captureMasses, fig.cap="Trends in mean $\\pm$ CI mass at capture for birds caught at Boundary Bay (black) and Sidney Island (red) between 1995 and 2001. Points are the mean for the month of the year \\textpm95\\%CI. Captures during the intermigratory period (July 25 - August 5) were removed from the estimates to make them more comparable with simulation results. Data from \\citet{ydenberg_western_2004}.",dependson='banding-dat',fig.scap="Trends in mass at capture for birds caught at Boundary Bay and Sidney Island between 1995 and 2001.">>=
 bandingdat$FRPlot + theme(legend.position='none') 
 @
 
- <<PredMassMatching, fig.cap="The effect of changes in the predator population on the mean mass of adult and juvenile migrants with and without prior knowledge at the small (red, dotted lines) and large (black, solid lines) sites. Means are shown with 95\\% bootstrapped confidence intervals.",dependson='banding-dat'>>=
+ <<PredMassMatching, fig.cap="The effect of changes in the predator population on the mean mass of adult and juvenile migrants with and without prior knowledge at the small (red, dotted lines) and large (black, solid lines) sites. Means are shown with 95\\% bootstrapped confidence intervals.",dependson='banding-dat',fig.scap="The effect of changes in the predator population on the mean mass of adult and juvenile migrants with and without prior knowledge at the small and large sites.">>=
 bandingdat$Scenario_mass_r 
  @
  
@@ -961,7 +964,7 @@ In the baseline model lengths of stay at the small site increase within the adul
 
 
 
-<<LOSMatching, fig.cap="Comparison of model trends in lengths of stay in percent deviation from mean lengths of stay for migrants under baseline conditions (with 95\\% CI;red - small site; dots - adults, triangles - juveniles) and predicted seasonal trends in lengths of stay from Sidney Island (dashed lines, from \\citet{Hope2011}).",dependson='banding-dat', fig.width=4, fig.height=8, out.width="0.6\\textwidth",fig.align='center'>>=
+<<LOSMatching, fig.cap="Comparison of model trends in lengths of stay in percent deviation from mean lengths of stay for migrants under baseline conditions (with 95\\% CI;red - small site; dots - adults, triangles - juveniles) and predicted seasonal trends in lengths of stay from Sidney Island (dashed lines, from \\citet{Hope2011}).",dependson='banding-dat', fig.width=4, fig.height=8, out.width="0.6\\textwidth",fig.align='center',fig.scap="Comparison of model trends in lengths of stay and predicted seasonal trends in lengths of stay from Sidney Island.">>=
 bandingdat$LoS_compare2  + theme(legend.position='none')
 @
 
@@ -971,7 +974,7 @@ Adjusting the overall predator population $\digamma$ between 0.1 and 1.5 results
 We do not have data on length of stay trends at a large site, but the trends at the small site match those at the Sidney Island. \citet{ydenberg_western_2004} report a decline from 8.4 to 2.4 days in western sandpiper lengths of stay, while my model generated lengths of stays decline for adults from \Sexpr{mod_scen_los$Small[mod_scen_los$priorK=='Prior Knowledge'&mod_scen_los$Scenario=='Low'&mod_scen_los$Age=="Adult"]} days to \Sexpr{mod_scen_los$Small[mod_scen_los$priorK=='Prior Knowledge'&mod_scen_los$Scenario=='High'&mod_scen_los$Age=="Adult"]} days as predation increases. For juveniles, the change is slightly smaller (\Sexpr{mod_scen_los$Small[mod_scen_los$priorK=='Prior Knowledge'&mod_scen_los$Scenario=='Low'&mod_scen_los$Age=="Juvenile"]} days to \Sexpr{mod_scen_los$Small[mod_scen_los$priorK=='Prior Knowledge'&mod_scen_los$Scenario=='High'&mod_scen_los$Age=="Juvenile"]} days).
 
 
-<<LOS_Danger_Matching,  fig.cap="The effect of changes in the predator population on the true length of stay for adult and juvenile migrants with and without prior knowledge at the small (red, dotted lines) and large (black, solid lines) sites. Length of stay is calculated as the number of days spent at the site prior to departing or moving sites. Means are shown with 95\\% bootstrapped confidence intervals.",dependson='banding-dat'>>=
+<<LOS_Danger_Matching,  fig.cap="The effect of changes in the predator population on the true length of stay for adult and juvenile migrants with and without prior knowledge at the small (red, dotted lines) and large (black, solid lines) sites. Length of stay is calculated as the number of days spent at the site prior to departing or moving sites. Means are shown with 95\\% bootstrapped confidence intervals.",dependson='banding-dat',fig.scap="The effect of changes in the predator population on lengths of stay.">>=
 bandingdat$los_plot   
 @
 
@@ -979,7 +982,7 @@ bandingdat$los_plot
 
 The model output matches the results from Sidney Island in that census declines are substantially larger than declines in the number of birds using the site. There is however some change in the true number of birds using the site between the low and high predator population scenarios as birds shift usage. Although there was no statistically significant decline across their entire study period, the data do suggest a decline in numbers of birds using the sites during the last two years of their study \citep[ their Figure 4]{ydenberg_western_2004}. In Chapter 4 I explore the effect of increasing predator populations in semipalmated sandpipers and show they show a shift in migratory usage toward safer sites and predators increase.
 
-<<count-vs-true,fig.cap="Comparison of annual cumulative daily abundances ($N_C$) with the true number of birds ($N_T$) at the small site. The figure is based on Figure 4 in \\citet{ydenberg_western_2004}.",dependson='banding-dat', out.width="0.7\\textwidth", fig.align="center", fig.width = 6, fig.height=6>>=
+<<count-vs-true,fig.cap="Comparison of annual cumulative daily abundances ($N_C$) with the true number of birds ($N_T$) at the small site. The figure is based on Figure 4 in \\citet{ydenberg_western_2004}.",dependson='banding-dat', out.width="0.7\\textwidth", fig.align="center", fig.width = 6, fig.height=6,fig.scap="Comparison of annual cumulative daily abundances with the true number of birds at the small site.">>=
 bandingdat$ydenberg_countPlot
 @
 

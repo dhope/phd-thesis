@@ -138,11 +138,11 @@ Detecting and assessing sandpiper population change is generally the primary dri
 To examine how patterns in counts should change as populations change I adjusted the total number of birds moving through the region between 10\% and 300\% of the baseline numbers (10 000 of each adults and juveniles). (\autoref{fig:sandpiper-pop-plots-plarge} to \autoref{fig:population-by-dist-relTotal}).
 
 
-<<sandpiper-pop-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying sandpiper population size in the region. The western sandpiper population changes between 10\\% and 300\\% of the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Dates are listed above each section.', fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<sandpiper-pop-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying sandpiper population size in the region. The western sandpiper population changes between 10\\% and 300\\% of the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Dates are listed above each section.', fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"WESA Numbers", "pLarge")  
 @
 
-<<sandpiper-pop-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying sandpiper population size in the region. The values are the proportional change relative to the median baseline value for that date. The western sandpiper population changes between 10\\% and 300\\% of the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Dates are listed above each section.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<sandpiper-pop-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying sandpiper population size in the region. The values are the proportional change relative to the median baseline value for that date. The western sandpiper population changes between 10\\% and 300\\% of the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Dates are listed above each section.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"WESA Numbers", "totalN")  
 @
 
@@ -153,22 +153,22 @@ plotscenarios(full_sum_quants,"WESA Numbers", "rel_S")
 
 
 
-<<population-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the total number of sandpipers moving through the region between 10\\% and 300\\% of baseline. The proportion of all birds found at the large sites are shown for July and August 15\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<population-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the total number of sandpipers moving through the region between 10\\% and 300\\% of baseline. The proportion of all birds found at the large sites are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 allplots_pk_scenario_by_dist$pLarge[[6]] + ggtitle("WESA Numbers")+theme( axis.line = element_blank(), 
     legend.position = 'none',
      # axis.text = element_blank(),
-      axis.ticks.x = element_blank(),
+      axis.ticks.x = element_blank(), 
        # strip.text.y = element_blank(),
         axis.text.x = element_blank())
 @
 
-<<population-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the total number of sandpipers moving through the region between 10\\% and 300\\% of baseline. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<population-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the total number of sandpipers moving through the region between 10\\% and 300\\% of baseline. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 allplots_pk_scenario_by_dist$relT[[6]]+ ggtitle("WESA Numbers") +theme( axis.line = element_blank(), 
     legend.position = 'none',
      # axis.text = element_blank(),
       axis.ticks.x = element_blank(),
        # strip.text.y = element_blank(),
-        axis.text.x = element_blank())
+        axis.text.x = element_blank()) 
 @
 
 
@@ -178,12 +178,12 @@ allplots_pk_scenario_by_dist$relT[[6]]+ ggtitle("WESA Numbers") +theme( axis.lin
 \subsubsection*{Scenario 2: Predator population change}
 Peregrine falcons have been shown to have strong influences on western sandpiper migration. I simulated changes in the predator population by adjusting maximum number predators at a site $\digamma$ between 0.1 and 10.0.
 
-<<predator-pop-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying predator population size in the region. The maximum seasonal predator numbers shift between 0.1 and 10 for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<predator-pop-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying predator population size in the region. The maximum seasonal predator numbers shift between 0.1 and 10 for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"Predator Numbers", "pLarge") 
 @
 
 
-<<predator-pop-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites The values are the proportional change relative to the median baseline value for that date. The maximum seasonal predator numbers shift between 0.1 and 10 for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<predator-pop-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites The values are the proportional change relative to the median baseline value for that date. The maximum seasonal predator numbers shift between 0.1 and 10 for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"Predator Numbers", "totalN") 
 @
 
@@ -192,65 +192,65 @@ plotscenarios(full_sum_quants,"Predator Numbers", "totalN")
 plotscenarios(full_sum_quants,"Predator Numbers", "rel_S")  
 @
 
-<<predator-population-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the predator population size. The maximum seasonal predator numbers shift between 0.1 and 10 for distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$pLarge[[3]]
+<<predator-population-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the predator population size. The maximum seasonal predator numbers shift between 0.1 and 10 for distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="", fig.width=12, fig.height=10, out.width="\\textwidth">>=
+allplots_pk_scenario_by_dist$pLarge[[3]] 
 @
 
-<<predator-population-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the predator population size. The maximum seasonal predator numbers shift between 0.1 and 10 for distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$relT[[3]]
+<<predator-population-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the predator population size. The maximum seasonal predator numbers shift between 0.1 and 10 for distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
+allplots_pk_scenario_by_dist$relT[[3]] 
 @
 
 \clearpage
 \subsubsection*{Scenario 3: Timing of Predator Arrival} % \ref{fig:falconpresence}
 To simulate interannual variation in timing of arrival I adjusted the parameter $m_t$ to simulate early arrival or late arrival of peregrines. I varied $m_t$  between -25 and 25. This changed the date at which probability of falcon presence reached 50\% by 50 days (Chapter 2 Figure 2.2), which matched the variation in peregrine falcon arrival in the Fraser River Delta found by \citet{Niehaus2006}. 
 
-<<predator-timing-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying predator timing of arrival in the region. The date of peak predator arrival shifts between 25 days early and 25 days late for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<predator-timing-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying predator timing of arrival in the region. The date of peak predator arrival shifts between 25 days early and 25 days late for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"Predator Timing", "pLarge") 
 @
 
 
-<<predator-timing-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites from scenarios modifying predator timing of arrival in the region. The values are the proportional change relative to the median baseline value for that date. The date of peak predator arrival shifts between 25 days early and 25 days late for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<predator-timing-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites from scenarios modifying predator timing of arrival in the region. The values are the proportional change relative to the median baseline value for that date. The date of peak predator arrival shifts between 25 days early and 25 days late for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"Predator Timing", "totalN") 
 @
 
-<<predator-timing-plots-rels, fig.cap="The predicted relative total number of birds found at both the large and small sites from scenarios modifying predator timing of arrival in the region. The values are the proportional change relative to the median baseline value for that date. The date of peak predator arrival shifts between 25 days early and 25 days late for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", eval=F>>=
+<<predator-timing-plots-rels, fig.cap="The predicted relative total number of birds found at both the large and small sites from scenarios modifying predator timing of arrival in the region. The values are the proportional change relative to the median baseline value for that date. The date of peak predator arrival shifts between 25 days early and 25 days late for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", eval=F>>=
 plotscenarios(full_sum_quants,"Predator Timing", "rel_S")
 @
 
-<<predator-timing-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the predator timing of arrival in the region. The values are the proportional change relative to the median baseline value for that date. The date of peak predator arrival shifts between 25 days early and 25 days late for each distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$pLarge[[4]]
+<<predator-timing-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the predator timing of arrival in the region. The values are the proportional change relative to the median baseline value for that date. The date of peak predator arrival shifts between 25 days early and 25 days late for each distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
+allplots_pk_scenario_by_dist$pLarge[[4]] 
 @
 
-<<predator-timing-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the predator timing of arrival in the region. The values are the proportional change relative to the median baseline value for that date. The date of peak predator arrival shifts between 25 days early and 25 days late for each distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$relT[[4]]
+<<predator-timing-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing the predator timing of arrival in the region. The values are the proportional change relative to the median baseline value for that date. The date of peak predator arrival shifts between 25 days early and 25 days late for each distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
+allplots_pk_scenario_by_dist$relT[[4]] 
 @
 
-\clearpage[4]
+\clearpage
 
 \subsubsection*{Scenario 4: Food abundance change}
 The reduction in refuelling rates through habitat degradation has been highlighted as a major potential conservation threat to migratory birds \citep{Piersma2016}. I adjusted the global food parameter ($e_g$) to examine how changes in food abundance would affect optimal decisions and thereby stopover counts. I adjusted $e_g$ between 1\% and 1000\% of the baseline value and simulated the movement of birds through the migratory landscape. 
 
-<<food-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying potential fuel loading rates for sandpipers in the region. The total food abundance shifts from 0.1 to 10 times of baseline for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<food-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying potential fuel loading rates for sandpipers in the region. The total food abundance shifts from 0.1 to 10 times of baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"Food abundance", "pLarge")
  
 @
 
 
-<<food-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying potential fuel loading rates for sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The total food abundance shifts from 0.1 to 10 times of baseline for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<food-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying potential fuel loading rates for sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The total food abundance shifts from 0.1 to 10 times of baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"Food abundance", "totalN") 
 @
 
-<<food-plots-rels, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying potential fuel loading rates for sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The total food abundance shifts from 0.1 to 10 times of baseline for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", eval=F>>=
+<<food-plots-rels, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying potential fuel loading rates for sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The total food abundance shifts from 0.1 to 10 times of baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", eval=F>>=
 plotscenarios(full_sum_quants,"Food abundance", "rel_S")
 @
 
-<<food-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing potential fuel loading rates for sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The total food abundance shifts from 0.1 to 10 times of baseline for each distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$pLarge[[1]]
+<<food-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing potential fuel loading rates for sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The total food abundance shifts from 0.1 to 10 times of baseline for each distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
+allplots_pk_scenario_by_dist$pLarge[[1]] 
 @
 
 
-<<food-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing potential fuel loading rates for sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The total food abundance shifts from 0.1 to 10 times of baseline for each distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$relT[[1]]
+<<food-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing potential fuel loading rates for sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The total food abundance shifts from 0.1 to 10 times of baseline for each distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
+allplots_pk_scenario_by_dist$relT[[1]] 
 @
 
 \clearpage
@@ -259,27 +259,27 @@ allplots_pk_scenario_by_dist$relT[[1]]
 
 While the interannual timing of falcon passage varies to a greater degree than western sandpiper passage, timing of sandpiper arrival does vary between years \citep{Niehaus2006,ydenberg_interannual_2005}. I expected the changes in arrival to lead to differences in optimal behaviour upon arrival in the region. I adjusted the mean date of arrival $t_a$ between 15 days earlier to 15 days later than the baseline.
 
-<<wesa-timing-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying mean timing of sandpipers in the region. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<wesa-timing-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying mean timing of sandpipers in the region. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"WESA Timing", "pLarge") 
 @
 
 
-<<wesa-timing-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying mean timing of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<wesa-timing-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying mean timing of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"WESA Timing", "totalN") 
 
 @
 
-<<wesa-timing-plots-rels, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying mean timing of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", eval=F>>=
+<<wesa-timing-plots-rels, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying mean timing of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", eval=F>>=
 plotscenarios(full_sum_quants,"WESA Timing", "rel_S")
 @
 
 
-<<wesa-timing-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing mean timing of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$pLarge[[5]]
+<<wesa-timing-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing mean timing of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
+allplots_pk_scenario_by_dist$pLarge[[5]] 
 @
 
-<<wesa-timing-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing mean timing of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$relT[[5]]
+<<wesa-timing-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing mean timing of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean date of arrival shifts between 15 days early and 15 days late relative to the baseline for each distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
+allplots_pk_scenario_by_dist$relT[[5]] 
 @
 
 
@@ -288,34 +288,34 @@ allplots_pk_scenario_by_dist$relT[[5]]
 \subsubsection*{Scenario 6: Sandpiper arrival fuel load}
 The amount of fuel a migrant carries can have strong consequences for their decisions on migration as well as elsewhere in their annual cycle \citep{Duijns2017}. I adjusted the mean mass of fuel on arrival $f_a$ between 0.1g and 5g of fuel.
 
-<<wesa-fuel-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying mean fuel load on arrival of sandpipers in the region. The mean fuel load shifts between 0.1g and 5g of fuel for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<wesa-fuel-plots-plarge, fig.cap='The predicted proportion of birds found at the large site across the migratory period from scenarios modifying mean fuel load on arrival of sandpipers in the region. The mean fuel load shifts between 0.1g and 5g of fuel for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.', fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"Mass", "pLarge") 
 
 @
 
 
-<<wesa-fuel-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying mean fuel load on arrival of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean fuel load shifts between 0.1g and 5g of fuel for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown." , fig.width=12, fig.height=10, out.width="\\textwidth">>=
+<<wesa-fuel-plots-total, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying mean fuel load on arrival of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean fuel load shifts between 0.1g and 5g of fuel for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown." , fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
 plotscenarios(full_sum_quants,"Mass", "totalN")
  
 
 @
 
-<<wesa-fuel-plots-rels, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying mean fuel load on arrival of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean fuel load shifts between 0.1g and 5g of fuel for each date. The median result is shown in the black line with grey shading between the 2.5\textsuperscript{th} and 97.5\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", eval=F, include=F>>=
+<<wesa-fuel-plots-rels, fig.cap="The predicted relative total number of birds found at both the large and small sites across the migratory period from scenarios modifying mean fuel load on arrival of sandpipers in the region. The values are the proportional change relative to the median baseline value for that date. The mean fuel load shifts between 0.1g and 5g of fuel for each date. The median result is shown in the black line with grey shading between the 2.5\\textsuperscript{th} and 97.5\\textsuperscript{th} quantiles of Monte Carlo outputs. Every third day in July and August are shown.", eval=F, include=F>>=
 plotscenarios(full_sum_quants,"Mass", "rel_S")
 @
 
-<<wesa-mass-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing modifying mean fuel load on arrival of sandpipers in the region. The values are the proportional change relative to the median baseline value for that distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$pLarge[[2]]
+<<wesa-mass-by-dist-pLarge, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing modifying mean fuel load on arrival of sandpipers in the region. The values are the proportional change relative to the median baseline value for that distance to migrate. The proportion of all birds found at the large sites are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
+allplots_pk_scenario_by_dist$pLarge[[2]] 
 @
 
-<<wesa-mass-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing modifying mean fuel load on arrival of sandpipers in the region. The values are the proportional change relative to the median baseline value for each distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth">>=
-allplots_pk_scenario_by_dist$relT[[2]]
+<<wesa-mass-by-dist-relTotal, fig.cap="Response of migrants with between 1300km and 9000km remaining on migration to changing modifying mean fuel load on arrival of sandpipers in the region. The values are the proportional change relative to the median baseline value for each distance to migrate. The total numbers of birds shown at the large and small sites combined are shown for July and August 15\\textsuperscript{th}.", fig.width=12, fig.height=10, out.width="\\textwidth", fig.scap="">>=
+allplots_pk_scenario_by_dist$relT[[2]] 
 @
 
 \chapter{BC/WA Summer Western Sandpiper Surveys}\label{app:wesa}
 
 <<locations-import, cache=F, include=T>>=
-require(tidyverse)
+require(tidyverse) 
 locations <- read_csv("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/ShinyResults/Shiny_Map/.data/sitelocations_decdegree.csv", col_types =  cols()) %>%
 	rename(SiteID = SITEID) %>% 
   filter(SiteID != "") %>%
@@ -338,7 +338,15 @@ if(!exists("site.codes")){
   filter(SiteID != "") %>%
   dplyr::select(SiteID, lon, lat)
  	}
- 	paste(round(loc_$lat[loc_$SiteID==site],2), "$^\\circ$N, ", round(loc_$lon[loc_$SiteID==site],2), "$^\\circ$W", sep="")
+  if(site=="JENB"){
+    tmp_fix <- loc_ %>% filter(SiteID %in% c("NJEN", "SJEN")) %>% 
+      dplyr::select(-SiteID) %>%
+      summarize_all(.funs=mean) %>% ungroup 
+    return(
+      paste(round(tmp_fix[["lat"]][[1]],2), "$^\\circ$N, ", round(tmp_fix[['lon']][[1]],2), "$^\\circ$W", sep="")
+      )
+  }
+ 	return(paste(round(loc_$lat[loc_$SiteID==site],2), "$^\\circ$N, ", round(loc_$lon[loc_$SiteID==site],2), "$^\\circ$W", sep=""))
  }
 
 returnsize <- function(site, km2=T, d=danger.est){
@@ -347,10 +355,8 @@ returnsize <- function(site, km2=T, d=danger.est){
 	d <- read_rds("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/AreaCalculations/Updated_Danger_largerarea.rds") %>% 
   mutate(Prop.Danger = prop.danger, Danger.group = ifelse(size=="Large", "low", "high"), SiteID.danger= SiteID )
 }
-	paste(round(d$area_km2[d$SiteID==site],2), ifelse(km2, "$km^2$", "$m^2$"))
+	paste(round(d$area_km2[d$SiteID==site],2), ifelse(km2, "km\\textsuperscript{2}", "m\\textsuperscript{2}"))
 }
-
-
 
 @
 
@@ -358,9 +364,9 @@ returnsize <- function(site, km2=T, d=danger.est){
 
 
 \section[Survey Sites]{Survey Site descriptions}\label{sec:sites}
-The survey sites were selected to generate a distribution of site types from across the region. Additionally, volunteers recommended sites and we added them where possible. In all we ended up with 40 sites, 38 of which were surveyed more than once. The sites were across the region but can be broken down into 8 sub-regions.
+The survey sites were selected to generate a distribution of site types from across the Salish Sea region. Additionally, volunteers recommended sites and we added them where possible. In all we ended up with 40 sites, 38 of which were surveyed more than once. The sites were across the region but can be broken down into 8 sub-regions (\autoref{fig:regional-map}).
 
-<<regional-map, fig.cap="Map of survey site locations. Four letter codes associate with each location are described in the text.", out.width="\\textwidth", fig.align='center'>>=
+<<regional-map, fig.cap="Map of survey site locations. Four letter codes associate with each location are described in the text.", out.width="\\textwidth", fig.align='center', fig.scap="">>=
 knitr::include_graphics("/home/dhope/Documents/SFU/PhD/Thesis_Project/Hope.wesa/Confrontation_chapter/.dat/Regionalplot.png") 
 @
 
@@ -368,76 +374,76 @@ knitr::include_graphics("/home/dhope/Documents/SFU/PhD/Thesis_Project/Hope.wesa/
 \subsection*{Sub-Regions}
 
 	\subsubsection*{Northern Vancouver Island - Malcolm Island}
-	Malcolm Island is situated off the northeastern coast of Vancouver Island. It is the northernmost survey sub-region and has two survey sites on it's southern coast. Rough Bay (ROGH; \Sexpr{returnloc("ROGH")}) is a small (\Sexpr{returnsize("ROGH")}), sandy bay with some rocky boulders located just to the west of the town of Sointula. It is enclosed on 3 sites and fairly sandy in composition. To the east of town is Kaleva Road (KALE; \Sexpr{returnloc("KALE")}), which is a narrow rocky beach with some sandy spots along the road. It was surveyed by driving the length of the road for approximately 1.2 km (\Sexpr{returnsize("KALE")}).
+	Malcolm Island is situated off the northeastern coast of Vancouver Island. It is the northernmost survey sub-region and has two survey sites on it's southern coast. Rough Bay (ROGH; \Sexpr{returnloc("ROGH")}) is a small (\Sexpr{ returnsize("ROGH")}), sandy bay with some rocky boulders located just to the west of the town of Sointula. It is enclosed on 3 sides and fairly sandy in composition. To the east of town is Kaleva Road (KALE; \Sexpr{returnloc("KALE")}), which is a narrow rocky beach with some sandy spots. It was surveyed by driving the length of the road for approximately 1.2 km (\Sexpr{ returnsize("KALE")}).
 
-	\subsubsection*{Eastern Vancouver Island}
-On the eastern side of Vancouver Island there is a large area of habitat that varies from rocky beach to muddy estuaries. I included \Sexpr{length(site.codes$SiteID[site.codes$Region=="EVanIs"])} study sites in this region. The northernmost is found on the waterfront in Comox (COMX; \Sexpr{returnloc("COMX")}). The site is an enclosed sandy bay between the town of Comox and the HMCS Quadra Naval Base. At low tide the entire bay of \Sexpr{returnsize("COMX")} is exposed. 
+\subsubsection*{Eastern Vancouver Island}
+On the eastern side of Vancouver Island there is a large area of habitat that varies from rocky beach to muddy estuaries. I included \Sexpr{length(site.codes$SiteID[site.codes$Region=="EVanIs"])} study sites in this region. The northernmost is found on the waterfront in Comox (COMX; \Sexpr{returnloc("COMX")}). The site is an enclosed sandy bay between the town of Comox and the HMCS Quadra Naval Base. At low tide the entire bay of \Sexpr{ returnsize("COMX")} is exposed. 
 
-Approximately 30km to the south the area around Fanny Bay has several large mudflats which are also home to extensive oyster farming operations. I surveyed two sites here. Fanny Bay (FANY; \Sexpr{returnloc("FANY")}) itself is an enclosed hard mudflat of (\Sexpr{returnsize("FANY")}) in size with an oyster farm at the low tideline across the survey years. Across the small peninsula from Fanny Bay, Ship's Point (SHPO; \Sexpr{returnloc("SHPO")}) is a small bay (\Sexpr{returnsize("SHPO")}) beside larger mudflats that stretch south.
+Approximately 30km to the south the area around Fanny Bay has several large mudflats which are also home to extensive oyster farming operations. I surveyed two sites here. Fanny Bay (FANY; \Sexpr{returnloc("FANY")}) itself is an enclosed hard mudflat of (\Sexpr{ returnsize("FANY")}) in size with an oyster farm at the low tideline across the survey years. Across the small peninsula from Fanny Bay, Ship's Point (SHPO; \Sexpr{returnloc("SHPO")}) is a small bay (\Sexpr{ returnsize("SHPO")}) beside larger mudflats that stretch south.
 
-At the southern end of these mudflats is a short peninsula with a bay one site and a sandy and rocky flat on the outside of the peninsula. I included the outside of the peninsula as a survey site (DEEP; \Sexpr{returnloc("DEEP")}; \Sexpr{returnsize("DEEP")}).
+At the southern end of these mudflats is a short peninsula with a bay one site and a sandy and rocky flat on the outside of the peninsula. I included the outside of the peninsula as a survey site (DEEP; \Sexpr{returnloc("DEEP")}; \Sexpr{ returnsize("DEEP")}).
 
-These sandy shores continue south for 45km, passing Columbia Beach COBE; \Sexpr{returnloc("COBE")} in Qualicum Beach, which is a part of a \Sexpr{returnsize("COBE")} beach. Just around the corner from Columbia Beach is the French Creek estuary FRCR; \Sexpr{returnloc("FRCR")}, a small \Sexpr{returnsize("FRCR")} sandy and rocky estuary adjacent to a ferry terminal and marina. 
+These sandy shores continue south for 45km, passing Columbia Beach COBE; \Sexpr{returnloc("COBE")} in Qualicum Beach, which is a part of a \Sexpr{ returnsize("COBE")} beach. Just around the corner from Columbia Beach is the French Creek estuary FRCR; \Sexpr{returnloc("FRCR")}, a small \Sexpr{ returnsize("FRCR")} sandy and rocky estuary adjacent to a ferry terminal and marina. 
 
-Further south the larger Englishman River estuary feeds the small \Sexpr{returnsize("SANM")} enclosed, but productive mudflat of San Malo Bay (SANM; \Sexpr{returnloc("SANM")}). This site is surrounded by a road on one site, houses on another and a small park on the third but is often host to small flocks of sandpipers and has regular falcon sightings.
+Further south the larger Englishman River estuary feeds the small \Sexpr{ returnsize("SANM")} enclosed, but productive mudflat of San Malo Bay (SANM; \Sexpr{returnloc("SANM")}). This site is surrounded by a road on one site, houses on another and a small park on the third but is often host to small flocks of sandpipers and has regular falcon sightings.
 
-Further south, past the end of the long stretch of sandy shores is Nanooose Bay (NANO; \Sexpr{returnloc("NANO")}). Nanoose Creek feeds the bay, but the small (\Sexpr{returnsize("NANO")}) flats are hard and sandy here with a lot of shellfish harvesting during the survey periods. 
+Further south, past the end of the long stretch of sandy shores is Nanooose Bay (NANO; \Sexpr{returnloc("NANO")}). Nanoose Creek feeds the bay, but the small (\Sexpr{ returnsize("NANO")}) flats are hard and sandy here with a lot of shellfish harvesting during the survey periods. 
 
-Along the path of the Nanaimo to Vancouver ferry route lies the small (\Sexpr{returnsize("PIPE")}) bay of Pipers Lagoon (PIPE; \Sexpr{returnloc("PIPE")}). It is protected from the Strait of Georgia by a sand spit connected to a small island and when the lagoon empties at low tide it exposes a fairly sandy flat. The lagoon is almost entirely enclosed however with only a small entrance for the tide.
+Along the path of the Nanaimo to Vancouver ferry route lies the small (\Sexpr{ returnsize("PIPE")}) bay of Pipers Lagoon (PIPE; \Sexpr{returnloc("PIPE")}). It is protected from the Strait of Georgia by a sand spit connected to a small island and when the lagoon empties at low tide it exposes a fairly sandy flat. The lagoon is almost entirely enclosed however with only a small entrance for the tide.
 
 
-	\subsubsection*{Western Vancouver Island - Tofino Mudflats}
+\subsubsection*{Western Vancouver Island - Tofino Mudflats}
 
-On the western shores of Vancouver Island across the mountains from Parksville lies Tofino. Tofino is a long peninsula with long sandy beaches facing the Pacific Ocean and expansive mudflats on the eastern side of the peninsula. I surveyed 2 sites on the protected side of the peninsula: Jensens Bay (JENB; \Sexpr{returnloc("JENB")}) and Grice Bay (GRIC; \Sexpr{returnloc("GRIC")}). Jensens Bay is an enclosed muddy bay surrounded by forest with some properties near the shoreline. I divided this site into two survey locations as the shape of the bay makes it impossible the entire site from one location. The site is large enough (\Sexpr{returnsize("JENB")}) that there is minimal overlap in the surveys and the survey areas were defined in a way to prevent overlapping in space.  Grice Bay lies further south along the edge of expansive mudflats. I chose a location within the Pacific Rim National Park that was accessible by road. The survey site is \Sexpr{returnsize("GRIC")} in size and almost entirely enclosed by forest with some salt marsh at the edges of the mudflats. There is a relatively small entrance to the bay from which the tide enters, but the bay is almost entirely exposed at low tide. There are extensive mudflats here that I was not able to survey (see \citet{Drevera}) and flocks of western sandpipers are also found on the beaches of Tofino that were unsurveyed.
+On the western shores of Vancouver Island across the mountains from Parksville lies Tofino. Tofino is a long peninsula with long sandy beaches facing the Pacific Ocean and expansive mudflats on the eastern side of the peninsula. I surveyed 2 sites on the protected side of the peninsula: Jensens Bay (JENB; \Sexpr{returnloc("JENB")}) and Grice Bay (GRIC; \Sexpr{returnloc("GRIC")}). Jensens Bay is an enclosed muddy bay surrounded by forest with some residential properties near the shoreline. I divided this site into two survey locations as the shape of the bay makes it impossible the entire site from one location. The survey areas were defined in a way to prevent overlap at this large site (\Sexpr{ returnsize("JENB")}).  Grice Bay lies further south along the edge of expansive mudflats. I chose a location within the Pacific Rim National Park that was accessible by road. The survey site is \Sexpr{ returnsize("GRIC")} in size and almost entirely enclosed by forest with some salt marsh at the edges of the mudflats. There is a relatively small entrance to the bay from which the tide enters, but the bay is almost entirely exposed at low tide. There are extensive mudflats within the Tofino region that I was not able to survey (see \citet*{Drevera}) and flocks of western sandpipers are also found on the beaches of Tofino that were unsurveyed.
 
 	\subsubsection*{Southern Vancouver Island and Gulf Islands}
 
-The southern end of Vancouver Island is the most populous sub-region on the island and I had many volunteers in this region. It also has many small sites that are often host to small to medium sized flocks of western and least sandpipers. Around the town of Duncan lie two of the largest sites in the region. The Chemainus River Estuary (CHEM; \Sexpr{returnloc("CHEM")}) is also one of the most proximate to a major industrial site of all our survey habitat. The survey location is on the property of Catalyst Pulp and Paper and the mudflats are adjacent to their pulp mill. The mudflats are also used for shellfish harvesting regularly during the survey periods. The mudflats themselves are large (\Sexpr{returnsize("CHEM")}) but bisected by a series of islands that run parallel to the shoreline. There are mudflats on both sides of the islands though near the survey point, they tended to be larger on the inland side.
+The southern end of Vancouver Island is the most populous sub-region on the island and I had many volunteers in this region. It also has many small sites that are often host to small to medium sized flocks of western and least sandpipers. Around the town of Duncan lie two of the largest sites in the region. The Chemainus River Estuary (CHEM; \Sexpr{returnloc("CHEM")}) is also one of the most proximate to a major industrial site of all our survey habitat. The survey location is on the property of Catalyst Pulp and Paper and the mudflats are adjacent to their pulp mill. The mudflats are also used for shellfish harvesting regularly during the survey periods. The mudflats themselves are large (\Sexpr{ returnsize("CHEM")}) but bisected by a series of islands that run parallel to the shoreline. There are mudflats on both sides of the islands though near the survey point, they tended to be larger on the inland side.
 
-Cowichan Bay (COWC; \Sexpr{returnloc("COWC")}) is another large (\Sexpr{returnsize("COWC")}) and industrialized survey location.  The Cowichan River estuary has been modified and channeled in the past though restoration is ongoing. While the bay itself is about 2.5 km wide it is divided by a long jetty and terminal that runs the length of the mudflats about half-way across. In 2015 the causeway that was breached and a culvert was added to allow water flow between the two sides of the bay. The bay is fairly sandy and rocky with not too many muddy areas.
+Cowichan Bay (COWC; \Sexpr{returnloc("COWC")}) is another large (\Sexpr{ returnsize("COWC")}) and industrialized survey location.  The Cowichan River estuary has been modified and channeled in the past though restoration is ongoing. While the bay itself is about 2.5 km wide, it is divided by a long jetty and terminal that runs the length of the mudflats about half-way across. In 2015, the causeway was breached and a culvert was added to allow water flow between the two sides of the bay. The bay is fairly sandy and rocky with not too many muddy areas.
 
-The Gulf Islands stretch from Nanaimo to Victoria along the western edge of the Strait of Georgia. There are numerous very small bays and patches of habitat along their shores. I included two muddy such bays in my surveys. Winter Cove (WINT; \Sexpr{returnloc("WINT")}) is on the western edge of Saturna Island. It has a small muddy beach (\Sexpr{returnsize("WINT")}) with some rocky habitat and a small lagoon adjacent to the shore.
+The Gulf Islands stretch from Nanaimo to Victoria along the western edge of the Strait of Georgia. There are numerous very small bays and patches of habitat along their shores. I included two muddy such bays in my surveys. Winter Cove (WINT; \Sexpr{returnloc("WINT")}) is on the western edge of Saturna Island. It has a small muddy beach (\Sexpr{ returnsize("WINT")}) with some rocky habitat and a small lagoon adjacent to the shore.
 
-A more significant habitat for migrating sandpipers is the Sidney Island lagoon (SDNY; \Sexpr{returnloc("SDNY")}). The \Sexpr{returnsize("SDNY")} lagoon is almost entirely enclosed with a sandy spit protecting it on one site and the island on the other. The northern portion of Sidney Island is part of the Gulf Islands National Park and while the island receives many visitors each year, the lagoon and sand spit are closed to the public which keeps numbers down, though not at zero. The habitat is very muddy in the lagoon and much of the research on southward migrating western sandpipers has been conducted here.
+A more significant habitat for migrating sandpipers is the Sidney Island lagoon (SDNY; \Sexpr{returnloc("SDNY")}). The \Sexpr{ returnsize("SDNY")} lagoon is almost entirely enclosed with a sandy spit protecting it on one site and the island on the other. The northern portion of Sidney Island is part of the Gulf Islands National Park and while the island receives many visitors each year, the lagoon and sand spit are closed to the public which keeps numbers down, though not at zero. The habitat is very muddy in the lagoon and much of the research on southward migrating western sandpipers has been conducted here.
 
-Across the water from Sidney Island a long stretch of sandy and rocky beach stretches from Sidney to Victoria. The largest \Sexpr{returnsize("ISVI")} stretch of this includes our survey site at Island View Regional Park (ISVI;\Sexpr{returnloc("ISVI")}). This narrow beach is mostly rocky or sandy but has patches of mud. It is heavily used by the public during the summer months, but less so than beaches closer to Victoria.
+Across the water from Sidney Island a long stretch of sandy and rocky beach stretches from Sidney to Victoria. The largest \Sexpr{ returnsize("ISVI")} stretch of this includes our survey site at Island View Regional Park (ISVI;\Sexpr{returnloc("ISVI")}). This narrow beach is mostly rocky or sandy but has patches of mud. It is heavily used by the public during the summer months, but less so than beaches closer to Victoria.
 
-On the southwestern side of Victoria, I have 5 additional small survey sites. View Royal is situated adjacent to the Mill Stream estuary VRYL; \Sexpr{returnloc("VRYL")}, surrounded by residences on a slope up from a muddy bay with a small island at the end of the tidal flats (\Sexpr{returnsize("VRYL")}). Around the end of Fort Rodd National Historic Site lies Esquimalt Lagoon ESQU; \Sexpr{returnloc("ESQU")}. The lagoon is enclosed by a sand spit that runs the length of the lagoon with a road running on top of it. The lagoon does not fully drain over a tidal cycle, but instead small patches of habitat \Sexpr{returnsize("ESQU")} are exposed around the edges, particularly near the mouth of lagoon, though this habitat is mostly rocky. In 2014 the survey location switched from next to the lagoon entrance to the side opposite the spit, where a small creek creates muddy habitat more suitable for sandpipers.
+On the southwestern side of Victoria, I have 5 additional small survey sites. View Royal is situated adjacent to the Mill Stream estuary VRYL; \Sexpr{returnloc("VRYL")}, surrounded by residences on a slope up from a muddy bay with a small island at the end of the tidal flats (\Sexpr{ returnsize("VRYL")}). Around the end of Fort Rodd National Historic Site lies Esquimalt Lagoon ESQU; \Sexpr{returnloc("ESQU")}. The lagoon is enclosed by a sand spit that runs the length of the lagoon with a road running on top of it. The lagoon does not fully drain over a tidal cycle, but instead small patches of habitat \Sexpr{ returnsize("ESQU")} are exposed around the edges, particularly near the mouth of lagoon, though this habitat is mostly rocky. In 2014 the survey location switched from next to the lagoon entrance to the side opposite the spit, where a small creek creates muddy habitat more suitable for sandpipers.
 
-Witty's Lagoon, a smaller (\Sexpr{returnsize("WITT")}), but more productive lagoon, lies 5 km to the south of Esquimalt Lagoon (WITT; \Sexpr{returnloc("WITT")}). It is part a Capital Regional District park and the lagoon itself is surrounded by steep forested banks. The mudflats are extremely soft mud and so are not accessible to the public. The entrance to the lagoon is small (about 15m wide) and feeds into extensive sandy flats that are often covered in people during the summer months. A similarly small (\Sexpr{returnsize("PEDD")}) and muddy bay lies further to the southwest. Pedder Bay (PEDD; \Sexpr{returnloc("PEDD")}) is two small mudflats with a small peninsula dividing them. The peninsula has a marina, boat launch and RV park on it, but the mudflats are too soft to be accessible to the public.
+Witty's Lagoon, a smaller (\Sexpr{ returnsize("WITT")}), but more productive lagoon, lies 5 km to the south of Esquimalt Lagoon (WITT; \Sexpr{returnloc("WITT")}). It is part a Capital Regional District park and the lagoon itself is surrounded by steep forested banks. The mudflats are extremely soft mud and so are not accessible to the public. The entrance to the lagoon is small (about 15m wide) and feeds into extensive sandy flats that are often covered in people during the summer months. A similarly small (\Sexpr{ returnsize("PEDD")}) and muddy bay lies further to the southwest. Pedder Bay (PEDD; \Sexpr{returnloc("PEDD")}) is two small mudflats with a small peninsula dividing them. The peninsula has a marina, boat launch and RV park on it, but the mudflats are too soft to be accessible to the public.
 
-Whiffin Spit (WHIF; \Sexpr{returnloc("WHIF")}) is a regional park that runs the length of the spit that encloses Sooke Harbour. The spit is sandy, but much of the beach habitat is composed of pebbly beach. There are some muddier regions on the harbour side of the spit. In all there is \Sexpr{returnsize("WHIF")} of habitat around the spit.
+Whiffin Spit (WHIF; \Sexpr{returnloc("WHIF")}) is a regional park that runs the length of the spit that encloses Sooke Harbour. The spit is sandy, but much of the beach habitat is composed of pebbly beach. There are some muddier regions on the harbour side of the spit. In all there is \Sexpr{ returnsize("WHIF")} of habitat around the spit.
 
-	\subsubsection*{Fraser River Estuary}
+\subsubsection*{Fraser River Estuary}
 
-Across the Strait of Georgia lies the largest estuary in British Columbia. The habitats that are part of the Fraser River Delta are considered of Hemispheric Importance to western sandpipers and dunlins by the Western Hemispheric Shorebird Reserve Network. The delta has extensive mudflats that run from Iona Island adjacent to the Vancouver International Airport to Roberts Bank adjacent to the Port of Metro Vancouver Deltaport and BC Ferries Terminals. Boundary Bay, while on the other side of Point Roberts from the Fraser Estuary is considered part of this regional complex of shorebird habitat as it is only 5km by line of site to the Roberts Banks mudflats. My survey program had 6 survey sites along Boundary Bay, one at Roberts Bank and one at Iona Island. We did not survey Sturgeon Banks and coverage of the other sites is not meant to be comprehensive. 
+Across the Strait of Georgia lies the largest estuary in British Columbia. The habitats that are part of the Fraser River Delta are considered of Hemispheric Importance to western sandpipers and dunlins by the Western Hemispheric Shorebird Reserve Network. The delta has extensive mudflats that run from Iona Island adjacent to the Vancouver International Airport to Roberts Bank adjacent to the Port of Metro Vancouver Deltaport and BC Ferries Terminals. Boundary Bay, while on the other side of Point Roberts from the Fraser Estuary is considered part of this regional complex of shorebird habitat as it is only 5km by line-of-sight to the Roberts Banks mudflats. My survey program had 6 survey sites along Boundary Bay, one at Roberts Bank and one at Iona Island. We did not survey Sturgeon Banks and coverage of the other sites is not meant to be comprehensive. 
 
-Boundary Bay is a very large (\Sexpr{returnsize("BBAY")}), mostly sandy bay that stretches 16 km from end to end. It has a raised rip-rap dyke that runs the length of the bay preventing tidal inundation to the surrounding farmland. It is sandier than most of the other sites in the sub-region due to it being further from the mouth of the Fraser River and having a longer fetch exposure from the strait. There is freshwater input from small inputs along the bay and  more substantial inputs from the Serpentine and Nicomekl Rivers at the eastern end of the bay. I surveyed along the bay at 6 sites described here from east to west. Mud Bay (BBMB; \Sexpr{returnloc("BBMB")}), the muddiest habitat of the sites has a highway and a train trestle running adjacent to the habitat. 112th Ave (BB12; \Sexpr{returnloc("BB12")}) is also quite muddy with an agricultural slough running into the bay here. 104th Ave (BB04; \Sexpr{returnloc("BB04")}) is adjacent to a small air park, but the dyke is fairly straight and continuous here. Near 92nd Ave lies another break in the dyke where a pump house protects the farm land and some freshwater input makes this part of the habitat more productive than others. At 72nd Ave (BB72; \Sexpr{returnloc("BB72")}), there is a large parking lot for visitors to the bay and the Boundary Bay airport is situated here with near constant airplanes landing and taking off here.  The salt marsh extends a bit further from the dyke here than at other areas on the Bay making the edge of the mudflats more complex than other survey locations. Finally, around the western end of Boundary Bay is Seaview regional park (BBSV; \Sexpr{returnloc("BBSV")}) with sandy shores are more easily accessible by the public than other parts of the bay. Public use of the Bay in general is relatively low due to it being a wildlife management area, but kite surfers and dog walkers do make regular use of it, particularly at the western end. 
+Boundary Bay is a very large (\Sexpr{ returnsize("BBAY")}), mostly sandy bay that stretches 16 km from end to end. It has a raised rip-rap dyke that runs the length of the bay preventing tidal inundation to the surrounding farmland. It is sandier than most of the other sites in the sub-region due to it being further from the mouth of the Fraser River and having a longer fetch exposure from the strait. There is freshwater input from small inputs along the bay and  more substantial inputs from the Serpentine and Nicomekl Rivers at the eastern end of the bay. I surveyed along the bay at 6 sites described here from east to west. Mud Bay (BBMB; \Sexpr{returnloc("BBMB")}), the muddiest habitat of the sites has a highway and a train trestle running adjacent to the habitat. 112th Ave (BB12; \Sexpr{returnloc("BB12")}) is also quite muddy with an agricultural slough running into the bay here. 104th Ave (BB04; \Sexpr{returnloc("BB04")}) is adjacent to a small air park, but the dyke is fairly straight and continuous here. Near 92nd Ave lies another break in the dyke where a pump house protects the farm land and some freshwater input makes this part of the habitat more productive than others. At 72nd Ave (BB72; \Sexpr{returnloc("BB72")}), there is a parking lot for visitors to the bay and the Boundary Bay airport is situated here with airplanes landing and taking off above the mudflat.  The salt marsh extends a bit further from the dyke here than at other areas on the Bay making the edge of the mudflats more complex than other survey locations. Finally, around the western end of Boundary Bay is Seaview regional park (BBSV; \Sexpr{returnloc("BBSV")}) with sandy shores are more easily accessible by the public than other parts of the bay. Public use of the Bay in general is relatively low due to it being a wildlife management area, but kite surfers and dog walkers do make regular use of it, particularly at the western end. 
 
-Roberts Bank (RBBP; \Sexpr{returnloc("RBBP")}) is a relatively enclosed and soft sediment mudflat lying between the southern most arm of the Fraser River and the jetty for the Deltaport cargo and coal terminals. Brunswick Point at the edge of the Fraser River is a long spit of salt marsh that separates the edge of the mudflat from the river. Much work has been done here on northward migrating western sandpipers, but it remains well utilized by southward migrating sandpipers. The mudflats in total are \Sexpr{returnsize("RBBP")}, but much of this is only exposed at the lowest tides.
+Roberts Bank (RBBP; \Sexpr{returnloc("RBBP")}) is a relatively enclosed and soft sediment mudflat lying between the southern most arm of the Fraser River and the jetty for the Deltaport cargo and coal terminals. Brunswick Point at the edge of the Fraser River is a long spit of salt marsh that separates the edge of the mudflat from the river. Much work has been done here on northward migrating western sandpipers, but it is also well utilized by southward migrating sandpipers. The mudflats in total are \Sexpr{ returnsize("RBBP")}, but much of this is only exposed at the lowest tides.
 
-Lying at the end of the Vancouver International Airport runways and adjacent to Vancouver's sewage lagoons lies the northern end of the Fraser River Delta mudflats on Iona Island (IONA; \Sexpr{returnloc("IONA")}). The mudflats themselves, while extensive (\Sexpr{returnsize("IONA")}), are not generally host to large flocks of shorebirds in the summer. The southern portion of the flats are very soft where water flows from the sewage lagoons, but harder between the sewage outflow jetty and the north arm of the Fraser River jetty. People are often found on the northern flats and walking along the sewage outflow jetty.
+Lying at the end of the Vancouver International Airport runways and adjacent to Vancouver's sewage lagoons lies the northern end of the Fraser River Delta mudflats on Iona Island (IONA; \Sexpr{returnloc("IONA")}). The mudflats themselves, while extensive (\Sexpr{ returnsize("IONA")}), are not generally host to large flocks of shorebirds in the summer. The southern portion of the flats are very soft where water flows from the sewage lagoons, but harder between the sewage outflow jetty and the north arm of the Fraser River jetty. People are often found on the northern flats and walking along the sewage outflow jetty.
 
 	\subsubsection*{Vancouver/Squamish}
-	 Two survey sites lie north of the Fraser River estuary. Maplewood flats (MAPL; \Sexpr{returnloc("MAPL")}) is a sandy mudflat adjacent to a regional park and industrial areas and across Burrard inlet from a major regional oil refinery. The \Sexpr{returnsize("MAPL")} flats are relatively enclosed, but a portion of the flats has been dredged meaning there is relatively less habitat close to cover than would be naturally. The edges of the habitat are forest on one side and houses on the other.
+	 Two survey sites lie north of the Fraser River estuary. Maplewood flats (MAPL; \Sexpr{returnloc("MAPL")}) is a sandy mudflat adjacent to a regional park and industrial areas and across Burrard inlet from a major regional oil refinery. The \Sexpr{ returnsize("MAPL")} flats are relatively enclosed, but a portion of the flats has been dredged meaning there is relatively less habitat close to cover than would be naturally. The edges of the habitat are forest on one side and houses on the other.
 
-	 North of Vancouver the heavily modified Squamish River Estuary has few remaining intertidal mudflats. Most of the river is shifted into a single fast flowing channel that enters Howe Sound along a long jetty that prevents sediment flowing back toward the town and port. I included the small mudflats (\Sexpr{returnsize("SQUA")}) that are exposed along the head of the jetty at low tide (SQUA; \Sexpr{returnloc("SQUA")}). 
+	 North of Vancouver the heavily modified Squamish River Estuary has few remaining intertidal mudflats. Most of the river is shifted into a single fast flowing channel that enters Howe Sound along a long jetty that prevents sediment flowing back toward the town and port. I included the small mudflats (\Sexpr{ returnsize("SQUA")}) that are exposed along the head of the jetty at low tide (SQUA; \Sexpr{returnloc("SQUA")}). 
 
 
 	\subsubsection*{Puget Sound}
 
 	The aforementioned sites have all been in British Columbia, but I did include 4 survey sites in Puget Sound, WA. There remain large areas of potential habitat that I was unable to include, but these sites do give some indication of usage in the sub-region.
 
-	The Skagit River is the longest river flowing into Puget Sound with extensive mudflats (\Sexpr{returnsize("ENBO")}) at its mouth. My volunteers surveyed the southern side of these mudflats from English Boom on Camano Island (ENBO; \Sexpr{returnloc("ENBO")}). The location gives broad views of the mudflats, but the tide rises quickly here leaving little habitat. Nearby next to the Stillaguamish River lies the Eide Road ponds (EIDE; \Sexpr{returnloc("EIDE")}). These small (\Sexpr{returnsize("EIDE")}), shallow bonds in fallow fields are a hotspot for birding and despite their small size being surrounded by cover were often host to migrating sandpipers. In 2017 the site was unsurveyed due to a habitat restoration project where the rip-rap dykes surrounding the site were partially removed creating large channels throughout the habitat. It is unknown if the site is still used by birds this year after the habitat has been modified so substantially.
+	The Skagit River is the longest river flowing into Puget Sound with extensive mudflats (\Sexpr{ returnsize("ENBO")}) at its mouth. My volunteers surveyed the southern side of these mudflats from English Boom on Camano Island (ENBO; \Sexpr{returnloc("ENBO")}). The location gives broad views of the mudflats, but the tide rises quickly here leaving little habitat. Nearby next to the Stillaguamish River lies the Eide Road ponds (EIDE; \Sexpr{returnloc("EIDE")}). These small (\Sexpr{ returnsize("EIDE")}), shallow ponds in fallow fields are a hotspot for birding and despite their small size and being surrounded by cover were often host to migrating sandpipers. In 2017 the site was unsurveyed due to a habitat restoration project where the rip-rap dykes surrounding the site were partially removed creating large channels throughout the habitat. It is unknown if the site is still used by birds this year after the habitat has been modified so substantially.
 
-	West of Camano Island lies Whidbey Island which stretches for 70km. At its midpoint lies Crockett Lake (CROC; \Sexpr{returnloc("CROC")}) a shallow estuarine lake surrounded by grassy farmland. Not all the \Sexpr{returnsize("CROC")} lake is available to sandpipers, but much of it is extremely deep mud covered by only centimetres of water. There is an outlet to the sea at one end, but this seems to be to prevent the lake from flooding rather than allowing tidal influence.
+	West of Camano Island lies Whidbey Island which stretches for 70km. At its midpoint lies Crockett Lake (CROC; \Sexpr{returnloc("CROC")}) a shallow estuarine lake surrounded by grassy farmland. Not all the \Sexpr{ returnsize("CROC")} lake is available to sandpipers, but much of it is extremely deep mud covered by only centimetres of water. There is an outlet to the sea at one end, but this seems to be to prevent the lake from flooding rather than allowing tidal influence.
 
-	The final site in the survey site set lies 122 km to the south of the other survey sites. Much like the sites on Malcolm Island, Kennedy Creek (KENN; \Sexpr{returnloc("KENN")}) is somewhat of an outlier geographically, but an important site within the Puget Sound ecosystem. Located at the southern end of Totten Inlet the \Sexpr{returnsize("KENN")} mudflats are fed by Kennedy Creek and are very sheltered and therefore highly productive. The mudflats are extremely soft and muddy and surrounded almost completely by forests or houses. There is a small viewing platform at one end and a highway passes over the creek before it enters the inlet, but the habitat remains inaccessible to the public.
+	The final site in the survey site set lies 122 km to the south of the other survey sites. Much like the sites on Malcolm Island, Kennedy Creek (KENN; \Sexpr{returnloc("KENN")}) is somewhat of an outlier geographically, but an important site within the Puget Sound ecosystem. Located at the southern end of Totten Inlet the \Sexpr{ returnsize("KENN")} mudflats are fed by Kennedy Creek and are very sheltered and therefore highly productive. The mudflats are extremely soft and muddy and surrounded almost completely by forests or houses. There is a small viewing platform at one end and a highway passes over the creek before it enters the inlet, but the habitat remains inaccessible to the public.
 
 
 \subsection*{Site types}
 
-Across the region the sites fall into a few broad categories. While only Crockett Lake and Eide Rd ponds are separated from tidal influence, there are many enclosed lagoon sites that do not entirely drain in a tidal cycle that should be similar to these sites (Sidney Island, Witty's Lagoon, Esquimalt Lagoon, San Malo Bay). There are many rockier or exposed sites where I would a priori expect there to less western sandpiper usage just based on site type. Some of the larger estuarine mudflats appear to have sufficient habitat to host large numbers of birds, but where only occasional visitors are found (Chemainus and Cowichan River Estuaries). Finally, there are the Fraser River sites which are on an order of magnitude larger than the other sites. These sites routinely host extremely large flocks of shorebirds on the northward and southward migrations as well as dunlin in the non-breeding season. Boundary Bay is 10 times larger than the next largest area outside the Fraser River Delta and even the smallest site in the sub-region is twice the next largest site. For this reason, in \autoref{ch:confront} I divided the sites into large sites consisting of Boundary Bay, Roberts Bank and Iona and small sites consisting of the remaining sites.
+Across the region the sites fall into a few broad categories. While only Crockett Lake and Eide Rd ponds are separated from tidal influence, there are many enclosed lagoon sites that do not entirely drain in a tidal cycle that should be similar to these sites (Sidney Island, Witty's Lagoon, Esquimalt Lagoon, San Malo Bay). There are many rockier or exposed sites where I would a priori expect there to be less western sandpiper usage just based on site type. Some of the larger estuarine mudflats appear to have sufficient habitat to host large numbers of birds, but where only occasional visitors are found (Chemainus and Cowichan River Estuaries). Finally, there are the Fraser River sites which are on an order of magnitude larger than the other sites. These sites routinely host extremely large flocks of shorebirds on the northward and southward migrations as well as dunlins in the non-breeding season. Boundary Bay is 10 times larger than the next largest area outside the Fraser River Delta and even the smallest site in the sub-region is twice the next largest site. For this reason, in \autoref{ch:confront} I divided the sites into large sites consisting of Boundary Bay, Roberts Bank and Iona and small sites consisting of the remaining sites.
 
 
 \section{Surveyor recruitment and training and Survey Methodology}
@@ -446,7 +452,7 @@ Volunteer citizen-scientists using a standardized protocol surveyed stopover sit
 
 Volunteers received their training primarily online. I designed a website to communicate the background material about the project as well as provide a platform for sharing training material (\url{www.sfu.ca/~dhope/}). I created a video that detailed the basic protocol involved in the surveys and posted this online (\url{vimeo.com/100176976}). Additionally, volunteers were able to access guides to assess flock size and identify key shorebird species, and particularly differentiate between Least and Western Sandpipers. %Surveyor instructions for 2017 are attached in a supplementary appendix with an example of the datasheets and data entry forms. 
 
-Survey protocols were developed to remove as many of the biases and covariates that are particularly important to control when counting shorebirds on migration. Each year surveys were conducted over two four-day spans: once during the adult migration (July) and once during the juvenile  migration (August). Survey timing was based on the perceived dates of peak sandpiper passage in each month, the tidal heights and timing, and surveyor availability. To increase surveyor availability, we conducted surveys over the course of weekends (Friday-Monday) as close to the 15\textsuperscript{th} of July and August and selected the weekend with the as close to full tides as possible. I asked surveyors to survey the site 3 times out of the four days, though this was not possible for many sites. 
+Survey protocols were developed to remove as many of the biases and covariates that are particularly important to control when counting shorebirds on migration. Each year surveys were conducted over two four-day spans: once during the adult migration (July) and once during the juvenile  migration (August). Survey timing was based on the perceived dates of peak sandpiper passage in each month, the tidal heights and timing, and surveyor availability. To increase surveyor availability, we conducted surveys over the course of weekends (Friday-Monday) as close to the 15\\textsuperscript{th} of July and August and selected the weekend with the as close to full tides as possible. I asked surveyors to survey the site 3 times out of the four days, though this was not possible for many sites. 
 
 I assigned survey times for each date and site based on the tidal cycle for the region. Within a given region, the timing was the same between sites, but as the tidal cycle varied across the region, I varied survey timings to hold the tidal state roughly equal across the region. Surveys were conducted for the 2.5 hours preceding tidal inundation of habitat, with two exceptions. The region around Victoria, BC had many small sites including many that were only exposed at low tide. To ensure I did not miss usage at these sites I surveyed the 2.5 hours after low tide for this region. For some lagoons in the region, the available habitat across the region would increase across the survey period as the lagoons drained. The second exception was for Crockett Lake, WA, which is a shallow saline lake with little to no tidal movement. As there are no nearby surveyed sites the volunteers at this site chose times early in the day that would reduce the heat waves that could masks the flocks using the site. The surveyors also modified their survey times to avoid fog. Otherwise, I used volunteer knowledge and tidal charts to estimate the times that would precede the habitat being covered. On some dates the tide did not come high enough to cover the habitat, but for the most part surveys occurred as the tideline moved in to covering the habitat within the last half-hour of surveys.
 
@@ -456,7 +462,7 @@ In addition to counting western sandpipers, surveyors also noted any peregrine f
 
 Surveyors sent their data to me in a few different ways. I created online forms which surveyors could enter their data. I also distributed spreadsheets for which volunteers could enter their data and send to me. Finally, I requested volunteers send me either hard copies or scans of their datasheets for verification and for those volunteers that did not enter their own data, I entered it into a spreadsheet myself. 
 
-The survey data was cleaned using python \citep{VanderWalt2011,Fuente2014,Eric2001,Summerfield2010} and R \citep{cran} scripts to ensure reproducible results. In some cases, this was due to errors in entering the data. I manually combined spreadsheets received from surveyors due to lack of compatibility and made some manual changes to the data while doing so. Otherwise changes to the data from submission are described in the accompanying scripts. 
+The survey data was cleaned using python \citep{VanderWalt2011,Fuente2014,Eric2001} and R \citep{cran} scripts to ensure reproducible results. In some cases, this was due to errors in entering the data. I manually combined spreadsheets received from surveyors due to lack of compatibility and made some manual changes to the data while doing so. Otherwise changes to the data from submission are described in the accompanying scripts. 
 
 
 \section{Surveyor effort}\label{sec:effort}
@@ -464,6 +470,7 @@ The survey data was cleaned using python \citep{VanderWalt2011,Fuente2014,Eric20
 <<surveyor-records, include=F, cache=T, error=T>>=
 cleaned.names <- readODS::read_ods("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/data/cleaned_surveyor_names.ods", sheet = "2018_version")
 require(tidyverse)
+
 find.records<- function(name, data){
   str.i <- as.character(name)
   a      <- filter(data, grepl(str.i, Obs1))
@@ -549,12 +556,7 @@ propreturnbyMonth2015 <- length(volbothMonths2015$CleanName) / length(out[[3]][[
 propreturnbyMonth2016 <- length(volbothMonths2016$CleanName) / length(out[[4]][['CleanName']] %>% unique())
 propreturnbyMonth2017 <- length(volbothMonths2017$CleanName) / length(out[[5]][['CleanName']] %>% unique())
 # mean(c(propreturnbyMonth2013, propreturnbyMonth2014, propreturnbyMonth2015,propreturnbyMonth2016,propreturnbyMonth2017))
-# 
-# 
 
-
-
-# 
 # # VolunteerDB by month year
 summary.of.volunteers <-
   clean.name.database %>%
@@ -604,24 +606,24 @@ dist_surv <- Site.SurveyorNumbers %>%
 @
 
 
-I recruited \Sexpr{n_distinct(VolunteerNames$CleanName)} volunteers (not including myself) from across the Salish Sea region. Surveyors on average participated \Sexpr{effort_by_surveyor$n %>% mean} years. \Sexpr{propAllYears*100} \% of volunteers participated in all 5 years of surveys. The proportion of volunteers who had volunteered in a previous year was relatively similar between years (\Sexpr{c(returnees2014 %>% nrow / nrow(out$`2014`),returnees2015 %>% nrow / nrow(out$`2015`),returnees2016 %>% nrow / nrow(out$`2016`),returnees2017 %>% nrow / nrow(out$`2017`))}). Volunteers tended to drop out rather than skip a year and return later, though there were some volunteers who did skip a year or even two (\autoref{fig:Volunteer-returns}).
+I recruited \Sexpr{n_distinct(VolunteerNames$CleanName)} volunteers (not including myself) from across the Salish Sea region. Surveyors on average participated \Sexpr{effort_by_surveyor$n %>% mean} years. \Sexpr{propAllYears*100} \% of volunteers participated in all 5 years of surveys. The proportion of volunteers who had volunteered in a previous year was relatively similar between years (\Sexpr{returnees2014 %>% nrow / nrow(out$`2014`)}, \Sexpr{returnees2015 %>% nrow / nrow(out$`2015`)}, \Sexpr{returnees2016 %>% nrow / nrow(out$`2016`)}, \Sexpr{returnees2017 %>% nrow / nrow(out$`2017`)}). Volunteers tended to drop out rather than skip a year and return later, though there were some volunteers who did skip a year or even two (\autoref{fig:Volunteer-returns}).
 
-Volunteers had a \Sexpr{mean(c(propreturnbyMonth2013, propreturnbyMonth2014, propreturnbyMonth2015,propreturnbyMonth2016,propreturnbyMonth2017))*100} \% chance of surveying in August if they surveyed in July, with some minor variation between years (\Sexpr{c(propreturnbyMonth2013, propreturnbyMonth2014, propreturnbyMonth2015,propreturnbyMonth2016,propreturnbyMonth2017)*100}). There were a small proportion of surveyors that surveyed in all years (\Sexpr{propAllYears*100}\%) and \Sexpr{nrow(supervolunteers)} volunteers who participated in every month. 
+Volunteers had a \Sexpr{mean(c(propreturnbyMonth2013, propreturnbyMonth2014, propreturnbyMonth2015,propreturnbyMonth2016,propreturnbyMonth2017))*100}\% chance of surveying in August if they surveyed in July, with some minor variation between years (\Sexpr{propreturnbyMonth2013*100}}, \Sexpr{propreturnbyMonth2014*100}}, \Sexpr{propreturnbyMonth2015*100}}, \Sexpr{propreturnbyMonth2016*100}},\Sexpr{propreturnbyMonth2017*100}}\%). There were a small proportion of surveyors that surveyed in all years (\Sexpr{propAllYears*100}\%) and \Sexpr{nrow(supervolunteers)} volunteers who participated in every month. 
 
-Surveyors on average conducted \Sexpr{mean(summary.volunteerefffort$NumberDays)} surveys, though survey effort was very overdispersed (\autoref{fig:surveyor-effort}). Many surveyors surveyed collaboratively as groups, though often surveyors surveyed alone. \Sexpr{dist_surv$p_surv[dist_surv$n==1]*100} \% of volunteers surveyed alone and \Sexpr{dist_surv$p_surv[dist_surv$n==2]*100} \% in pairs. There were small numbers of surveyors in groups of up to 5 people.
+Surveyors on average conducted \Sexpr{mean(summary.volunteerefffort$NumberDays)} surveys, though survey effort was very overdispersed (\autoref{fig:surveyor-effort}). Many surveyors surveyed collaboratively as groups, though often surveyors surveyed alone. \Sexpr{dist_surv$p_surv[dist_surv$n==1]*100}\% of volunteers surveyed alone and \Sexpr{dist_surv$p_surv[dist_surv$n==2]*100}\% in pairs. There were small numbers of surveyors in groups of up to 5 people.
 
 
-<<Volunteer-returns, fig.cap="The return patterns for citizen-scientist surveyors in the BC/WA Western Sandpiper Shorebird Survey program. Each point shows the number of surveyors who began surveying in a given year and then surveyed for a particular number of years. The final year of surveys is shown on the vertical axis. The number of years surveyed is shown by the colour gradient and the number of surveyors is shown by the area of the points.">>=
- ggplot(effort_grouped, aes(first.yr, colour =as.character(n), y = last.yr,size = n_surv)) + geom_jitter(width=0.2, height = 0.2) + labs(x = "First Year Surveyed", colour = "Years\nSurveyed", size = "Number of\nsurveyors", y = "Last Year Surveyed") + scale_colour_brewer(palette = 2,type = 'seq')+ scale_size_area() + theme_dark()
+<<Volunteer-returns, fig.cap="The return patterns for citizen-scientist surveyors in the BC/WA Western Sandpiper Shorebird Survey program. Each point shows the number of surveyors who began surveying in a given year and then surveyed for a particular number of years. The final year of surveys is shown on the vertical axis. The number of years surveyed is shown by the colour gradient and the number of surveyors is shown by the area of the points.", fig.scap="">>=
+ ggplot(effort_grouped, aes(first.yr, colour =as.character(n), y = last.yr,size = n_surv)) + geom_jitter(width=0.2, height = 0.2) + labs(x = "First Year Surveyed", colour = "Years\nSurveyed", size = "Number of\nsurveyors", y = "Last Year Surveyed") + scale_colour_brewer(palette = 2,type = 'seq')+ scale_size_area() + theme_dark() 
 @
 
 
-<<surveyor-effort, fig.width=8, fig.height=8, fig.cap="The distribution of total number of days surveyed by surveyors (top) and the number of days surveyed broken down by year and month (bottom). ">>=
+<<surveyor-effort, fig.width=8, fig.height=8, fig.cap="The distribution of total number of days surveyed by surveyors (top) and the number of days surveyed broken down by year and month (bottom). ", fig.scap="">>=
 require(cowplot)
 plot_grid(ggplot(summary.volunteerefffort, aes(NumberDays)) + 
 	geom_histogram(binwidth=1) + labs(x="Number of Days Surveyed", y="Number of Surveyors"),
 	ggplot(summary.volunteerefffort.by.month, aes(NumberDays, fill=Year)) + geom_bar(position='dodge') + facet_wrap(~Month.name) +  scale_fill_brewer(type='qual', palette = "Set1") +labs(y="Number of Surveyors", x="Number of Days Surveyed"),
-	nrow=2	) 
+	nrow=2	)  
 @
 
 
@@ -632,20 +634,19 @@ I requested surveyors in groups to conduct independent counts where possible. \S
 
 \section{Results}
 <<results-wesa-plots, include=F, cache=T, runagainmaybe=file.info("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/Appendixplots.r")$mtime>>=
-source("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/Appendixplots.r", chdir = T)  
+source("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/Appendixplots.r", chdir = T)
 @
 	\subsection{Variation in counts}
 Counts of Western Sandpipers varied between 0 and \Sexpr{max(wesa$counts.cleaned)}. Within surveys, there was substantial variation in counts at a few sites and no sandpipers observed across a survey period at others (\autoref{fig:variation-counts-figure}). The coefficient of variation within a site increased when examining the sites across all months and within each year, but tended to be lower within each month, suggesting the numbers between surveys within a month didn't change that much at a given site. The coefficient of variation was high when including all counts together for each month and year, but there was not much difference in the CV between years or months. 
 
-<<variation-counts-figure, fig.cap="Variation in measures of coefficients of variation in counts across different scales in time. Each histogram shows the different estimates of the CV for the counts scaled across (from the top by row left to right) each month (July, August); each year (2013-2017); each site (39 survey sites); each survey site in each month; each survey site across each year; and within each individual survey (each month identified by month). ">>=
+<<variation-counts-figure, fig.cap="Variation in measures of coefficients of variation in counts across different scales in time. Each histogram shows the different estimates of the CV for the counts scaled across (from the top by row left to right) each month (July, August); each year (2013-2017); each site (39 survey sites); each survey site in each month; each survey site across each year; and within each individual survey (each month identified by month). ", fig.scap="">>=
 ggplot(cvs, aes(cv, fill = Month)) + geom_histogram(binwidth = 0.5) + facet_wrap(~g, scales='free_y') +
 labs(x= "CV", y="N")
-
 @
 
 
 	\subsection{Variation in surveys}
- <<surveys-by-site,dependson='results-wesa-plots', fig.cap="Variation in the survey effort across all survey sites. A. The total number of surveys conducted at each site across all 5 years of surveys. Some of the sites with few surveys were not included in the final analysis. B. The total numbers of surveys conducted (solid lines) and number of sites surveyed (dashed lines) across all survey years in July (blue) and August (red) of each year.">>=
+ <<surveys-by-site,dependson='results-wesa-plots', fig.cap="Variation in the survey effort across all survey sites. A. The total number of surveys conducted at each site across all 5 years of surveys. Some of the sites with few surveys were not included in the final analysis. B. The total numbers of surveys conducted (solid lines) and number of sites surveyed (dashed lines) across all survey years in July (blue) and August (red) of each year.", fig.scap="">>=
  plot_grid(SiteEffort,YearEffort, nrow=2, labels="AUTO")
  @
 
@@ -655,7 +656,7 @@ To assess the amount of error in counts of surveys I asked volunteers to perform
 
 The absolute difference between counts increased as the number of birds at the site increased up to a max of \Sexpr{only_independent_counts$diff_count %>% max}, but along the log-scale remained relatively close to the 1:1 line as the counts increased (\autoref{fig:observer-counts}). The CV decreased with the mean count as mean counts close to zero could easily have counts from one observer that were double or more of the other. Above 1000 mean birds the CV was on average \Sexpr{mean(only_independent_counts$cv[only_independent_counts$mean_count<1000], na.rm=T)}. As we see below for any set of surveys only a few sites generally have birds more than 1000 meaning that even a CV of less than 20\% could have a strong influence on my estimate of the distribution across sites. It should be noted that while the counts with the highest absolute variation come from a single survey they are also a survey conducted by observers that have done paid surveys of western sandpipers at the site and therefore inexperience is unlikely to explain the high variation.
 
-<<observer-counts, fig.cap="Comparison of independent, but simultaneous counts of western sandpipers. Each point's position is the count from each independent observer. The red line shows the 1:1 line. Counts are shown along a log + 1 scale ">>=
+<<observer-counts, fig.cap="Comparison of independent, but simultaneous counts of western sandpipers. Each point's position is the count from each independent observer. The red line shows the 1:1 line. Counts are shown along a log + 1 scale ", fig.scap="">>=
 ggplot(only_independent_counts, aes(CountClean, Alt_Count)) + 
   geom_point() + #geom_smooth(method="lm", se=F) +
   geom_line(data = tibble(x=seq(0,4000, 1),y=seq(0,4000, 1)),aes(x=x, y = y, colour = 'red' )) +
@@ -666,65 +667,65 @@ ggplot(only_independent_counts, aes(CountClean, Alt_Count)) +
 @
 
 
-<<observer-cv, fig.cap='The coefficient of variation for each pair of independent counts. Colours show the sites where each independent count was done. Counts where the mean count was zero are not shown. '>>=
+<<observer-cv, fig.cap='The coefficient of variation for each pair of independent counts. Colours show the sites where each independent count was done. Counts where the mean count was zero are not shown. ', fig.scap="">>=
 ggplot(only_independent_counts, aes(mean_count, cv, colour = substr(RecordID,1,4))) + geom_point() + scale_colour_brewer(type = 'qual', palette = 'Set1') + labs(colour = "Site", x = "Mean count", y="CV")
 @
 
 
 	\subsection{Surveys by region}
-<<regional-summary-plot,dependson='results-wesa-plots',fig.width = 8, fig.height = 8, out.width = "\\textwidth", fig.cap='Average counts ($\\pm$95\\%CI) for each sub-region across all years in July and August. Sub-regions move from approximately north to south from left to right, starting with Malcom Island (Malc), eastern Vancouver Island (EvanIs), Tofino Mudflats (Tofino), southern Vancouver Island (SVanIs), the Fraser River Delta (FRD), Vancouver and Squamish (Van), and Puget Sound (Puget).'>>=
+<<regional-summary-plot,dependson='results-wesa-plots',fig.width = 8, fig.height = 8, out.width = "\\textwidth", fig.cap='Average counts ($\\pm$95\\%CI) for each sub-region across all years in July and August. Sub-regions move from approximately north to south from left to right, starting with Malcom Island (Malc), eastern Vancouver Island (EvanIs), Tofino Mudflats (Tofino), southern Vancouver Island (SVanIs), the Fraser River Delta (FRD), Vancouver and Squamish (Van), and Puget Sound (Puget).', fig.scap="">>=
 Regional_Summary2
 @
 
 
 
-<<maclom-island-results, dependson='results-wesa-plots',fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.cap='Counts of western sandpipers at the survey sites on Malcolm Island, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown over the individual points. Counts are shown on a log 10 + 1 scale.'>>=
-regional.plots$Malc
+<<maclom-island-results, dependson='results-wesa-plots',fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.cap='Counts of western sandpipers at the survey sites on Malcolm Island, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown over the individual points. Counts are shown on a log 10 + 1 scale.', fig.scap="">>=
+ regional.plots$Malc
 @
 
 Of the two sites on Malcolm Island, Rough Bay was the only site to have consistent usage. While Kaleva Rd did have flocks of over 100 birds spotted in August of 2013 and 2015, Rough Bay had consistent usage across all four years. Counts were higher in August at both sites though this was primarily driven by 2013 counts at Rough Bay. Counts across all surveys were below 500 birds and therefore this region appears to host migrants regularly, but for only short stops in low numbers.
 
-<<eastern-vancouver-island, dependson='results-wesa-plots', fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.cap='Counts of western sandpipers at the survey sites along the eastern shores of Vancouver Island, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown over the individual points. Counts are shown on a log 10 + 1 scale.'>>=
+<<eastern-vancouver-island, dependson='results-wesa-plots', fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.cap='Counts of western sandpipers at the survey sites along the eastern shores of Vancouver Island, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown over the individual points. Counts are shown on a log 10 + 1 scale.', fig.scap="">>=
 # "EVanIs" "SVanIs" "FRD"    "Malc"   "Puget"  "Tofino"
-regional.plots$EVanIs 
+ regional.plots$EVanIs 
 @
 
 The small sites that span the eastern side of Vancouver Island were regularly used by small flocks, primarily in August. San Malo Bay was the most regularly used with flocks observed every survey period at the site. These numbers were generally less than 100 birds, but the flocks tended to stay through the survey period. Comox Bay had larger counts, but was only used in the juvenile migratory period, when counts over 100 birds were observed in three of the five years. Fanny Bay hosted occasional flocks less than 100, but generally less than 50 and observations. The other sites had occasional observations of small flocks, but were not regularly used, particularly by adults. 
 
 
-<<tofino-res, dependson='results-wesa-plots', fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.cap='Counts of western sandpipers at the survey sites on the Tofino Mudflats, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.'>>=
-regional.plots$Tofino 
+<<tofino-res, dependson='results-wesa-plots', fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.cap='Counts of western sandpipers at the survey sites on the Tofino Mudflats, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.', fig.scap="">>=
+ regional.plots$Tofino 
 @
 
-The Tofino Mudflats have been granted the distinction of ``Regional Importance'' to shorebirds and was the third most abundant sub-region in my surveys. Of the three survey locations the two at Jensens Bay had much greater numbers. Usage was also much higher for juveniles than for adults. Adult counts at Jensens Bay was less than 500 for all years and generally less than 100 birds. In August however, counts were much higher with 2-3000 birds counted in 2015 and about 1000 in 2013. The surveys here were often hit-or-miss with some years having little to no birds observed. Surveyors commented on the strong influence of the tidal height on the numbers observed. With so much available, but unsurveyed habitat, it is also possible we just missed larger flocks in the sub-region due to our limited scope of survey.
+The Tofino Mudflats have been granted the distinction of ``Regional Importance'' to shorebirds by the Western Hemispheric Reserve Network and was the third most abundant sub-region in my surveys. Of the three survey locations the two at Jensens Bay had much greater numbers. Usage was also much higher for juveniles than for adults. Adult counts at Jensens Bay were less than 500 in all years and generally less than 100 birds. In August however, counts were much higher with 2-3000 birds counted in 2015 and about 1000 in 2013. The surveys here were often hit-or-miss with some years having little to no birds observed. Surveyors commented on the strong influence of the tidal height on the numbers observed. With so much available, but unsurveyed habitat, it is also possible we just missed larger flocks in the sub-region due to our limited scope of survey.
 
 
-<<svanis-res, dependson='results-wesa-plots',fig.cap="Counts of western sandpipers at the survey sites in the southern region of Vancouver Island, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.", fig.width = 10, fig.height=8.5, out.width="\\textwidth">>=
-regional.plots$SVanIs 
+<<svanis-res, dependson='results-wesa-plots',fig.cap="Counts of western sandpipers at the survey sites in the southern region of Vancouver Island, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.", fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.scap="">>=
+ regional.plots$SVanIs 
 
 @
 
 In the southern sub-region of Vancouver Island sandpipers were consistently found at sites in low numbers in both months, especially at Sidney Island, where the largest flocks were observed. Witty's Lagoon also regularly had flocks though the numbers varied between 10s and 100s. The more northern sites in this region were also the largest, but had numbers lower than Sidney Island, but higher than those sites in the Eastern Vancouver Island sub-region.
 
-<<frd-res, dependson='results-wesa-plots',fig.cap="Counts of western sandpipers at the survey sites on the Fraser River Delta, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.", fig.width = 10, fig.height=8.5, out.width="\\textwidth">>=
-regional.plots$FRD 
+<<frd-res, dependson='results-wesa-plots',fig.cap="Counts of western sandpipers at the survey sites on the Fraser River Delta, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.", fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.scap="">>=
+ regional.plots$FRD 
 @
 	
 The Fraser River Delta is the largest area of habitat for shorebirds in the region. Assigned the WHRSN classification of ``Hemispheric Importance'' primarily for the region's importance to wintering dunlins and northward migrating western sandpipers, it was also the most important region for southward migrating western sandpipers. The highest individual count was over 5000 birds along Boundary Bay, but numbers were commonly in the hundreds in July and overall higher in August. Numbers were lower at Iona Island, which is further north than the other sites. Robert's Bank had consistently high numbers and is one of the few survey locations where adult numbers are generally higher than juveniles. The site had the highest counts in some years and appears to be one of the more critically important sites within the region. While we attempted to get good coverage across Boundary Bay, we did not survey Sturgeon Banks, which lies between Roberts Bank and Iona. Sturgeon Bank has been shown to host large numbers within the region \citep{Jardine2015}, and we may be missing many regional birds by excluding these sites.
 
 
-<<vansq-res, dependson='results-wesa-plots', fig.cap="Counts of western sandpipers at the survey sites around North Vancouver and Squamish, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.",fig.width = 10, fig.height=8.5, out.width="\\textwidth">>=
-regional.plots$Van 
+<<vansq-res, dependson='results-wesa-plots', fig.cap="Counts of western sandpipers at the survey sites around North Vancouver and Squamish, BC. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.",fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.scap="">>=
+ regional.plots$Van 
 @
 
-The two sites lying on the eastern side of the Strait of Georgia and to the north of the Fraser River Delta had very few western sandpipers observed. The urban mudflat at Maplewood had small flocks in four of the five years in August, but only once in July. No sandpipers were observed at the Squamish Estuary in the for years of surveys in July and three in August. The Squamish Estuary is a small isolated flat on the side of a fast-flowing river, and so could be inappropriate for western sandpipers in general. Maplewood is a highly urban mudflat in Burrard Inlet, and its location within a narrow inlet could make it less appealing to sandpipers. Of all the sites I would guess it is also the most likely to be polluted from past and present industrial activity nearby.
+The two sites lying on the eastern side of the Strait of Georgia and to the north of the Fraser River Delta had very few western sandpipers observed. The urban mudflat at Maplewood had small flocks in four of the five years in August, but only once in July. No sandpipers were observed at the Squamish Estuary in the for years of surveys in July and three in August. The Squamish Estuary is a small isolated flat on the side of a fast-flowing river, and so could be inappropriate for western sandpipers in general. Maplewood is a highly urban mudflat in Burrard Inlet, and its location within a narrow inlet could make it less appealing to sandpipers. Of all the sites surveyed I would guess Maplewood is also the most likely to be polluted from past and present industrial activity nearby.
 
 
-<<puget-res, dependson='results-wesa-plots',fig.cap="Counts of western sandpipers at the survey sites in Puget Sound, WA. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.", fig.width = 10, fig.height=8.5, out.width="\\textwidth">>=
-regional.plots$Puget 
+<<puget-res, dependson='results-wesa-plots',fig.cap="Counts of western sandpipers at the survey sites in Puget Sound, WA. Points are shown for each count for each month and year. The mean (bold line) and associated 95\\% CI (crossbars) are shown overlayed the individual points. Counts are shown on a log 10 + 1 scale.", fig.width = 10, fig.height=8.5, out.width="\\textwidth", fig.scap="">>=
+ regional.plots$Puget 
 @
 
-The final sub-region includes all of Puget Sound and my survey sites in Washington State. It could be divided into two sub-regions due to its size but for this description I've grouped them together. This subregion had the third highest counts of the region and Crockett Lake appears to be one of the most abundantly and regularly used sites in the region with numbers regularly in the 100s and commonly over 1000. Especially in July when numbers tended to be lower at other sites Crockett Lake appears to be a well used site. The other site that jumped out as important and in fact had the highest count in the subregion was the Eide Rd Ponds. This ephemeral wetland commonly hosted small flocks and in two years flocks of about 1000 and estimated 3500 sandpipers were observed. The site is only \Sexpr{danger.est$area_m2[danger.est$SiteID == "EIDE"]} $m^2$ in area and completely surrounded by cover, but appeared to be an important site for western sandpipers at high tide. In 2017, we could not survey the site due to a major ``restoration'' project which removed the dykes on parts of the island. There is now a channel passing through the ponds the sandpipers used and it is unknown if it will still be suitable for western sandpipers. 
+The final sub-region includes all of Puget Sound and my survey sites in Washington State. It could be divided into two sub-regions due to its size but for this description I've grouped them together. This subregion had the third highest counts of the region and Crockett Lake appears to be one of the most abundantly and regularly used sites in the region with numbers regularly in the 100s and commonly over 1000. Especially in July when numbers tended to be lower at other sites Crockett Lake appears to be a well used site. The other site that jumped out as important and in fact had the highest count in the subregion was the Eide Rd. Ponds. This ephemeral wetland commonly hosted small flocks and in two years flocks of about 1000 and estimated 3500 sandpipers were observed. The site is only \Sexpr{danger.est$area_m2[danger.est$SiteID == "EIDE"]} $m^2$ in area and completely surrounded by cover, but appeared to be an important site for western sandpipers at high tide. In 2017, we could not survey the site due to a major ``restoration'' project which removed the dykes on parts of the island. There is now a channel passing through the ponds the sandpipers used and it is unknown if it will still be suitable for western sandpipers. 
 
 English Boom, which is a much larger habitat than Eide Rd or Crockett Lake had very few sandpipers observed in July and none in August. As English Boom is part of the large Skagit River Delta, it is possible that there are more productive parts of the mudflats where western sandpipers are found. Most of the shoreline is inaccessible to the public so my surveys may have missed larger flocks that could be closer to the mouth of the river. It is interesting to note the lack of any juveniles observed at the site.
 
@@ -735,16 +736,16 @@ In all, the regional surveys highlight the importance of the Fraser River Delta,
 
 	\subsection{Surveys between Adults and Juveniles}
 
-<<monthly-compare,dependson='results-wesa-plots', fig.cap='Comparison of counts of western sandpipers on southward migration from July (adults) and August (juveniles) in five years of surveys. Points show the individual counts for each year, while the lines show the comparisons of mean counts between July and August in each year and across all years (black line). Counts are shown on the log + 1 scale.'>>=
+<<monthly-compare,dependson='results-wesa-plots', fig.cap='Comparison of counts of western sandpipers on southward migration from July (adults) and August (juveniles) in five years of surveys. Points show the individual counts for each year, while the lines show the comparisons of mean counts between July and August in each year and across all years (black line). Counts are shown on the log + 1 scale.', fig.scap="">>=
 MonthlyComparison
 @
 
-Across the 5 years of surveys an average \Sexpr{mean(wesa$counts.cleaned[wesa$Month=="7"])} adults of \Sexpr{mean(wesa$counts.cleaned[wesa$Month=="8"])} juveniles were observed per count. In three of the five years, more juveniles were counted than adults, despite more surveys being conducted in July than August. However, in 2014 and 2017 the average count was higher for adults than juveniles (\autoref{fig:monthly-compare}). As we saw in the regional breakdown of the counts, the differences are in some years driven by single counts at one or two sites (e.g. Boundary Bay in July 2014 or Eide Rd in August 2015), but in other years the overall number of birds counted is just low (e.g. July 2013).
+Across the 5 years of surveys an average \Sexpr{mean(wesa$counts.cleaned[wesa$Month=="7"])} adults of \Sexpr{mean(wesa$counts.cleaned[wesa$Month=="8"])} juveniles were observed per count. In three of the five years, more juveniles were counted than adults, despite more surveys being conducted in July than August. However, in 2014 and 2017 the average count was higher for adults than juveniles (\autoref{fig:monthly-compare}). As we saw in the regional breakdown of the counts, the differences are in some years driven by single counts at one or two sites (e.g. Boundary Bay in July 2014 or Eide Rd in August 2015), but in other years the overall number of birds counted is just low across all sites (e.g. July 2013).
 
 
 	\subsection{Surveys between years}
 
-<<YearlySummary,dependson='results-wesa-plots',fig.cap='Comparison of counts of western sandpipers on southward migration five years of surveys. Points show the individual counts for each year, while the lines show the comparisons of mean counts in each year for adults (Jul) and juveniles(Aug) in and across both months (black line). Counts are shown on the log + 1 scale.'>>=
+<<YearlySummary,dependson='results-wesa-plots',fig.cap='Comparison of counts of western sandpipers on southward migration five years of surveys. Points show the individual counts for each year, while the lines show the comparisons of mean counts in each year for adults (Jul) and juveniles(Aug) in and across both months (black line). Counts are shown on the log + 1 scale.', fig.scap="">>=
 YearlySummary
 @
 
@@ -754,7 +755,7 @@ As with the comparison of months, the number of birds counted in each year varie
 
 I broadly divided sites into small or large based on the proportion of the available habitat that was within 150m of cover (See Chapter 3 text).  The numbers at both sites varied between years, but the average count was higher at the large, safe sites in July across all years (\autoref{fig:dangerplot-results}). The difference was highest in 2014 and lowest in 2016, but the may driver of the difference is differences in counts at the large sites. In August by comparison, the counts are much more similar between large and small sites, with higher average counts at the small sites in 2015. The numbers counted at the small sites seems to vary much more in August than in July, while the mean count at the large site varies less than in July.
 
-<<dangerplot-results,dependson='results-wesa-plots', fig.cap="Counts of western sandpiper abundance by month and year for sites of low or high danger. Mean counts are shown in the lines for high danger (red), low danger (blue) and the average (black).">>=
+<<dangerplot-results,dependson='results-wesa-plots', fig.cap="Counts of western sandpiper abundance by month and year for sites of low or high danger. Mean counts are shown in the lines for high danger (red), low danger (blue) and the average (black).", fig.scap="">>=
 dangerplot + theme(legend.position='bottom')
 
 @
@@ -767,7 +768,7 @@ dangerplot + theme(legend.position='bottom')
 
 While the aim of the surveys was to access abundances of western sandpipers, many sites also were host to least sandpipers. Starting in 2014 I asked surveyors to note the proportion of least sandpipers and western sandpipers using the site at some point during their survey. I used this information to insure that the survey data only included western sandpipers, especially where the birds could not be identified in counts to species. 
 
-<<lesa-proportions, lesa_file = file.info('~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/Pwesa.r')$mtime,fig.width=8, fig.height=5.4, out.width="\\textwidth", fig.cap='The proportion of western sandpipers out of both western and least sandpipers counted at individual sites comparing counts in July (blue) and August (red) across months (A) years (B) and regions (C). Individual site means are shown as individual points in A and B. Bold points show the overall mean $\\pm95$\\%CI for each month or region. Regional names are as described in \\autoref{fig:regional-summary-plot}. '>>=
+<<lesa-proportions, lesa_file = file.info('~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/Pwesa.r')$mtime,fig.width=8, fig.height=5.4, out.width="\\textwidth", fig.cap='The proportion of western sandpipers out of both western and least sandpipers counted at individual sites comparing counts in July (blue) and August (red) across months (A) years (B) and regions (C). Individual site means are shown as individual points in A and B. Bold points show the overall mean $\\pm95$\\%CI for each month or region. Regional names are as described in \\autoref{fig:regional-summary-plot}. ', fig.scap="">>=
 source('~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/Pwesa.r',chdir=T)
 nrows_lesa <- propW_df %>% group_by(Month) %>% summarize(n=n())
 
@@ -779,14 +780,14 @@ final_lesaPlot
 
 The proportion of western sandpipers at each survey site varied substantially between sites, but overall there was little difference in the proportions between the July and August surveys (\autoref{fig:lesa-proportions}A). The number of surveys with reported proportions was slightly higher in August (\Sexpr{nrows_lesa$n[nrows_lesa$Month=="7"]} in July; \Sexpr{nrows_lesa$n[nrows_lesa$Month=="8"]} in August), but this is unlikely to explain the mask a difference between months. The proportion did vary between years, but in 2015 and 2016, when the proportion was lower, it was for both months (\autoref{fig:lesa-proportions}). 
 
-Across the regions the proportion of least sandpipers was higher on Vancouver Island than the Fraser River Delta or Puget Sound (\autoref{fig:lesa-proportions}C). It could be due to geographic differences, but it could also be due to differences in the site choices. As least sandpipers have faster escape performance and are more manoeuvrable in flight (\citep{burns_effects_2002}) they should experience lower vulnerability at sites I classify as more dangerous for western sandpipers. I should therefore expect to see them in greater proportions at the smaller sites along the coast of Vancouver Island. That even Tofino shows relatively low proportion of western sandpipers suggests it may be partially geographic also.
+Across the regions the proportion of least sandpipers was higher on Vancouver Island than the Fraser River Delta or Puget Sound (\autoref{fig:lesa-proportions}C). It could be due to geographic differences, but it could also be due to differences in the site choices. As least sandpipers have faster escape performance and are more manoeuvrable in flight \citep{burns_effects_2002} they should experience lower vulnerability at sites I classify as more dangerous for western sandpipers. I should therefore expect to see them in greater proportions at the smaller sites along the coast of Vancouver Island. That even Tofino shows relatively low proportion of western sandpipers suggests it may be partially geographic also.
 
 
 \subsection{Large site counts double counting?}\label{sec:bb}
 
 While most sites are at least relatively geographically separated from each other, Boundary Bay and Jensens Bay had multiple survey sites along the shore of a single bay, lead to the possibility of double counting either within a single count or across a survey. I examined the patterns of counts from these two sites and determined that double counting at a single time was unlikely, but Jensens Bay especially (\autoref{fig:jj-breakdown}) and to a lesser degree potentially Boundary Bay (\autoref{fig:large-sites-ex}) had a chance of counting the same birds twice in a single survey period. To adjust for this, I used the total number of birds for both North and South Jensens Bay and all the sites along Boundary Bay as a measure for these two sites. To calculate the measures used in \autoref{ch:confront} I summed across all survey locations within a site at each count time and used the maximum count from each survey averaged across each month of surveys, weighed by the number of survey sites on a given date. 
 
-<<large-sites-ex, fig.width=10, fig.height=10, out.width="\\textwidth", fig.cap = "Numbers of western sandpipers counted at each of the sites along Boundary Bay for each survey date. Dates and axes are unlabelled, but times go from start of survey to end of survey from left to right.">>=
+<<large-sites-ex, fig.width=10, fig.height=10, out.width="\\textwidth", fig.cap = "Numbers of western sandpipers counted at each of the sites along Boundary Bay for each survey date. Dates and axes are unlabelled, but times go from start of survey to end of survey from left to right.", fig.scap="">>=
 bb <- 
   wesa %>%
   filter(grepl(pattern = '^BB', SiteID )) %>%
@@ -844,7 +845,7 @@ theme_no_id <- theme(strip.text = element_blank(), axis.text = element_blank(), 
 alldates <- 
 bb %>% 
   dplyr::filter(datecode %in% nsitesbydate$datecode[nsitesbydate$n>1]&tot>0) %>% 
-ggplot( aes(TimeEst, counts.cleaned,colour = SiteID)) + geom_line() + facet_wrap(~datecode, scales='free') +
+ggplot( aes(TimeEst, counts.cleaned,colour = SiteID, group = RecordID)) + geom_line() + facet_wrap(~datecode, scales='free') +
   scale_color_brewer(type='qual', palette = "Set1")
 colors <- ggplot_build(alldates)$data[[1]]$colour %>% unique
 names(colors) <- unique(bb$SiteID)
@@ -880,11 +881,11 @@ names(colors) <- unique(bb$SiteID)
 alldates + theme_no_id + labs(x="", y="Number of western sandpipers", colour = "Site")
 @
 
-<<jj-breakdown, dependson='large-sites-ex', fig.width=10, fig.height=10, out.width="\\textwidth", fig.cap = "Numbers of western sandpipers counted at each of the sites along Jensens Bay for each survey date. Dates and axes are unlabelled, but times go from start of survey to end of survey from left to right.">>=
+<<jj-breakdown, dependson='large-sites-ex', fig.width=10, fig.height=10, out.width="\\textwidth", fig.cap = "Numbers of western sandpipers counted at each of the sites along Jensens Bay for each survey date. Dates and axes are unlabelled, but times go from start of survey to end of survey from left to right.", fig.scap="">>=
 alldates_jb <- 
 Jensens.Bay %>% 
   dplyr::filter(datecode %in% nsitesbydate$datecode[nsitesbydate$n>1]&tot>0) %>% 
-ggplot( aes(TimeEst, counts.cleaned,colour = SiteID)) + geom_line() + facet_wrap(~datecode, scales='free') +
+ggplot( aes(TimeEst, counts.cleaned,colour = SiteID, group = RecordID)) + geom_line() + facet_wrap(~datecode, scales='free') +
   scale_color_brewer(type='qual', palette = "Set1")
 
   alldates_jb + theme_no_id + labs(x="", y="Number of western sandpipers", colour = "Site")
@@ -900,12 +901,12 @@ For each round of surveys, I used the Saturday as the measure of the proximity o
 
 \subsubsection*{Results}
 
-<<surveyres-snowmelt, fig.cap="Proportions of western sandpipers found at the large site in each year relative to the estimated falcon arrival date for that year. Estimates are shown with the 95\\% bootstrapped CI of the proportions (vertical bars) and 95\\%CI from \\citet{Niehaus2006} of the estimated timing of falcon arrival from the snowmelt date in Alaska.">>=
+<<surveyres-snowmelt, fig.cap="Proportions of western sandpipers found at the large site in each year relative to the estimated falcon arrival date for that year. Estimates are shown with the 95\\% bootstrapped CI of the proportions (vertical bars) and 95\\%CI from \\citet{Niehaus2006} of the estimated timing of falcon arrival from the snowmelt date in Alaska.", fig.scap="">>=
 source("../Rscripts/ComparingPredictions_ish.r", chdir=T)
 Headstartplot 
 @
 
-The proportion of birds at the large sites appears to be strongly influenced by the timing relative to the falcon front arrival date. The proportion at large sites varied between 0.25 and 0.75 between years, but was shifted the most toward the smaller, more dangerous sites when surveys were conducted around the estimated falcon arrival date. When surveys were about 10 days prior to and 15 days after falcon arrival the proportion shifted strongly towards the safe sites again. This pattern matches the expected pattern of behaviour proposed by others \citep{Ydenberg2007b,Hope2011}. Those migrants present around the steep increase in falcon presence should still be able to migrate ahead of the falcon front and therefore using more dangerous habitat could allow them to have the higher fuel loading rates needed to stay ahead. Migrants under the falcon front should be expected to shift to the safer sites as predator abundance goes up. Migrants far ahead of the falcon front have the time to act safer and do not need to take the risk of foraging at the smaller sites.
+The proportion of birds at the large sites appears to be strongly influenced by the timing relative to the falcon front arrival date. The proportion at large sites varied between 0.25 and 0.75 between years, but was shifted the most toward the smaller, more dangerous sites when surveys were conducted around the estimated falcon arrival date. When surveys were about 10 days prior to and 15 days after falcon arrival the proportion shifted strongly towards the safe sites again. This pattern matches the expected pattern of behaviour proposed elsewhere \citep{Ydenberg2007b,Hope2011}. Those migrants present around the steep increase in falcon presence should still be able to migrate ahead of the falcon front and therefore using more dangerous habitat could allow them to have the higher fuel loading rates needed to stay ahead. Migrants under the falcon front should be expected to shift to the safer sites as predator abundance goes up. Migrants far ahead of the falcon front have the time to act safer and do not need to take the risk of foraging at the smaller sites.
 
 \subsection{Falcon observations}
 
@@ -916,32 +917,32 @@ During western sandpiper surveys, the surveyors noted any observations of Peregr
 
 \subsubsection*{Results}
 
-<<prop-obs-vs-model, fig.cap="Comparing the probability of observing a falcon at a survey site versus the model trend in predator presence. Season trends are from binomial GLMs grouped by year (black lines), by size size (small - red; large - blue), and the overall trend (green line). Points are jittered to show overlap.", fig.height=8, fig.width=8, out.width="0.6\\textwidth", fig.align='center', out.width="0.7\\textwidth">>=
+<<prop-obs-vs-model, fig.cap="Comparing the probability of observing a falcon at a survey site versus the model trend in predator presence. Season trends are from binomial GLMs grouped by year (black lines), by size size (small - red; large - blue), and the overall trend (green line). Points are jittered to show overlap.", fig.height=8, fig.width=8, out.width="0.6\\textwidth", fig.align='center', out.width="0.7\\textwidth", fig.scap="">>=
 fModel_dataCompare 
 @
 
 
-<<total-falcons, fig.cap="The total number of falcons counted in each survey period.", fig.align='center', out.width="0.7\\textwidth">>=
+<<total-falcons, fig.cap="The total number of falcons counted in each survey period.", fig.align='center', out.width="0.7\\textwidth", fig.scap="">>=
 totalFalcons_bymonth
 
 
 
 @
 
-<<falc-by-size, fig.cap="The probability of observing a falcon by site size (small - red; large - blue) across all years and months.", fig.align='center', out.width="0.7\\textwidth">>=
+<<falc-by-size, fig.scap="", fig.cap="The probability of observing a falcon by site size (small - red; large - blue) across all years and months.", fig.align='center', out.width="0.7\\textwidth">>=
 falcsizeplt
 @
 
-<<prob-falc, fig.cap="The ", fig.align='center', out.width="0.7\\textwidth", eval=F>>=
+<<prob-falc, fig.scap="", fig.cap="The ", fig.align='center', out.width="0.7\\textwidth", eval=F>>=
 plt.prop.falc
 @
 
-<<falc-v-wesa, fig.cap="The probability of falcon observations by the maximum count of western sandpipers (solid lines) from GLMs by year and month.", fig.align='center', out.width="0.7\\textwidth">>=
+<<falc-v-wesa, fig.scap="", fig.cap="The probability of falcon observations by the maximum count of western sandpipers (solid lines) from GLMs by year and month.", fig.align='center', out.width="0.7\\textwidth">>=
 falcVsWESA
 @
 
 
-<<falc-attacks, fig.cap="Mean number of attacks per survey at small (red) and large  (blue) sites. Values are mean $\\pm95\\%$CI)", fig.align='center', out.width="0.7\\textwidth">>=
+<<falc-attacks, fig.scap="", fig.cap="Mean number of attacks per survey at small (red) and large  (blue) sites. Values are mean $\\pm95\\%$CI)", fig.align='center', out.width="0.7\\textwidth">>=
 Year_F 
 @
 
@@ -1084,24 +1085,25 @@ overall.relativemonth <- site.by.month %>%
 }
 @
 
-<<estimation-methods, fig.cap="Review of index types without interpolation. Estimates of proportion of birds at the large sites and total numbers of birds from surveys of western sandpipers based on various estimation types. Estimation methods described in the text.", fig.width=8, fig.height = 6, out.width="\\textwidth">>=
+<<estimation-methods, fig.scap="", fig.cap="Review of index types with interpolation. Estimates of proportion of birds at the large sites and total numbers of birds from surveys of western sandpipers based on various estimation types. Estimation methods described in the text.", fig.width=8, fig.height = 6, out.width="\\textwidth">>=
 EstimationMethods <- function(comparetypes){
 plot_grid(
 ggplot(comparetypes, aes(as.numeric(Year), pTotal, colour = type)) + 
   facet_wrap(~month) + geom_line() + 
-  ylim(0,1) + labs(x= "", y="Proportion of Birds at the Large Sites", colour = "Estimation Method")+ 
+  ylim(0,1) + labs(x= "", y="Proportion of Birds\nat the Large Sites", colour = "Estimation Method")+ 
   theme(legend.position = 'none')+
   scale_color_brewer(palette="Set1", type = "qual"),
 ggplot(comparetypes, aes(as.numeric(Year), totalBirds, colour = type)) + facet_wrap(~month) + geom_line() + 
   theme(legend.position = 'bottom')+
   labs(x= "Year", y="Total Numbers of Birds", colour = "Estimation Method")+
-  scale_color_brewer(palette="Set1", type = "qual") , nrow=2)}
+  scale_color_brewer(palette="Set1", type = "qual") , nrow=2) +
+  guides(fill=guide_legend(nrow=2,byrow=TRUE))}
 EstimationMethods(read_rds("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/WithInterpolation_comparetypes.rds"))
 @
 
 
-<<estimation-methods-no-interpolation, fig.cap="Review of index types without interpolation. Estimates of proportion of birds at the large sites and total numbers of birds from surveys of western sandpipers based on various estimation types. Estimation methods described in the text.",fig.width=8, fig.height = 6, out.width="\\textwidth", dependson='estimation-methods'>>=
-EstimationMethods(read_rds("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/NoInterpolation.rds"))  
+<<estimation-methods-no-interpolation, fig.scap="", fig.cap="Review of index types without interpolation. Estimates of proportion of birds at the large sites and total numbers of birds from surveys of western sandpipers based on various estimation types. Estimation methods described in the text.",fig.width=8, fig.height = 6, out.width="\\textwidth", dependson='estimation-methods'>>=
+EstimationMethods(read_rds("~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/Rscripts/NoInterpolation.rds"))   
 @
 
 
@@ -1130,7 +1132,7 @@ I compared counts by observer and found to strong differences between them that 
 
 		\subsubsection*{Site classification}
 
-Each survey site was classified based on area of available habitat. Intertidal area was drawn using Google Earth Pro into a spatial file that could be analyzed in another software package. For each site I measured the area of intertidal habitat, the proportion of that habitat within 150 of cover (high danger). For each sample I measured the distance from cover.
+Each survey site was classified based on area of available habitat. Intertidal area was drawn using Google Earth Pro into a spatial file that could be analyzed in another software package. For each site I measured the area of intertidal habitat, the proportion of that habitat within 150 of cover (high danger). 
 
 		\subsubsection*{Sample location and distance to cover}
 
@@ -1138,7 +1140,7 @@ To estimate the distance from each sample location to the shoreline I used the m
 
 	\subsection{Analysis}
 		\subsubsection*{Site analysis}
-I visually examined how the abundances in the different taxonomic groups differed between sites, particularly in relation to the sites' danger classification. I used the mean total invertebrate abundance per sample as a proxy for western sandpiper food abundance at each site. This leaves out a lot of information by pooling taxonomic groups, but is a standard way of assessing macroinvertebrate abundance from the prospective of western sandpipers \cite{Pomeroy2006a,Seaman2003a}. 
+I visually examined how the abundances in the different taxonomic groups differed between sites, particularly in relation to the sites' danger classification. I used the mean total invertebrate abundance per sample as a proxy for western sandpiper food abundance at each site. This leaves out a lot of information by pooling taxonomic groups, but is a standard way of assessing macroinvertebrate abundance from the prospective of western sandpipers \citep{Pomeroy2006a,Seaman2003a}. 
 
 		\subsubsection*{Spatial analysis}
 		\subsubsection*{Community analysis}
@@ -1180,7 +1182,7 @@ invert_w_danger <- left_join(invertdat, danger.est, by = "SiteID.danger") %>%
 Invertebrate abundances were highly variable, within sample, taxonomic group and site. \Sexpr{nrow(invertdat[invertdat$TotalInverts==0,])/nrow(invertdat)*100}\% of the samples had no macroinvertebrates detected( \autoref{fig:first-plots-inverts}). And \Sexpr{nrow(invertdat[invertdat$TotalInverts<10,])/nrow(invertdat)*100}\% had less than 10 per core. There were however \Sexpr{nrow(invertdat[invertdat$TotalInverts>100,])} samples with over 100 individuals.  The mean number per sample was \Sexpr{mean(invert_w_danger$TotalInverts[invert_w_danger$size == "Large"])} at the large sites and \Sexpr{mean(invert_w_danger$TotalInverts[invert_w_danger$size == "Small"])} at the small sites. 
 
 
-<<first-plots-inverts, fig.cap="Histogram of macrofaunal abundance by site type", dependson='fuck'>>=
+<<first-plots-inverts, fig.scap="", fig.cap="Histogram of macrofaunal abundance by site type", dependson='fuck'>>=
 
 ggplot(invert_w_danger, aes(TotalInverts, fill = size)) + 
   geom_histogram(binwidth = 5)+ 
@@ -1191,7 +1193,7 @@ ggplot(invert_w_danger, aes(TotalInverts, fill = size)) +
 
 
 
-<<plot-by-invert-group, fig.cap="Mean macrofaunal abundances for each site across taxonomic groups. Abundances are the mean $\\pm95\\%CI$. Sites are unlabeled here for clarity. Abundance axes differ between taxonomic groups.">>=
+<<plot-by-invert-group, fig.scap="", fig.cap="Mean macrofaunal abundances for each site across taxonomic groups. Abundances are the mean $\\pm95\\%CI$. Sites are unlabeled here for clarity. Abundance axes differ between taxonomic groups.">>=
 @
 
 
@@ -1202,9 +1204,9 @@ worms<- combinedInverts %>% filter(Group == "Polychaete" ) %>% group_by(SiteID) 
 
 @
 
-Across taxonomic groups there was also a lot of variation in the numbers observed. Amphipods were the most abundant across sites with an average \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Amphipod"])} found per sample. Tanaids were also relatively common with \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Tanaid"& combinedInverts$SiteID %in% tans])} average per sample at sites where any were found. Ostracods had the most abundant samples with \Sexpr{max(combinedInverts$Abundance[combinedInverts$Group == "Ostracods"])} found at in one sample. There overall abundance was much lower with \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Ostracods"])} found per sample, though at sites where any where found the average rose to \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Ostracods"& combinedInverts$SiteID %in% cods])}. Polychaetes, which have been found abundantly within the region in other studies \cite{Pomeroy2006a,Seaman2003a}, were relatively uncommon in my samples. They were only found at \Sexpr{length(worms)} sites and at these sites only with a mean abundance of \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Polychaete"& combinedInverts$SiteID %in% worms])}. The other taxonomic groups identified included Bivalves, Cumacs, Insects, Larvae, and Gastropods.
+Across taxonomic groups there was also a lot of variation in the numbers observed. Amphipods were the most abundant across sites with an average \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Amphipod"])} found per sample. Tanaids were also relatively common with \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Tanaid"& combinedInverts$SiteID %in% tans])} average per sample at sites where any were found. Ostracods had the most abundant samples with \Sexpr{max(combinedInverts$Abundance[combinedInverts$Group == "Ostracods"])} found at in one sample. There overall abundance was much lower with \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Ostracods"])} found per sample, though at sites where any where found the average rose to \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Ostracods"& combinedInverts$SiteID %in% cods])}. Polychaetes, which have been found abundantly within the region in other studies \citep{Pomeroy2006a,Seaman2003a}, were relatively uncommon in my samples. They were found at \Sexpr{length(worms)} sites but at these sites only with a mean abundance of \Sexpr{mean(combinedInverts$Abundance[combinedInverts$Group == "Polychaete"& combinedInverts$SiteID %in% worms])}. The other taxonomic groups identified included Bivalves, Cumacs, Insects, Larvae, and Gastropods.
 
-<<plot-d2c, fig.cap="Mean ($ \\pm$95\\%CI) number of total numbers of macro-invertebrates per sample by distance to cover for large and small sites. Distances are grouped by 50m of distance and across all sites. Lines show the generalized linear models of total invertebrate abundances with increasing distances to cover at the large and small sites. Models run with the Poisson distribution and shown with 95\\%CI in grey.">>=
+<<plot-d2c, fig.scap="", fig.cap="Mean ($ \\pm$95\\%CI) number of total numbers of macro-invertebrates per sample by distance to cover for large and small sites. Distances are grouped by 50m of distance and across all sites. Lines show the generalized linear models of total invertebrate abundances with increasing distances to cover at the large and small sites. Models run with the Poisson distribution and shown with 95\\%CI in grey.">>=
 database.loc <- '~/Documents/SFU/PhD/SharingFiles_ForWindows/ShorebirdSurveyDatabase/'
 # danger.est <- read.csv(paste(database.loc, 'AreaCalculations/GISArea.estimates_updated.csv', sep = ""),
 #                       stringsAsFactors = FALSE) %>%
@@ -1227,7 +1229,7 @@ ggplot(invert_w_danger , aes(dist,TotalInverts, colour = size )) +
 A key finding of \citet{pomeroy_tradeoffs_2006} was showing macrofaunal abundance declined with distances from shore. \citet{Pomeroy2006a} found the pattern was less clear during the summer and I was unable to find any strong pattern with distance to shore in macrofaunal invertebrate abundance (\autoref{fig:plot-d2c}). If anything, the trend was for total invertebrate abundance to increase with distance to cover, though this is only a trend and likely driven in part by discrepancies in sample size by distance to cover. There also appears to be a slightly higher macroinvertebrate abundance at small sites.
 
 
-<<d2c-by-group, fig.cap="Mean ($\\pm$95\\%CI) number of individuals of each taxonomic group per sample by distance to cover. Distances are grouped by 50m of distance and across all sites.", out.width="\\textwidth">>=
+<<d2c-by-group, fig.scap="", fig.cap="Mean ($\\pm$95\\%CI) number of individuals of each taxonomic group per sample by distance to cover. Distances are grouped by 50m of distance and across all sites.", out.width="\\textwidth">>=
 ggplot(combinedInverts,aes(round(dist/50,0)*50,Abundance )) + 
   stat_summary(fun.data = "mean_cl_boot", geom="pointrange") + 
   geom_smooth(method='glm', method.args = list(family='poisson')) +
@@ -1246,20 +1248,20 @@ glm_inverts <- glmer(TotalInverts~arm::rescale(dist)*size+0 + (1+ arm::rescale(d
 
 \subsubsection*{Biases}
 
-<<collectiondate, fig.cap="Total invertebrate abundance across the sampling period. For all but two sites all collection was done on a single day at each site so overall trend (black points and blue line) show overall change in abundance across the region. Boundary Bay 112th Ave (BB12) and Iona (IONA) had surveys done on two dates and are shown broken down into their two collection dates to show trends within sites.">>=
+<<collectiondate, fig.scap="", fig.cap="Total invertebrate abundance across the sampling period. For all but two sites all collection was done on a single day at each site so overall trend (black points and blue line) show overall change in abundance across the region. Boundary Bay 112th Ave (BB12) and Iona (IONA) had surveys done on two dates and are shown broken down into their two collection dates to show trends within sites.">>=
 @
 
 
 As samples were collected for the most part at each site in a single day, but the time period of collecting samples was over two months, if a seasonal trend in invertebrate abundances existed, it could shape any patterns in abundances across sites. To explore this, I examined the trends in total abundances across the collection period and found no trend in total sample invertebrate abundances (\autoref{fig:collectiondate}). There were two sites (Boundary Bay at 112th and Iona Island) where I had to return at a later date to collect the remaining samples. At both these sites we see an increased abundance of invertebrates in samples collected at the later date. The trend at Boundary Bay 112th could be explained by the later samples being collected at a distance closer to shore (\Sexpr{round(bb12[1,2],2)}m vs \Sexpr{round(bb12[2,2])}m), the trend was reversed at Iona with the early samples being collected at \Sexpr{round(iona[1,2],2)}m and the later samples at an average \Sexpr{round(iona[2,2],2)}m from shore. While the sample of two dates at two sites is by no means evidence of a global trend in invertebrate abundance across the region, it also provides no support for an idea of any decrease in abundance across the region.
 
 
-<<collectiondate-groups, fig.cap="Invertebrate abundance by group shown across the sampling period. Samples were collected from each site on a single day so any observed could also be shaped by sampling bias by date across sites.",out.width="\\textwidth", eval=F>>=
+<<collectiondate-groups, fig.scap="", fig.cap="Invertebrate abundance by group shown across the sampling period. Samples were collected from each site on a single day so any observed could also be shaped by sampling bias by date across sites.",out.width="\\textwidth", eval=F>>=
 @
 
 
 Five observers recorded the abundances of the different taxonomic groups in the samples. Overall, there was little differences in their findings for three of the observers (\autoref{fig:collector-counts}). Two observers had higher counts on average, but this is mostly due to higher counts of ostracods and tanaids, which showed high variability in abundances between sites (\autoref{fig:plot-by-invert-group}). It does not appear that there were any substantial biases within any observer counts.
 
-<<collector-counts, fig.cap="The mean counts by taxonomic group for each of the five undergraduate assistants.">>=
+<<collector-counts, fig.scap="", fig.cap="The mean counts by taxonomic group for each of the five undergraduate assistants.">>=
 n_samples <- invertdat %>% group_by(processorNum) %>% summarize(n=n(), nsites=n_distinct(SiteID))
 ggplot(combinedInverts, aes(processorNum, Abundance, colour = Group)) + stat_summary(position=position_dodge(0.5),fun.data='mean_cl_boot') + 
   geom_text(data=n_samples, aes(y = 12, label=paste("N: ",n)), colour = "black") +
@@ -1280,7 +1282,7 @@ The remaining sites were all separated in characteristics from Witty's and Crock
 Due to the inability to distinguish many of the sites using the macroinvertebrate data and our knowledge of the importance of meiofaunal invertebrates and biofilm to migrating western sandpipers I have not included the food data in \autoref{ch:confront}.
 
 
-<<dendrogram-plot, fig.cap="Cluster analysis of macroinvertebrate communities at surveyed stopover sites for Western Sandpipers. Sites are grouped by similarity in community composition using a cluster algorithm that uses the Euclidean distances in abundance between sites for each taxonomic group.", fig.width = 8, fig.height = 12,out.width=NULL, out.height="0.8\\textheight", fig.align='center'>>=
+<<dendrogram-plot, fig.scap="", fig.cap="Cluster analysis of macroinvertebrate communities at surveyed stopover sites for Western Sandpipers. Sites are grouped by similarity in community composition using a cluster algorithm that uses the Euclidean distances in abundance between sites for each taxonomic group.", fig.width = 8, fig.height = 12,out.width=NULL, out.height="0.8\\textheight", fig.align='center'>>=
 @
 
 % \section{Literature Cited}

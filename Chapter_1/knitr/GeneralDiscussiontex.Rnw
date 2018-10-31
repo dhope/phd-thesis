@@ -1,0 +1,320 @@
+% \documentclass{sfuthesis}
+% \usepackage[round,sort&compress]{natbib}
+% \usepackage{multirow} % span in both directions tables
+% \usepackage{array}
+% \usepackage{pdflscape}
+% \usepackage{rotating}
+% \usepackage{import}
+% \usepackage{phaistos}
+% \usepackage{amsmath,amssymb,amsthm}
+% \usepackage[pdfborder={0 0 0},colorlinks=false]{hyperref}
+% \usepackage{graphicx}
+% \usepackage{caption}
+% \usepackage{tabularx}
+% % \usepackage{animate}
+% \usepackage{tcolorbox}
+% \usepackage{multicol}
+% \usepackage{lineno}
+% \frenchspacing                                    % (1)
+% \renewcommand*{\chapterautorefname}{Chapter}      % (2)
+% \renewcommand*{\sectionautorefname}{Section}      % (2)
+% \renewcommand*{\subsectionautorefname}{Section}   % (2)
+% \renewcommand{\defaultspacing}{\doublespacing}  % (3)
+
+% % https://tex.stackexchange.com/questions/15728/multiple-references-with-autoref
+% % define a macro \Autoref to allow multiple references to be passed to \autoref
+
+
+% \begin{document}
+% \SweaveOpts{concordance=FALSE}
+<<setup-gen-discuss, echo=F, message=F, warning=F>>=
+library(tidyverse)
+library(knitr)
+library(xtable)
+library(cowplot) 
+require(lubridate)
+set_parent("HopeThesis.Rnw")
+opts_chunk$set(echo=F, # Do NOT repeat code in final document
+                message = F, # Do NOT print R messages in document
+                warning = F, # Do NOT pring warnings
+                cache = T, # Cache runs
+                #dev = "CairoPNG", # Uses Cairo png instead of pdf for images
+                dpi=300
+             )
+# numbers >= 10^5 will be denoted in scientific
+# notation, and rounded to 2 digits
+if(!exists("includeapp")) includeapp <- F
+options(scipen = 1, digits = 2)
+@
+
+
+\chapter{General Discussion: The implications of adaptive behaviour on estimated population trends.}
+
+\defaultspacing
+
+
+\section{Summary of Results}
+
+Throughout my thesis I explored how the behaviour of avian migrants shapes counts at stopover sites and if changes in behaviour can be detected using surveys conducted on migration. In Chapters 2 and 3 I developed and used a model to explore migratory movements of western sandpipers (\textit{Calidris mauri}) through a landscape of small and large sites. In Chapters 4 and 5 I used surveys of counts at stopover sites to detect changes in migratory behaviour. Across all four chapters, I found changes in behaviour should be expected in response to changing conditions on migration, but that these changes can be difficult to detect in stopover counts. 
+
+In Chapter 2 I presented a model of decisions for western sandpipers optimizing their survival across migration as they move southward through a landscape of small and large stopover sites. I calculated the decision that optimized individual migrants' expected survival across migration based on their state, location, and the date. I found that distributions between sites are sensitive to the relative food and safety at the sites and that the distributions have transition points at which the population shifts to using primarily one or the other site. I also found the remaining distance on migration affects how migrants prioritize food or safety in a local landscape. Using the model, I was able to recreate observed differences in capture mass of western sandpipers between a small and large site and the seasonal patterns in mark-recapture based lengths of stay at a small site. I was also able to broadly replicate the response to an increase in the predator population over several years. 
+
+In Chapter 3 I used the model developed in Chapter 2 to explore the scenarios that could shape patterns in survey counts of western sandpipers on southward migration. I fit the observed distribution between small and large sites to six model scenarios each representing a factor that was considered likely to influence counts at stopovers. Three of the scenarios (population size, fuel load on arrival, and sandpiper arrival timing) were unable to generate proportions of total birds at large sites in a given month that were equal to the observed survey distribution. However, using the scenarios for global fuelling rate, flyway predator abundance, and the timing of falcon migration I was able to adjust the model to fit the observed distributions. Of the fitted scenarios, the estimated annual timing of falcon migration showed similar patterns when generated from adult and juvenile counts and closely matched external data that was correlated with the timing of falcon arrival in the Salish Sea for each year. The falcon abundance estimates varied with the numbers of falcons observed in the shorebird surveys, but the fit was less strong than in the falcon timing scenario. Variation in food abundance was also able to recreate the observed patterns, but I lacked external data to verify the annual food or fuelling rate estimates. Finally, all three scenarios showed that juveniles either view the world as safer than the model predicts relative to adults or have lower fuelling rates than adults. The confrontation with data showed that the distributions are likely shaped by timing of falcon migration but could also be created by fuelling rates or predator abundance.
+
+In Chapter 4 I used a long-term dataset of citizen-scientist-conducted surveys across the Maritimes region of Canada to examine if site selection in migrating sandpipers across the region shifted as falcon presence increased. The dataset had wide spatial and temporal coverage, but survey effort was highly variable within seasons and across years. I developed a custom index to calculate how the birds surveyed in a given year were prioritizing safety in their stopover usage. I simulated birds increasingly aggregating and aggregating at the safest sites and resulting in a decline in my index. Based in a similar decline in the index generated from counts I concluded that since 1974 semipalmated sandpipers (\textit{Calidris pusilla}) have shifted their stopover usage toward the safest sites and increased their aggregation at these sites. I attribute this shift to the increased numbers of locally breeding peregrine falcons (\textit{Falco peregrinus}) and the continental increase in migratory peregrine falcons.
+
+In Chapter 5, I showed how the timing of progression of western sandpipers and dunlins (\textit{Calidris alpina}) northward changed over about 3 decades. Using a power analysis and simulations I was able to determine that these changes were not the result of survey biases and were likely due to earlier arrival at southern sites and sandpipers spending longer moving between the southern sites and the northern most sites. I conclude that western sandpipers may be initiating migration earlier and arriving at a major stopover area to wait for favourable temperature conditions before departing for the breeding grounds. Due to the high degree of variation in annual snowmelt date and the increasing likelihood of early snowmelt with climate changes, it is likely advantageous for migrants to reach a point that they can assess annual conditions earlier as the likelihood of early snowmelt increases.
+
+
+
+
+\section{Implications for management}
+
+In each of the data chapters I attempt to understand the processes behind migratory shorebird counts. In this chapter I take a more applied approach and explore if migratory counts remain a useful tool for monitoring populations or if they should be abandoned for other methods of population assessment. This issue had been well studied in terms of survey biases and survey protocols, so I focus here only on the role of behaviour in detecting a population trend.
+
+
+\subsection*{Detecting a true population change under abundances driven by timing of falcon arrival}
+\subsubsection*{Methods}
+To explore the efficacy of surveys in the Salish Sea region or elsewhere on southward migration I generated simulated abundances for 10 years under six scenarios of conservation importance plus one control scenario.  I simulated an initial population of 50,000 adult and 50,000 juvenile migrants passing through the model region. Across the simulated decade except in the control, the overall population of predators increased at 1\% per year and the annual timing of falcon arrival was assigned randomly using the annual estimates from the falcon arrival scenario in Chapter 3. I drew the annual migratory passage date of falcons $m_t$ from a normal distribution $\mathcal{N}\left( m_a, \sigma_{m_a}^2 \right)$ where $m_a$ is the mean estimate of $m_t$ from Chapter 2 for the adults or juveniles and $\sigma_{m_a}^2$ is the standard deviation of the estimates of $m_t$ across all years. For each scenario and year, I ran 1000 simulations of adult migration and 1000 simulations of juvenile migration where falcon timing $m_t$ was drawn randomly for each run.
+
+I examined three scenarios where the migrant population either remained stable across the 10 years, declined at 3\% per year, or declined at 5\% per year. The later two scenarios meet the Committee on the Status of Endangered Wildlife in Canada (COSEWIC) definition for a population threatened and endangered \citep{COSEWIC2017}. I refer hereafter to these scenarios as ``stable'', ``threatened'', and ``endangered'' populations. I simulated adults and juveniles declining equally and analysed them separately. In a population dynamics model, the adults and juveniles will not decline at the same rate, but this scenario is not meant to model population dynamics, but instead examine how behaviour complicates detecting the simplest trends. 
+
+I also modelled three scenarios that could be mistaken for a population decline or could represent threats to the population outside of a decline in numbers. I examined a global reduction in potential refuelling rate of 0.01 g year\textsuperscript{-1}, a reduction in refuelling rate at only the large sites of 0.01 g year\textsuperscript{-1}, and a reduction in mean mass on arrival of 0.01 g year\textsuperscript{-1}. A global reduction in fuelling rates could occur if there is a factor reducing food abundance across the sites or if migrant fuelling ability is reduced equally across sites, such as with increased contaminant load. A local reduction could be due to development or reduction in habitat quality at a large site. A reduction in mass on arrival could occur if flights from Alaska become costlier, either via containments increasing the energetic cost of flight, or by conditions on the breeding grounds increasing the cost of loading fuel before departure. 
+
+Finally, I ran a control scenario with a 3\% annual decline across 10 years, but without increasing falcon population or variation in timing of falcon arrival. This scenario demonstrates whether the statistical model is suitable to use for the migration data. 
+
+I sampled the data generated from the scenarios using different survey methods. While I did not model detection explicitly, I designed sampling around three methods used for migratory surveys. Firstly, I selected a three-day period in July (July 14, 15, 16) and a three-day period in August (August 14, 15, 16) and sampled the counts from those dates across all model runs. This methodology represents the most consistent survey protocols but is often unrealistic in organizing true counts. Secondly, I simulated the protocols from my surveys in Chapter 3. In this simulation I randomly sampled a three-day period in July and August in each model run, so the survey effort was consistent between site types, but differed between years. Finally, I modelled an approach similar to the Atlantic Canada Shorebird Survey (Chapter 4) where survey timing at the large sites and small sites was 6 random days within each month and small and large sites were not necessarily surveyed on the same dates.
+
+For each scenario and survey method I analysed the observed counts using a linear mixed-effects model with the following equation using a Poisson distribution of log counts:
+
+\begin{equation}
+y_{ijs} \sim  \text{Pois}(u_{ijs})
+\end{equation}
+
+\begin{equation}
+
+\log(u_{ijs}) = \beta_1\times \text{year}_i + \beta_2\times \text{day}_j + \beta_3\times \text{day}_j^2 + \varepsilon_i + n_{is} 
+
+\end{equation}
+
+The random effects ($n_{is}$) are normally distributed effects on the intercept for site and year, while $\beta_1$ is the interannual trend across years. 
+
+%For the survey methods involving a weekends, there are likely temporal autocorrelation, but I did not include this in the model for this simple power analysis. 
+
+Across the scenarios and model runs, I back-transformed $\beta_1$ to calculate the estimated proportion change in the population across the 10 years of simulated surveys.  I then extracted the proportion of slope estimates that were below zero for each month and scenario as well as the mean and 95\% prediction intervals of the fixed effects slopes and the estimates of the percentage change in the abundance over the 10 years. I only examine this fixed effect trend of year here as it is the parameter commonly used as an index of population in migratory species \citep{Crewe2015a,Crewe2016,Crewe2015b,bart_survey_2007,Bart2003,Gratto-Trevor2012}. I also calculated the annualized bias as the difference between the true population trend in each scenario (0\%, 3\% or 5\% per year) and the estimated annual trend from the linear model.
+
+I subsequently repeated the analysis when only one site is surveyed. I examine here the result of surveying only the largest sites as these sites are commonly the highest priority for surveys.
+
+
+% Nfails  ranweek 32, constweekend37, randay39
+
+
+\subsection*{Surveys may detect a population decline, but accuracy is low}
+\subsubsection*{Results}
+<<survyey-res-power>>=
+require(tidyverse)
+
+# dat_power <- read_rds("../Rscripts/.rds/fingerprint_cis_glmer_noplots.rds")
+# largeonly <- read_rds("../Rscripts/.rds/fingerprint_cis_glmer_largeOnly.rds")
+# pdecline <- dat_power$propDecline
+# ci_power <- dat_power$all_ci_estimates 
+
+labels = c("Food"= "Fuelling rate\ndecline\nboth sites",
+  "FoodLarge"="Fuelling rate\ndecline\nlarge sites",
+  "NoTrend"="Constant\npopulation",
+  "Mass"="Decline\nin\narrival mass",
+  "Pop"="30%\npopulation\ndecline",
+  "PopEndange"="50%\npopulation\ndecline",
+  "PopNoBehav"="No Behavioural Variation\n30%\npopulation\ndecline"
+
+  )
+abbr_labels <- c("Food"= "Food\ndecline\nboth\nsites",
+  "FoodLarge"="Food\ndecline\nlarge\nsites",
+  "NoTrend"="Constant\npop.",
+  "Mass"="Decline\nin\narrival\nmass",
+  "Pop"="30%\npop.\ndecline",
+  "PopEndange"="50%\npop.\ndecline",
+  "PopNoBehav"="No Behaviour"
+  )
+
+bias_df <- read_rds("../Confrontation_chapter/.rds/bias_df.rds")
+
+prop_sucess <- bias_df %>% 
+  mutate(negtrend = ifelse(yr < 0, 1, 0)) %>%
+  group_by(scenario, Age, survey, surveySites) %>% 
+  summarize(pSuc = sum(within5) / n(),
+            
+            lci_yr = quantile(yr, 0.025),
+            uci_yr = quantile(yr, 0.975),
+            yr = median(yr),
+            
+            lci_se_yr = quantile(sd_yr, 0.025),
+            uci_se_yr = quantile(sd_yr, 0.975),
+            se_yr = median(sd_yr),
+
+            pdecline = sum(negtrend) / n(),
+
+            
+            propchange_lci = quantile(propchange, 0.025),
+            propchange_uci = quantile(propchange, 0.975),
+            propchange = median(propchange)
+            
+
+
+            )
+returnPercent <- function(col, scen,sites, age,survey_, data_ = prop_sucess )
+{
+  data_[data_$scenario==scen& data_$surveySites==sites& data_$Age==age &data_$survey==survey_,] %>%
+  .[[col]] *100
+  }
+@
+
+
+
+<<plot-cis, fig.cap="The estimated proportion of change in the population of migrants moving through a landscape of small and large sites across 10 years of simulated surveys. Estimates are shown as the mean with the 95\\% prediction intervals. The values for a constant population (grey dashed line), 3\\% per year population decline (yellow dashed line), and 5\\% population decline per year (red dashed line) are shown for comparison. Estimates are derived from a mixed effect model of simulated surveys conducted at either both small and large sites (red dots) or only large sites (blue triangles). Simulated surveys were drawn from model scenarios showing a trend in the population across ten years, a decline in the arrival mass of migrants or a decline in the fuelling rates at one or both sites. Simulated counts are generated from a model described in Chapter 2 and include interannual variation in timing of predator arrival and a small increase in predator abundance through the ten years. Survey protocols (right side) include surveying the same three days every year, surveying a random three consecutive days every year, or surveying 6 random days across both site types in each year.", fig.width = 10, fig.height=12, out.height="0.6\\textheight", include=F, eval=F>>=
+dat_power$all_ci_estimates %>% mutate(surveySites = "Both") %>% 
+  bind_rows(
+    largeonly$ci %>% mutate(surveySites = "Large Only")
+  ) %>%  
+  mutate(
+  # Scenario= ifelse(scenario=="Food", "Fuelling rate\ndecline\nboth sites",
+  #   ifelse(scenario=="FoodLarge", "Fuelling rate\ndecline\nlarge sites",
+  #     ifelse(scenario=="NoTrend", "Constant\npopulation", 
+  #       ifelse(scenario=="Mass", "Decline\nin\narrival mass",
+  #         ifelse(scenario=="Pop", "30%\npopulation\ndecline",
+  #           ifelse(scenario=="PopEndange", "50%\npopulation\ndecline", NA)))))),
+  Age = factor(ifelse(age==0, "July", "August"), levels=c("July", "August") ) ) %>%
+
+  ggplot(aes(scenario, propchange_mean, group=surveySites)) + 
+  geom_pointrange(aes(ymin=propchange_lci, ymax=propchange_uci, colour = surveySites, shape=surveySites),
+                  position = position_dodge(0.5)) +
+  facet_grid(survey~Age) +
+  geom_hline(yintercept = -0.5, colour = 'red', linetype=2) + 
+  geom_hline(yintercept = -0.3, colour = 'orange', linetype=2) +
+  geom_hline(yintercept = 0, colour = 'grey', linetype=2)+
+  labs(x="", y="Proportion change from first year across 10 years",
+    colour = "Sites Surveyed", shape= "Sites Surveyed") +
+  coord_cartesian(ylim = c(-1,2))  + scale_colour_brewer(palette='Set1', type='qual') +
+  theme(legend.position= "bottom") +
+   scale_x_discrete(labels = abbr_labels)
+@
+
+
+
+<<bias-plot,fig.width = 10, fig.height=12, out.width="\\textwidth", fig.cap="The annualized bias (estimated annual change in population - true change) for estimates of population change under differing model scenarios and survey protocols in July and August. Crossbar plots show the median and 95\\textsuperscript{th} quantiles of estimates from 1000 model runs when either both large and small sites (left panels) or only large sites (right panels) are surveyed for the statistical model. Sampling protocols are either the same 3 days in every year (green solid lines), a random three day period each year (blue short dashed lines), or three random days each year (red long dashed lines). The individual model results are shown in grey points. I have clipped plot to -0.1 and 0.6 as there are a very small number of outlier results above 0.6. Survey protocols and model scenarios are described in the text in more detail.",fig.scap="The annualized bias for estimates of population change under differing model scenarios and survey protocols.">>=
+bias_plot <-
+  bias_df %>% 
+  #filter(abs(bias) < quantile(bias, 0.999) & abs(bias > quantile(bias, 0.001))) %>% 
+  ggplot(aes(scenario, bias, group = survey)) +
+  geom_point(colour = 'grey', alpha = 0.3, position = position_dodge(0.7)) +
+  stat_summary(fun.data = "median_hilow", size=.8,
+               geom = "crossbar", 
+               width = 0.4,
+               position = position_dodge(0.7),
+              mapping = aes(group = survey,linetype = survey,
+                            colour = survey)) +
+  # stat_summary(fun.data = "mean_cl_boot") +
+  # stat_boxplot() +
+  coord_flip(ylim = c(-0.1, 0.6)) +
+  facet_grid(Age ~ surveySites) +
+  geom_hline(yintercept = 0, linetype = 2) +
+  scale_color_brewer(type = 'seq', palette = 'Set1', direction = -1) +
+  labs(y = "Annualized Bias", x = "", colour = "", linetype = "") +
+  scale_x_discrete(labels = labels)
+bias_plot
+@
+
+
+<<percent-decline, fig.cap="The percentage of model runs where the statistical model returns an interannual trend below zero representing a negative population trend. Model scenarios are described in the text, but results are shown for each scenario based on different survey methods for adults (July) and juveniles (August) when both small and large sites (top: Both) and when only large sites (bottom: Large Only) are surveyed.", fig.width = 8, fig.height = 10, out.height="0.6\\textheight", out.width = NULL, fig.align='center', include=F, eval=F>>=
+dat_power$propDecline %>% mutate(surveySites = "Both") %>% 
+  bind_rows(
+    largeonly$propdec %>% mutate(surveySites = "Large Only")
+  ) %>% 
+  mutate(
+  Age = factor(ifelse(age==0, "July", "August"), levels=c("July", "August") ) ) %>%
+  ggplot(aes(scenario, pd, colour = survey, shape =Age)) + 
+  geom_point(position = position_dodge(0.2)) +
+  facet_wrap(~surveySites,nrow=2) +
+  ylim(0,100)+
+  scale_colour_brewer(palette='Set1', type='qual') +
+  theme(legend.position= "right") +
+   scale_x_discrete(labels = abbr_labels) +
+   labs(x="", y="Percent of population trend estimates below zero",
+    shape = "Age", colour = "Survey Methods")#+
+   # guides( colour = guide_legend(nrow=2, byrow=T) ) 
+@
+
+
+<<prop-success,fig.width = 8, fig.height = 10, out.width = "\\textwidth", fig.align='center', fig.cap = "The proportion of model runs where the statistical model returns an interannual trend with 5\\% points of the true trend across 10 years. Model scenarios are described in the text, but results are shown for each scenario based on different survey methods for adults (July) and juveniles (August) when both small and large sites (left panels blue shapes: Both) and when only large sites (right panels, red: Large Only) are surveyed.",fig.scap="The proportion of model runs where the statistical model returns an interannual trend with 5\\% points of the true trend across 10 years.">>=
+ggplot(prop_sucess, aes(scenario, pSuc, colour = surveySites, shape = survey)) + 
+  facet_grid(Age~.) + 
+  geom_point(position = position_dodge(0.4), size=2) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  labs(y = "Proportion within 5% points of true trend across 10 years",
+       x = "", colour = "Sites Surveyed", shape = "Survey protocol") +
+  scale_color_brewer(type = 'seq', palette = 'Set1', direction = -1) +
+  scale_x_discrete(labels = labels) +
+  ylim(0,1) + theme(legend.position='right') #+
+  # guides( shape = guide_legend(nrow=2, byrow=T), colour = guide_legend(nrow=2, byrow=T) ) 
+@
+ 
+
+The statistical model estimated a population decline \Sexpr{returnPercent("pdecline","PopEndange",'Both',"July","Constant 3 days")}\% of the time when surveys at both site types were conducted in July on the same 3-day period each year under the endangered population scenario. However, only \Sexpr{returnPercent( "pSuc","PopEndange",'Both',"July","Constant 3 days")}\% of all runs were within 5\% of the true population trend across 10 years (\autoref{fig:bias-plot}). In August, the percent of successes (within 5\% of true trend) dropped to  \Sexpr{returnPercent("pSuc","PopEndange",'Both',"August","Constant 3 days")}\%. Under the threatened scenario the percent of successful trend estimates dropped to  \Sexpr{returnPercent("pSuc","Pop",'Both',"July","Constant 3 days")}\% in July and  \Sexpr{returnPercent("pSuc","Pop",'Both',"August","Constant 3 days")}\% in August, though the estimated trend was negative \Sexpr{returnPercent("pdecline","Pop",'Both',"July","Constant 3 days")}\% and  \Sexpr{returnPercent("pdecline","Pop",'Both',"August","Constant 3 days")}\% of runs. Using the constant three-day survey the estimated population change across 10 years in the endangered scenario were on average \Sexpr{returnPercent("propchange","PopEndange","Both","July","Constant 3 days")}\% [95\% PI \Sexpr{returnPercent("propchange_lci","PopEndange","Both", "July","Constant 3 days")}; \Sexpr{returnPercent("propchange_uci","PopEndange","Both", "July","Constant 3 days")}] in July and  \Sexpr{returnPercent("propchange","PopEndange", "Both", "August","Constant 3 days")}\% [95\% PI \Sexpr{returnPercent("propchange_lci","PopEndange", "Both", "August","Constant 3 days")}; \Sexpr{returnPercent("propchange_uci","PopEndange", "Both", "August","Constant 3 days")}]  in August. For threatened  and stable scenarios, the constant survey period scenario was on average equally accurate (30\%: \Sexpr{returnPercent("propchange","Pop","Both","July","Constant 3 days")}\% [95\% PI \Sexpr{returnPercent("propchange_lci","Pop","Both", "July","Constant 3 days")}; \Sexpr{returnPercent("propchange_uci","Pop","Both", "July","Constant 3 days")}],  \Sexpr{returnPercent("propchange","Pop", "Both", "August","Constant 3 days")}\% [95\% PI \Sexpr{returnPercent("propchange_lci","Pop", "Both", "August","Constant 3 days")}; \Sexpr{returnPercent("propchange_uci","Pop", "Both", "August","Constant 3 days")}]; 0\%: \Sexpr{returnPercent("propchange","NoTrend","Both","July","Constant 3 days")}\% [95\% PI \Sexpr{returnPercent("propchange_lci","NoTrend","Both", "July","Constant 3 days")}; \Sexpr{returnPercent("propchange_uci","NoTrend","Both", "July","Constant 3 days")}],  \Sexpr{returnPercent("propchange","NoTrend", "Both", "August","Constant 3 days")}\% [95\% PI \Sexpr{returnPercent("propchange_lci","NoTrend", "Both", "August","Constant 3 days")}; \Sexpr{returnPercent("propchange_uci","NoTrend", "Both", "August","Constant 3 days")}]). 
+
+
+The constant three-day survey period had the strongest trend detection rate and highest accuracy of the three surveys I looked at. The random three-day period estimated an accurate decline in  \Sexpr{returnPercent("pSuc","PopEndange","Both", "July", "Random 3 day period")}\% of runs under the endangered scenario and \Sexpr{returnPercent("pSuc","Pop","Both", "July", "Random 3 day period")}\% in the threatened scenario. This accuracy was similar in August (endangered: \Sexpr{returnPercent("pSuc","PopEndange","Both", "August", "Random 3 day period")}\% successes; threatened: \Sexpr{returnPercent("pSuc","Pop","Both", "August", "Random 3 day period")}\% successes). A relatively large proportion of runs were predicting a positive trend when the population was threatened (\Sexpr{ 100-returnPercent("pdecline","Pop","Both", "July", "Random 3 day period")} in July and \Sexpr{ 100-returnPercent("pdecline","Pop","Both", "August", "Random 3 day period")} in August) and endangered (\Sexpr{ 100-returnPercent("pdecline","PopEndange","Both", "July", "Random 3 day period")} in July and \Sexpr{ 100-returnPercent("pdecline","PopEndange","Both", "August", "Random 3 day period")} in August). Error rates were marginally less of a problem with the random survey dates (\Sexpr{returnPercent("pSuc","PopEndange","Both", "July", "Random 3 days")}\% successes to accurately estimate trends when population endangered in July surveys). For both these survey protocols the prediction intervals did overlap with the true population trend but varied so widely making a large error likely. 
+
+The mass and no trend scenarios were identical in their results across all survey methods and months. Both show many false trend detections, especially with the random weekend survey protocol. Under the food decline scenarios, false estimation of a population decline was very likely. Both a decline in refuelling rates at the large site (\Sexpr{returnPercent("pdecline", "FoodLarge", "Both", "July", "Constant 3 days")}\% estimated population declines in July, \Sexpr{returnPercent("pdecline", "FoodLarge", "Both", "August", "Constant 3 days")}\% in August) and a global decline in refuelling rates (\Sexpr{returnPercent("pdecline", "Food", "Both", "July", "Constant 3 days")}\% in July, \Sexpr{returnPercent("pdecline", "Food", "Both", "August", "Constant 3 days")}\% in August) were very likely to be detected as population declines. With a constant survey effort, the estimated declines were generally smaller than in either of the declining population scenarios, but only \Sexpr{returnPercent("pSuc", "Food", "Both", "July", "Constant 3 days")}\% of runs in July were within 5\% of zero over ten years. The estimated trends could easily be detected as one classifying the population as threatened when using random surveys or random 3-day periods. Even the constant survey weekend protocol showed a global food decline matching the predicted decline from a threatened population (annualized bias below zero in \autoref{fig:bias-plot}).
+
+
+
+\subsubsection*{Surveying only large sites}
+
+Surveying only large sites on southward migration dramatically reduces the ability to detect a declining population. While, for adults, a true population decline of 50\% per 10 years was detected as negative \Sexpr{returnPercent("pdecline","PopEndange", "Large Only", "July", "Constant 3 days")}\% of runs when a constant survey period was used, only \Sexpr{returnPercent("pSuc","PopEndange", "Large Only", "July", "Constant 3 days")}\% were within 5\% of accuracy. This success rate dropped to \Sexpr{returnPercent("pSuc","Pop", "Large Only", "July", "Constant 3 days")}\% for a threatened declined and in juveniles the proportion estimated accurately was even lower (Endangered: \Sexpr{returnPercent("pSuc","PopEndange", "Large Only", "August", "Constant 3 days")}\%; Threatened: \Sexpr{returnPercent("pSuc","Pop", "Large Only", "August", "Constant 3 days")}\%). For the survey protocols that were less consistent the accurate classification rate was lower at \Sexpr{returnPercent("pSuc","Pop", "Large Only", "July", "Random 3 day period")}\% for random three-day surveys and \Sexpr{returnPercent("pSuc","Pop", "Large Only", "July", "Random 3 days")}\% for random days in adults. \autoref{fig:prop-success} shows the full classification results for all scenarios. 
+
+The scenarios with food decline were as likely or more likely to be classified as a negative population trend and the predicted trends were often more negative than under a true population decline. Across all scenarios, when only large sites were surveyed the variation in estimates was much larger and under many survey protocols a strongly positive trend was estimated when the population was declining at 5\% per year. 
+
+\subsubsection*{Simulations without annual behavioural responses}
+
+Without modelling a behavioural response to annual conditions or an increasing falcon population, the statistical model was much more accurate in estimating population trends. When surveying a constant three days \Sexpr{returnPercent("pSuc","PopNoBehav",'Both',"July","Constant 3 days")}\% of runs were within 5\% of the true 30\% decline for July surveys and \Sexpr{returnPercent("pSuc","PopNoBehav",'Both',"August","Constant 3 days")}\% in August. Survey effort or methodology did not impact this accuracy (\autoref{fig:bias-plot}). When only the large site was surveyed on three random days \Sexpr{returnPercent("pSuc","PopNoBehav",'Large Only',"July","Random 3 days")}\% of estimates in July and \Sexpr{returnPercent("pSuc","PopNoBehav",'Large Only',"August","Random 3 days")}\% in August were within 5\% of 30\% decline over 10 years.
+
+
+\subsection*{Behaviour can obscure population trends}
+
+Using the statistical model to detect population trends generated negative trends with good success when the population was truly declining, and a constant survey effort was used in July. I do not include any correction for temporal autocorrelation, detection error or other survey biases that can be included in survey programs \citep{Crewe2015b}. However, a constant three-day program at small and large sites appears to be able to classify a large decline in a migratory population as a negative trend even if the distributions are shifting between years due to variation in falcon arrival. However, the accuracy of such estimates is very low and estimated small negative trends could be population endangering trends when masked by behaviour. The other survey protocols had even less success in estimating a population decline accurately. The statistical model often estimated a decline or a large increase in the population solely due chance in the scenario without a true population trend. All survey methods tended to estimate a population decline when food abundance or fuelling rates were declining.
+
+From my basic power analysis, I suggest that if surveys of southward migration are to be useful they should occur around the same dates every year and food abundance or refuelling rates should be closely monitored to rule out a false detection of a population decline. Nonetheless, a very large number of false positives should be expected in any monitoring program of a population that exhibits high behavioural plasticity and external measures need to confirm a population trend that is estimated from a statistical model. Because surveys of only large sites on southward migration fail to detect large population declines and have a strong chance of assigning a population a threatened or endangered status on incorrect information, they appear to be even less effective as monitoring programs
+
+There may be more cost-effective means of monitoring populations of migratory shorebirds. Monitoring non-breeding habitats requires less assumptions and has been used to detect population declines in the East-Australasian flyway effectively \citep{Piersma2016}. Contaminant or physiological monitoring conducted at migratory stopovers could be a useful population monitoring tool as stopover sites provide large numbers of birds to capture in a relatively small area. Developing flyway models that look at arrival patterns after long flights could also provide some indicators of population health. Behavioural indicators that take into account the easy of observing shorebirds at stopovers should be developed. For example, vigilance observations or flight initiation distances can be conducted easily at many sites and when put in context of state and location may provide information about the status of birds \citep{Cresswell2011,Moller2008,Blumstein2004}. Increased observations of behaviours that increase vulnerability to predation without a parallel reduction in predators or predation danger is one strong indicator that could suggest individuals may be experiencing stress or arriving in lower condition. Additionally, any behaviour must be put into the context of their position within the predator landscape \citep{Hope2011,Ydenberg2007b}.
+
+\section{Conclusion}
+
+Overall, in my thesis I have demonstrated that behavioural responses to changing conditions can have strong impacts on survey counts at migratory stopovers. With careful use of behavioural ecology, these counts can provide information about the populations that move through stopover sites, but their use as population indicators remains limited. My simple model does not explore larger flyway-level responses to changing conditions. Programs such as the International Shorebird Survey project should develop and test predictions of how behaviour is shaping the patterns they are able to observe at continental scales. Any monitoring program that uses stopover counts should also examine how behavioural shifts can affect their ability to detect population trends. Power analyses that explicitly include behavioural shifts or responses to annual conditions may be more accurate than ones that only classify annual shifts as stochastic. 
+
+I recommend that collecting direct measures of how migrant western sandpipers move through the Salish Sea and along the flyway on both northward and southward migration should be a research priority. The seasonal and annual variation in arrival location along the west coast of North America after their transoceanic flight could provide insight into how the sandpipers are prioritizing speed and safety as well as utilizing optimal winds. At a local level, my model predicts that migrants should have distinct movement patterns between small and large sites. Understanding the degree to which migrants move between small and large sites within a landscape could confirm or reject the predictions generated from my simple model of adaptive behaviour. On northward migration repeating a tracking study such as the one that was conducted in the 1990s \citep{Iverson1996,Warnock2004,Warnock2004c} would show if western sandpipers and dunlins have changed migratory strategies. Increasing surveys or tracking studies at the Copper River Delta would also show if migrants are indeed increasing their use of this large site as a staging site prior to departing to the breeding grounds when the conditions are favourable. 
+
+Overall, my thesis shows that migrating calidrid shorebirds respond to changing conditions by adjusting the sites that they use, a consistent decision to optimize survival across migration. The inclusion of site-specific predation danger, seasonal patterns in predator abundance, and the role of individual vulnerability to predation in migratory studies appears critical to understanding the migratory processes in this flyway. 
+
+
+<<-begin-comment-g,cache=F, results='asis'>>=
+if(!includeapp) {cat("\\begin{comment}")} 
+# cat("\\begin{comment}")
+@
+
+
+
+
+ \backmatter%
+  \addtoToC{Literature Cited}
+  \bibliographystyle{apa}
+  \bibliography{library}
+
+
+<<-end-comment-g,cache=F, results='asis'>>=
+if(!includeapp) {cat("\\end{comment}")} 
+# cat("\\end{comment}")
+@
+
+
+
+% \end{document}

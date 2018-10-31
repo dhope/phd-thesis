@@ -1,0 +1,54 @@
+
+<<set-parent-software, cache=F, echo=F, include=F>>=
+require(knitr)
+set_parent("HopeThesis.Rnw")
+@
+\nocitesec{*}
+
+
+
+ \section*{R packages}
+
+I wrote this thesis in \LaTeX  using the ``knitr'' program to build the figures within the thesis documents. The raw files are available on GitHub (\url{https://github.com/dhope/phd-thesis}) and within the SFU Research Data Repository. Anonymized survey results will also be available in the repository.
+
+I conducted much of the analysis, data wrangling and plotting in R \citep{R-base}. The details of the version used in the final draft is below.
+
+
+
+<<session, include=T, pretty =T,  echo=T,tidy.opts = list(blank = FALSE, width.cutoff = 60), comment = NA >>=
+version
+@
+
+% \bibliography{base-r}
+
+Chapter 5 used R version 3.4.4.
+
+I used many packages within my thesis analysis. Many packages that were particularily useful  come from the package universe the ``Tidyverse'' \citep{R-tidyverse}.
+
+<<rpackages, eval=F, echo=F>>=
+write_bib(c("tidyverse","knitr","xtable","cowplot","lubridate","rsample","Rcpp","magrittr","dplyr","broom","lattice","gridExtra","Rcpp","purrr","boot","lme4","sp","rgdal","rgeos","maptools","raster","manipulate","tidyr","readODS","readr","ggplot2","purrr","readr","readxl","stringr","tibble"), "R.bib")
+@
+A complete list of packages is found below.
+% \bibliography{R}
+
+
+\section*{C++}
+I wrote the behavioural model in the C++ language. The raw files can be found on my GitHub page or within the SFU data repository. I used the following libraries when compiling and running the model:
+
+<<cpp, include=T, echo=F, comment = NA>>=
+paste(c("algorithm","chrono","cstring","fstream","iostream","iterator","math.h","mpi.h","random","sstream","stdio.h","stdlib.h","string","time.h","time.h","typeinfo","unordered_map","vector"), sep ="; ")
+@
+
+\section*{ Python}
+
+I used Python 3 to clean the shorebird survey data received from surveyors. The files are included in the repository. I used the packages ``numpy'', ``pandas'', ``re'', ``csv'' in particular.
+
+% \bibliography{python}
+
+
+\section*{Westgrid and Compute Canada}
+
+This research was enabled in part by support provided by WestGrid (www.westgrid.ca) and Compute Canada Calcul Canada (www.computecanada.ca). Chapters 2, 3, 5, and 6 all had software run on the servers and what would have taken weeks on my computer took an hour on their fantastic system. 
+
+\bibliographystylesec{chicago}
+\bibliographysec{R}
