@@ -964,7 +964,7 @@ In the baseline model lengths of stay at the small site increase within the adul
 
 
 
-<<LOSMatching, fig.cap="Comparison of model trends in lengths of stay in percent deviation from mean lengths of stay for migrants under baseline conditions (with 95\\% CI;red - small site; dots - adults, triangles - juveniles) and predicted seasonal trends in lengths of stay from Sidney Island (dashed lines, from \\citet{Hope2011}).",dependson='banding-dat', fig.width=4, fig.height=8, out.width="0.6\\textwidth",fig.align='center',fig.scap="Comparison of model trends in lengths of stay and predicted seasonal trends in lengths of stay from Sidney Island.">>=
+<<LOSMatching, fig.cap="Comparison of model trends in lengths of stay in percent deviation from mean lengths of stay for migrants under baseline conditions (with 95\\% CI;red - small site; dots - adults, triangles - juveniles) and predicted seasonal trends in lengths of stay from Sidney Island (dashed lines, from \\citealt{Hope2011}).",dependson='banding-dat', fig.width=4, fig.height=8, out.width="0.6\\textwidth",fig.align='center',fig.scap="Comparison of model trends in lengths of stay and predicted seasonal trends in lengths of stay from Sidney Island.">>=
 bandingdat$LoS_compare2  + theme(legend.position='none')
 @
 
