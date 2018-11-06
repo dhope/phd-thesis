@@ -1,0 +1,195 @@
+---
+title: "Full Binning Analysis"
+author: "David Hope"
+date: "May 12, 2017"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = TRUE)
+require(tidyverse)
+require(ggthemes)
+require(broom)
+source("dstats.r")
+source("covariates.r")
+source("analysisFunction_acss.r")
+```
+
+
+
+### Binned temporal analysis
+
+```{r}
+# source('dstats.r')
+ACSS_allLG <- filter(ACSS_South_Danger, Year %in% yrs.w.lg & !Year %in% c(1995) & proportionDanger > 0.1)
+
+sample.binning <- lapply(runif(1000, 0, 10000000), function(x) calculateDstats(
+    data = ACSS_South_Danger_forAnalysis, x, plotOut = F, transform = "None", average = T,
+    useMice = F, calcTrends = F, modelType = "lm", binIt = T,
+    binSize = 0.10, yrbinSize = .5, areaNumBins = 5010
+  ))
+
+
+binning.df <- do.call("rbind", sample.binning) %>%
+  filter(!is.na(aucRatio)) %>%
+  filter(MAPT_GRAN == TRUE) %>%
+  # left_join(LgCounts, by  = 'Year') %>%
+  mutate(yr_centered = Year - 1994) %>%
+  as_tibble() %>%
+  mutate(mg = as.factor(ifelse(isTRUE(MAPT_GRAN), 1, 0))) %>%
+  filter(Year %in% yrs.w.lg & !Year %in% c(1995)) %>%
+  mutate(yr.st = arm::rescale(Year))
+
+binn.sum <- binning.df %>%
+  group_by(Year, yr.st, MAPT_GRAN) %>%
+  filter(MAPT_GRAN == TRUE) %>%
+  summarize(
+    uci = quantile(aucRatio, 0.975),
+    lci = quantile(aucRatio, 0.025),
+    aucRatio = mean(aucRatio, na.rm = T)
+  ) %>%
+  ungroup() # , 0.025)) %>% ungroup
+```
+
+
+
+
+```{r}
+
+
+require(broom)
+alpha_a <- 0.05
+res <- binning.df %>%
+  group_by(seed) %>%
+  do(augment(lm(aucRatio ~ yr.st, data = .)))
+res_ci <- res %>%
+  group_by(yr.st) %>%
+  summarize(
+    median = median(.fitted),
+    conf.low = quantile(.fitted, alpha_a / 2),
+    conf.high = quantile(.fitted, 1 - alpha_a / 2)
+  ) %>%
+  ungroup()
+```
+
+
+# Test Binning Effect
+
+
+```{r binTest}
+binTest <- function(binD, binA, data, nruns = 1000, binY = 1, only.w.lg = TRUE) {
+  data <- data %>% filter(proportionDanger > 0.1)
+  if (binD == 0.0) {
+    binD <- 0.00000001
+    nruns <- 1
+  }
+  sample.binning <- lapply(runif(nruns, 0, 10000000), function(x) calculateDstats(
+      data = data, x,
+      plotOut = F,
+      transform = "None",
+      average = T,
+      useMice = F,
+      calcTrends = F,
+      modelType = "lm",
+      binIt = T,
+      binSize = binD,
+      yrbinSize = binY,
+      areaNumBins = binA
+    ))
+
+  binning.df <- do.call("rbind", sample.binning) %>%
+    filter(!is.na(aucRatio)) %>%
+    mutate(yr_centered = arm::rescale(Year)) %>%
+    as_tibble() # %>% filter(MAPT_GRAN==TRUE)
+  if (isTRUE(only.w.lg)) {
+    binning.df <- filter(binning.df, MAPT_GRAN == TRUE)
+  }
+  if (nrow(binning.df) < 1) {
+    return(tibble(binD = binD, binY = binY, binA = binA, nruns = nruns, slope = NA))
+  }
+  bin.res <- binning.df %>%
+    group_by(seed) %>%
+    do(mod = lm(aucRatio ~ yr_centered, data = .)) %>%
+    mutate(int = coef(mod)[1], slope = coef(mod)[2], method = "Separate") %>%
+    select(-mod)
+  bin.res.obs <- binning.df %>%
+    group_by(seed) %>%
+    do(mod = lm(aucObs ~ yr_centered, data = .)) %>%
+    mutate(int = coef(mod)[1], slope = coef(mod)[2], method = "Separate") %>%
+    select(-mod)
+  bin.res.exp <- binning.df %>%
+    group_by(seed) %>%
+    do(mod = lm(aucExp ~ yr_centered, data = .)) %>%
+    mutate(int = coef(mod)[1], slope = coef(mod)[2], method = "Separate") %>%
+    select(-mod)
+  return(tibble(
+    binD = binD, binY = binY, binA = binA, nruns = nruns, slope = mean(bin.res$slope, na.rm = T),
+    med.slop = median(bin.res$slope, na.rm = T), uci = quantile(bin.res$slope, 0.975, na.rm = T),
+    lci = quantile(bin.res$slope, 0.025, na.rm = T), maxS = mean(binning.df$maxSafe, na.rm = T),
+    minS = mean(binning.df$minSafe, na.rm = T),
+    slopeObs = mean(bin.res.obs$slope, na.rm = T),
+    med.slopeObs = median(bin.res.obs$slope, na.rm = T),
+    uciObs = quantile(bin.res.obs$slope, 0.975, na.rm = T),
+    lciObs = quantile(bin.res.obs$slope, 0.025, na.rm = T),
+    slopeExp = mean(bin.res.exp$slope, na.rm = T),
+    med.slopeExp = median(bin.res.exp$slope, na.rm = T),
+    uciExp = quantile(bin.res.exp$slope, 0.975, na.rm = T),
+    lciExp = quantile(bin.res.exp$slope, 0.025, na.rm = T)
+  ))
+}
+
+require(purrr)
+# out.df <- map_df(seq(0,0.5, 0.05), binTest, data = ACSS_allLG, nruns = 1000)
+# out.df2 <- map_df(seq(0,0.5, 0.05), binTest, data = ACSS_allLG, nruns = 1000,  only.w.lg = FALSE)
+# out.df3 <- map_df(seq(0,0.5, 0.05), binTest, data = ACSS_allLG, nruns = 1000,  only.w.lg = TRUE)
+# out.df4 <- pmap_df(list(y), binTest, binD = 0, data = ACSS_allLG, nruns = 100,  only.w.lg = TRUE)
+x <- seq(0, 0.2, 0.02)
+y <- 55500 # c(5,10,20,50,75,100,250,400,500)
+# seq(1, 500,20)
+xy <- expand.grid(x, y)
+out.df5 <- map2_df(xy[, 1], xy[, 2], binTest, data = ACSS_allLG, nruns = 1000, only.w.lg = TRUE)
+```
+
+
+AIC Bin results
+
+```{r AICBin}
+source("analysisFunction_acss.r")
+acss_dat <- read.csv("../MasterFilesFromPaul/PrismDataDownload/bmde_data.txt", sep = "\t", stringsAsFactors = F)
+danger_150 <- read.csv("./danger.r_Prism_150.csv")
+```
+
+```{r}
+DatForBin <- prepareDat(acss_dat, danger.dat = danger_150, c(0.1, 0.9))
+```
+
+
+```{r}
+binnedDat <- calculateDstats(DatForBin, 1231, TRUE, "None", F, T, F, "lm", binIt = T, binSize = 0.1, yrbinSize = 1, areaNumBins = 5000)
+source("covariates.r")
+# covars = list("hawkYr50" = hawkYr50, "falc.predict" = falc.predict, "SESA.index" = SESA.index, "snowmelt.both" = snowmelt.both)
+bin.results <- map(1:1000, function(x) calculateNewDataAnalysis(DatForBin, covars = covars, outlier = 1995, plotOut = F, binIt = T, binD = 0.10, seed = x))
+binresults.T <- transpose(bin.results)
+allauc <- do.call("rbind", binresults.T$AUC)
+allMod <- map_df(.x = transpose(binresults.T$models)$`Year linear`, .f = tidy)
+
+summary_bin <-
+  allMod %>%
+  group_by(term) %>%
+  summarize(
+    meanEst = mean(estimate),
+    q975 = quantile(estimate, probs = 0.975),
+    q025 = quantile(estimate, probs = 0.025)
+  )
+
+
+
+# geom_line(aes(y=.fitted))
+binningresults <- list("raw" = sample.binning, "res" = res, "res_ci" = res_ci, "binn_sum" = binn.sum, "adjustbinRaw" = binning.df, "finalBin_tidy_p1" = allMod, "summarybin01" = summary_bin, "var_binSize" = out.df5, "noLg" = noLg)
+saveRDS(binningresults, "rds_files/fullBinningResults.rds")
+```
+
+
