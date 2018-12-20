@@ -79,8 +79,8 @@ as Alaska's Copper River Delta. My methodology generates specific predictions of
 northward migration that may be useful in other systems where historical count data are available.
 
 
- \linenumbers
- \defaultspacing
+ % \linenumbers
+ % \defaultspacing
 
 % {
 % \textit{Keywords}}:  migratory progression, Pacific Flyway, shorebird monitoring, spring migration,
@@ -200,7 +200,7 @@ The site closest to the breeding grounds is Kachemak Bay (59.625{\textdegree}N, 
 64-km long inlet near Homer, Alaska, on the Kenai Peninsula. Surveys were conducted during spring in 1986 and from
 1989 to 1994 by a single individual driving between sites \citep{Matz2012}. Surveys with multiple observers were
 conducted from 2009-2013 and involved simultaneous visits at the sites. Those surveys were conducted every 5 days
-during a 2 hour period on an outgoing tide and covered a larger portion of the migratory period \citep{Matz2012}.
+during a 2-hour period on an outgoing tide and covered a larger portion of the migratory period \citep{Matz2012}.
 To ensure that counts at Kachemak Ba included the peak count for each year, I also included supplemental counts
 collected between the survey periods. These counts did not have a standardized protocol, so I compared the results
 with and without the supplemental counts. I found their inclusion did not change the results substantially but
@@ -233,7 +233,7 @@ each year and site by fitting truncated normal distributions to the daily count 
 distributions. The distribution was truncated at the first and last day of the counts for each year and site. Dates
 here were the ordinal day of year, so in leap years the day of year would be one higher than in non-leap years. This
 method iteratively fits a partial normal distribution that is clipped at the truncation points to the data. By fitting
-a truncated distribution I can still estimate an accurate peak even if survey dates change between years or are
+a truncated distribution, I can still estimate an accurate peak even if survey dates change between years or are
 initiated after migration begins \citep{Jenni2003,Rigby2005}. The
 truncation allows the peak of the distribution to be estimated as within or outside the truncation points. The
 model does assume variance to be symmetrical around the mean \citep{GAMLSS}, and so we
@@ -474,10 +474,10 @@ There was strong support for including temperature in the models of
 western sandpiper peak passage dates. All models that included temperature received more support than those
 without temperature (Table 5.3). The model that received the most support from the data included variables from the
 previous top model plus an additive temperature parameter that varied based on whether a site was further or closer
-than 2000 km from the breeding grounds (\textit{wi }= 0.63). This parameter divided sites into
+than 2000 km from the breeding grounds ($w_i$ = 0.63). This parameter divided sites into
 those within Alaska (Copper River Delta, Hartney Bay, and Kachemak Bay) or those south of Alaska (Kennedy Creek,
 Roberts Bank, and Tofino Mudflats). The second model that received most of the remaining support from the data did
-not include the north/south interaction term (\textit{wi }= 0.25). In the top model, only the
+not include the north/south interaction term ($w_i$ = 0.25). In the top model, only the
 effect of year without the distance to breeding grounds interaction and the difference in temperature effect
 between northern and southern sites had confidence intervals that overlapped zero (Figure 5.2). 
 
@@ -504,7 +504,7 @@ than at the main Copper River Delta site.
 The inclusion of temperature did not substantially change
 the results for dunlins. The top model remained the model that included year, distance to the breeding grounds and
 their interaction, though its support from the data was diminished with the additional models
-(Table 5.4; \textit{wi }=0.58). Though the second and third supported
+(Table 5.4; $w_i$ =0.58). Though the second and third supported
 model included the divergent temporal pattern, they also include the temperature effect and the divergent temperature
 effect respectively (Table 5.4). The random effect of site in the dunlin model showed greater variance than in
 the western sandpipers in each site's mean peak passage date relative to that expected by the distance to the

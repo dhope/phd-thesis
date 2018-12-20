@@ -320,14 +320,14 @@ PLarge_mc
 
 % \section*{Pattern Matching Plots}
 
-<<patternmatching-baseline-full,fig.cap="Forward simulation model output from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", eval=F, fig.scap="">>=
+<<patternmatching-baseline-full,fig.cap="Forward simulation model output from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  A. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. B. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. C. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", eval=F, fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/mut/baseline/forwards_sim.txt", dat_type = 'forward', pk = 'No Prior Knowledge')
 
 a_pm <- plotres(for_dat_pm,plot_type =  'hist')
 a2_pm <- plotres(for_dat_pm,plot_type =  'mass') + theme(legend.position = 'none')
 a3_pm <- plotres(for_dat_pm ,plot_type =  'los')+ theme(legend.position = 'none')
-pg1_pm <- plot_grid(a_pm, a2_pm, a3_pm, nrow=3, labels='auto')
+pg1_pm <- plot_grid(a_pm, a2_pm, a3_pm, nrow=3, labels='AUTO')
 # now add the title
 title1_pm <- ggdraw() + draw_label("Pattern matching", fontface='bold')
 plot_grid(title1_pm, pg1_pm, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
@@ -340,14 +340,14 @@ if(!exists("bandingdat")) read_rds("../Rscripts/.rds/bandingdata.rds")
 bandingdat$Mass_plot + theme(legend.position='bottom')
 @
 
-<<patternmatching-baseline-full-pk, fig.cap="Forward simulation model output from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (orange) and juveniles (blue) migrants at the small (left) or large (right) sites are shown separately in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", eval=F>>=
+<<patternmatching-baseline-full-pk, fig.cap="Forward simulation model output from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (orange) and juveniles (blue) migrants at the small (left) or large (right) sites are shown separately in all plots.  A. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. B. Daily mean $\\pm 95\\% CI$ of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. C. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", eval=F>>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm_pk <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/PK/changed_x/baseline/forwards_sim.txt", dat_type = 'forward', pk = 'Prior Knowledge')
 
 a_pmpk <- plotres(for_dat_pm_pk,plot_type =  'hist')
 a2_pmpk <- plotres(for_dat_pm_pk,plot_type =  'mass') + theme(legend.position = 'none')
 a3_pmpk <- plotres(for_dat_pm_pk ,plot_type =  'los')+ theme(legend.position = 'none')
-pg1_pmpk <- plot_grid(a_pmpk, a2_pmpk, a3_pmpk, nrow=3, labels='auto')
+pg1_pmpk <- plot_grid(a_pmpk, a2_pmpk, a3_pmpk, nrow=3, labels='AUTO')
 # now add the title
 title1_pmpk <- ggdraw() + draw_label("Pattern matching - with prior knowledge", fontface='bold')
 plot_grid(title1_pmpk, pg1_pmpk, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
@@ -357,14 +357,14 @@ plot_grid(title1_pmpk, pg1_pmpk, ncol=1, rel_heights=c(0.1, 1)) # rel_heights va
 
 % \subsection*{High Predation Scenario}
 
-<<patternmatching-baseline-full-highpred,fig.cap="Forward simulation model output under a scenario of high predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
+<<patternmatching-baseline-full-highpred,fig.cap="Forward simulation model output under a scenario of high predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  A. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. B. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. C. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm_highpred <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/highpred/forwards_sim.txt", dat_type = 'forward', pk = 'No Prior Knowledge')
 
 a_pm_highpred <- plotres(for_dat_pm_highpred,plot_type =  'hist')
 a2_pm_highpred <- plotres(for_dat_pm_highpred,plot_type =  'mass') + theme(legend.position = 'none')
 a3_pm_highpred <- plotres(for_dat_pm_highpred ,plot_type =  'los')+ theme(legend.position = 'none')
-pg1_pm_highpred <- plot_grid(a_pm_highpred, a2_pm_highpred, a3_pm_highpred, nrow=3, labels='auto')
+pg1_pm_highpred <- plot_grid(a_pm_highpred, a2_pm_highpred, a3_pm_highpred, nrow=3, labels='AUTO')
 # now add the title
 title1_pm_highpred <- ggdraw() + draw_label("High Predation Scenario", fontface='bold')
 plot_grid(title1_pm_highpred, pg1_pm_highpred, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
@@ -372,14 +372,14 @@ plot_grid(title1_pm_highpred, pg1_pm_highpred, ncol=1, rel_heights=c(0.1, 1)) # 
 @
 
 
-<<patternmatching-baseline-full-pk-highpred, fig.cap="Forward simulation model output under a scenario of high predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
+<<patternmatching-baseline-full-pk-highpred, fig.cap="Forward simulation model output under a scenario of high predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. A. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. B. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. C. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.", fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm_pk_highpred <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/PK/changed_x/highpred/forwards_sim.txt", dat_type = 'forward', pk = 'Prior Knowledge')
 
 a_pmpk_highpred <- plotres(for_dat_pm_pk_highpred,plot_type =  'hist')
 a2_pmpk_highpred <- plotres(for_dat_pm_pk_highpred,plot_type =  'mass') + theme(legend.position = 'none')
 a3_pmpk_highpred <- plotres(for_dat_pm_pk_highpred ,plot_type =  'los')+ theme(legend.position = 'none')
-pg1_pmpk_highpred <- plot_grid(a_pmpk_highpred, a2_pmpk_highpred, a3_pmpk_highpred, nrow=3, labels='auto')
+pg1_pmpk_highpred <- plot_grid(a_pmpk_highpred, a2_pmpk_highpred, a3_pmpk_highpred, nrow=3, labels='AUTO')
 # now add the title
 title1_pmpk_highpred <- ggdraw() + draw_label("High Predation Scenario\nwith prior knowledge", fontface='bold')
 plot_grid(title1_pmpk_highpred, pg1_pmpk_highpred, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
@@ -387,14 +387,14 @@ plot_grid(title1_pmpk_highpred, pg1_pmpk_highpred, ncol=1, rel_heights=c(0.1, 1)
 
 % \subsubsection*{Low Predation Scenario}
 
-<<patternmatching-baseline-full-lowpred,fig.cap="Forward simulation model output under a scenario of low predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.",fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
+<<patternmatching-baseline-full-lowpred,fig.cap="Forward simulation model output under a scenario of low predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots. A. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. B. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. C. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.",fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm_lowpred <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/noPK/changed_x/lowpred/forwards_sim.txt", dat_type = 'forward', pk = 'No Prior Knowledge')
 
 a_pm_lowpred <- plotres(for_dat_pm_lowpred,plot_type =  'hist')
 a2_pm_lowpred <- plotres(for_dat_pm_lowpred,plot_type =  'mass') + theme(legend.position = 'none')
 a3_pm_lowpred <- plotres(for_dat_pm_lowpred ,plot_type =  'los')+ theme(legend.position = 'none')
-pg1_pm_lowpred <- plot_grid(a_pm_lowpred, a2_pm_lowpred, a3_pm_lowpred, nrow=3, labels='auto')
+pg1_pm_lowpred <- plot_grid(a_pm_lowpred, a2_pm_lowpred, a3_pm_lowpred, nrow=3, labels='AUTO')
 # now add the title
 title1_pm_lowpred <- ggdraw() + draw_label("Low Predation Scenario", fontface='bold')
 plot_grid(title1_pm_lowpred, pg1_pm_lowpred, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins
@@ -402,14 +402,14 @@ plot_grid(title1_pm_lowpred, pg1_pm_lowpred, ncol=1, rel_heights=c(0.1, 1)) # re
 @
 
 
-<<patternmatching-baseline-full-pk-lowpred, fig.cap="Forward simulation model output under a scenario of low predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  a. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. b. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. c. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.",fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
+<<patternmatching-baseline-full-pk-lowpred, fig.cap="Forward simulation model output under a scenario of low predation from the model modified to match mass and length of stay patterns in western sandpipers (See \\autoref{sec:matching}). Arrival is simulated for birds with prior knowledge. Adults (solid lines) and juveniles (dotted lines) migrants at the small (red) or large (black) sites are shown in all plots.  A. Daily number of migrants at the small or large site. Counts are made after daily decision has been made, so migrants that move will be counted at the new site for that day and those that depart will not be counted. B. Daily mean $\\pm 95\\% CI$ (grey shading) of mass for migrants output from the model. Values are calculated from the relative fuel load of the migrant after it has foraged for that date. C. Mean $\\pm 95\\%CI$ total length of stay for birds that move or depart on a given date.",fig.width=4, fig.height=8,out.width = "0.5\\textwidth", fig.align='center', fig.scap="">>=
 if(!exists("dataimport")) source("../Rscripts/model_data_import.r")
 for_dat_pm_pk_lowpred <- dataimport(input_data = "../cpp_version/Migration_Model/OrganizedResults/noU/MassCorrection/PK/changed_x/lowpred/forwards_sim.txt", dat_type = 'forward', pk = 'Prior Knowledge')
 
 a_pmpk_lowpred <- plotres(for_dat_pm_pk_lowpred,plot_type =  'hist')
 a2_pmpk_lowpred <- plotres(for_dat_pm_pk_lowpred,plot_type =  'mass') + theme(legend.position = 'none')
 a3_pmpk_lowpred <- plotres(for_dat_pm_pk_lowpred ,plot_type =  'los')+ theme(legend.position = 'none')
-pg1_pmpk_lowpred <- plot_grid(a_pmpk_lowpred, a2_pmpk_lowpred, a3_pmpk_lowpred, nrow=3, labels='auto')
+pg1_pmpk_lowpred <- plot_grid(a_pmpk_lowpred, a2_pmpk_lowpred, a3_pmpk_lowpred, nrow=3, labels='AUTO')
 # now add the title
 title1_pmpk_lowpred <- ggdraw() + draw_label("Low Predation Scenario\nwith prior knowledge", fontface='bold')
 plot_grid(title1_pmpk_lowpred, pg1_pmpk_lowpred, ncol=1, rel_heights=c(0.1, 1)) # rel_heights values control title margins

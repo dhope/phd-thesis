@@ -54,6 +54,8 @@ chapter5:
 
 chapter6:
 	cp $(CH6LOC)GeneralDiscussiontex.Rnw ./Chapter_1/knitr/
+	cp $(CH6LOC)Power_appendix.Rnw ./Chapter_1/knitr/
+	cp $(CH6LOC)SoftwareUsed.Rnw ./Chapter_1/knitr/
 
 
 copythesis: abstractfrontmatter chapter1 chapter2 chapter3 chapter4 chapter5 chapter6

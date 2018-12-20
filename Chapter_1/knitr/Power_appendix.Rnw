@@ -1,0 +1,72 @@
+<<parent-app-discussion, include=F, eval=T>>=
+
+# write_rds(full_tidy_glmers, ".rds/full_tidy_glmers_dec2018.rds")
+# write_rds(tidy_singlesites, ".rds/singlesite_tidy_glmers_dec2018.rds")
+require(cowplot)
+plot_estimates_ci <- function(scen, surveS, dat_, title_) {
+    dat_ %>% filter(scenario == scen & surveySites == surveS ) %>% 
+      rownames_to_column("x") %>% 
+      mutate_at(vars(x), as.numeric) %>% 
+      ggplot(aes(x,y=(exp(yr*9)-1)*100)) + 
+      geom_ribbon(aes(ymin=(exp(conf.low*9)-1)*100, ymax=(exp(conf.high*9)-1)*100), colour = 'grey') + 
+      geom_line(alpha = 0.7)+
+      geom_line(aes(y=(sim_trend)*100), colour = 'red') +
+      geom_hline(yintercept = 0, colour = 'black') +
+      facet_wrap(Age~survey, scales='free', nrow = 2, ncol = 3) + 
+      theme(axis.text.x = element_blank(), axis.ticks = element_blank()) +
+      labs(x="Individual Simulations", y = "Estimated percentage change in population", title = title_)
+}
+@
+
+
+\chapter{Simulation of population trends}\label{app:power}
+
+
+<<prop-success-10,fig.width = 10, fig.height = 8, out.width = "\\textwidth", fig.align='center', fig.cap = "The proportion of model runs where the statistical model returns an interannual trend within a given threshold (in percentage points of the true trend across 10 years) across varying survey protocols. See \\autoref{fig:prop-success} for details.">>=
+suc_comp <- 
+	dplyr::select(prop_sucess, scenario, surveySites, survey, Age,pSuc10, pSuc, pSuc20) %>%
+	gather("success", "pSuc", pSuc10:pSuc20) %>%
+	mutate(Success = factor(ifelse(success == "pSuc", "5%", ifelse(success == "pSuc10", "10%", "20%")),
+		levels = c("5%","10%", "20%")) ,
+	Scenario = abbr_labels[scenario])
+
+ggplot(suc_comp, aes(Success, pSuc, linetype = surveySites, colour = survey)) +
+		geom_line(aes(group = interaction(surveySites, survey))) +
+		facet_grid(Age~Scenario) + 
+		labs(y = "Proportion of simulations within threshold for accuracy",
+       x = "Threshold for success in % points of true trend across 10 years", colour = "Sites Surveyed", linetype = "Survey protocol") + 
+		theme(legend.position = 'bottom') +
+		guides( colour = guide_legend(nrow=2, byrow=T),linetype = guide_legend(nrow=2, byrow=T) )  +
+		scale_color_brewer(type = 'seq', palette = 'Set1', direction = -1)
+@
+
+<<power-PopTrend-nobehaviour,fig.width = 10, fig.height = 6, out.width = "\\textwidth", fig.align='center', fig.cap = "Results from all simulations in the estimate percentage change in the population across 10 years of surveys from a statistical model using simulations of a true 30\\% decline the population across 10 years (red line) without annual behavioural responses. Dark line shows the estimate from the statistical model with the grey lines showing the 95\\% CI for the estimate. Both site types are surveyed here.">>=
+plot_estimates_ci(scen = "PopNoBehav", surveS = "Both", bias_df, "30% Population Decline - No Behavioural Response")  
+@
+
+<<power-PopTrend,fig.width = 10, fig.height = 6, out.width = "\\textwidth", fig.align='center', fig.cap = "Results from all simulations in the estimate percentage change in the population across 10 years of surveys from a statistical model using simulations of a true 30\\% decline the population across 10 years (red line). Dark line shows the estimate from the statistical model with the grey lines showing the 95\\% CI for the estimate. Both site types are surveyed here.">>=
+plot_estimates_ci(scen = "Pop", surveS = "Both", bias_df, "30% Population Decline")  
+@
+
+
+
+<<power-PopTrend-endange,fig.width = 10, fig.height = 6, out.width = "\\textwidth", fig.align='center', fig.cap = "Results from all simulations in the estimate percentage change in the population across 10 years of surveys from a statistical model using simulations of a true 50\\% decline the population across 10 years (red line). Dark line shows the estimate from the statistical model with the grey lines showing the 95\\% CI for the estimate. Both site types are surveyed here.">>=
+plot_estimates_ci(scen = "PopEndange", surveS = "Both", bias_df, "50% Population Decline")  
+@
+
+
+<<power-PopTrend-stable,fig.width = 10, fig.height = 6, out.width = "\\textwidth", fig.align='center', fig.cap = "Results from all simulations in the estimate percentage change in the population across 10 years of surveys from a statistical model using simulations of a true stable population across 10 years (red line). Dark line shows the estimate from the statistical model with the grey lines showing the 95\\% CI for the estimate. Both site types are surveyed here.">>=
+plot_estimates_ci(scen = "NoTrend", surveS = "Both", bias_df, "No Population Trend")  
+@
+
+<<power-PopTrend-mass,fig.width = 10, fig.height = 6, out.width = "\\textwidth", fig.align='center', fig.cap = "Results from all simulations in the estimate percentage change in the population across 10 years of surveys from a statistical model using simulations of a true stable population across 10 years (red line), but with a decline in arrival mass of birds. Dark line shows the estimate from the statistical model with the grey lines showing the 95\\% CI for the estimate. Both site types are surveyed here.">>=
+plot_estimates_ci(scen = "Mass", surveS = "Both", bias_df, "No Population Trend, Decline in Arrival Mass")  
+@
+
+<<power-PopTrend-food,fig.width = 10, fig.height = 6, out.width = "\\textwidth", fig.align='center', fig.cap = "Results from all simulations in the estimate percentage change in the population across 10 years of surveys from a statistical model using simulations of a true stable population across 10 years (red line), but with a decline in fuelling load. Dark line shows the estimate from the statistical model with the grey lines showing the 95\\% CI for the estimate. Both site types are surveyed here.">>=
+plot_estimates_ci(scen = "Food", surveS = "Both", bias_df, "No Population Trend, Decline in Food")  
+@
+
+<<power-PopTrend-foodL,fig.width = 10, fig.height = 6, out.width = "\\textwidth", fig.align='center', fig.cap = "Results from all simulations in the estimate percentage change in the population across 10 years of surveys from a statistical model using simulations of a true stable population across 10 years (red line), but with a decline in fuelling load at the large site. Dark line shows the estimate from the statistical model with the grey lines showing the 95\\% CI for the estimate. Both site types are surveyed here.">>=
+plot_estimates_ci(scen = "FoodLarge", surveS = "Both", bias_df, "No Population Trend, Decline in Food at Large Site")  
+@
